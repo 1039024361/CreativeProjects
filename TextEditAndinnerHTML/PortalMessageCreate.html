@@ -15,6 +15,8 @@
         <input type="button" value="Copy">
         <input type="button" value="Cut">
         <input type="button" value="Paste">
+        <label for="forecolor">字体颜色</label><input type="color" value="#000000" id="forecolor">
+        <label for="backcolor">背景颜色</label><input type="color" value="#ffffff" id="backcolor">
     </div>
     <div id="divComplex">
         <input type="button" value="Create Link" id="btnCreateLink">
@@ -150,6 +152,10 @@
         var queryDiv = document.getElementById("divQuery");
         var richEdit = document.getElementById("richedit");
 
+        EventUtil.addHandler(window, "load", function(){
+            richEdit.focus();
+        });
+
         EventUtil.addHandler(document.forms[0], "submit", function(){
             event = EventUtil.getEvent(event);
             var target = EventUtil.getTarget(event);
@@ -165,8 +171,20 @@
 //                alert(target.value.toLowerCase());
                 document.execCommand(target.value.toLowerCase(), false, null);
             }
-
         });
+
+        EventUtil.addHandler(simple, "change", function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+
+            if (target.type == "color"){
+                console.log(target.id.toLowerCase());
+                console.log(target.value);
+                document.execCommand(target.id.toLowerCase(), false, target.value);
+                richEdit.focus();
+            }
+        });
+
 
         EventUtil.addHandler(complex, "click", function(event){
             event = EventUtil.getEvent(event);

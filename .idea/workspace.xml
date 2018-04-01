@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="" />
+    <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TextEditAndinnerHTML/PortalMessageCreate.html" afterPath="$PROJECT_DIR$/TextEditAndinnerHTML/PortalMessageCreate.html" />
+    </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -26,11 +28,11 @@
       <file leaf-file-name="PortalMessageCreate.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TextEditAndinnerHTML/PortalMessageCreate.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="163" column="41" selection-start-line="163" selection-start-column="41" selection-end-line="163" selection-end-column="41" />
+            <state relative-caret-position="612">
+              <caret line="183" column="33" selection-start-line="183" selection-start-column="33" selection-end-line="183" selection-end-column="33" />
               <folding>
                 <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1522575850000" expanded="true" signature="7429:7452" ph="..." />
+                <marker date="1522579580000" expanded="true" signature="8167:8190" ph="..." />
               </folding>
             </state>
           </provider>
@@ -196,12 +198,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1522574536568</updated>
-      <workItem from="1522574540087" duration="1305000" />
+      <workItem from="1522574540087" duration="4544000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1305000" />
+    <option name="totallyTimeSpent" value="4544000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -243,11 +245,11 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/TextEditAndinnerHTML/PortalMessageCreate.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="163" column="41" selection-start-line="163" selection-start-column="41" selection-end-line="163" selection-end-column="41" />
+        <state relative-caret-position="612">
+          <caret line="183" column="33" selection-start-line="183" selection-start-column="33" selection-end-line="183" selection-end-column="33" />
           <folding>
             <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1522575850000" expanded="true" signature="7429:7452" ph="..." />
+            <marker date="1522579580000" expanded="true" signature="8167:8190" ph="..." />
           </folding>
         </state>
       </provider>
