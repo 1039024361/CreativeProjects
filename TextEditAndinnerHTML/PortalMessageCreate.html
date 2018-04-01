@@ -15,8 +15,11 @@
         <input type="button" value="Copy">
         <input type="button" value="Cut">
         <input type="button" value="Paste">
-        <label for="forecolor">字体颜色</label><input type="color" value="#000000" id="forecolor">
-        <label for="backcolor">背景颜色</label><input type="color" value="#ffffff" id="backcolor">
+        <input type="button" value="justifyleft">
+        <input type="button" value="justifycenter">
+        <input type="button" value="justifyright">
+        <label for="forecolor">color</label><input type="color" value="#000000" id="forecolor">
+        <label for="backcolor">backcolor</label><input type="color" value="#ffffff" id="backcolor">
     </div>
     <div id="divComplex">
         <input type="button" value="Create Link" id="btnCreateLink">
@@ -30,9 +33,9 @@
         <input type="button" value="Italic">
         <input type="button" value="Underline">
     </div>
-    <div id="richedit" style="height: 600px; width: 800px; border: 2px inset #CCCCCC;" contenteditable></div>
-    <input type="hidden" name="comments" value="">
-    <input type="submit" value="Submit Form">
+    <div id="richedit" style="height: 400px; width: 800px; border: 2px inset #CCCCCC;" contenteditable></div>
+    <input type="submit" value="Submit Form"><br>
+    <input type="text" name="comments" value="" style="height: 200px; width: 800px">
 </form>
 <script type="text/javascript">
     var EventUtil = {
@@ -154,6 +157,13 @@
 
         EventUtil.addHandler(window, "load", function(){
             richEdit.focus();
+        });
+
+        EventUtil.addHandler(document.forms[0], "submit", function(){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+
+            target.elements["comments"].value = richEdit.innerHTML;
         });
 
         EventUtil.addHandler(document.forms[0], "submit", function(){
