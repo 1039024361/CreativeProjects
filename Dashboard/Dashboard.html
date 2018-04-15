@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画板</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        canvas{
+            /*height: 100%;*/
+            /*width: 100%;*/
+            /*margin: 50px;*/
+            border: 1px solid #CCCCCC;
+        }
+    </style>
+    <script src="EventUtil.js"></script>
+</head>
+<body>
+
+    <canvas id="dashboard" width="800px" height="600px"></canvas>
+    <br><button id="createImg">生成图照片</button>
+    <script>
+
+        var dashboard = document.getElementById("dashboard");
+        var createImg = document.getElementById("createImg");
+        var drawFlag = 0;   //表明是否按下鼠标左键
+
+        if(dashboard.getContext){
+            var context = dashboard.getContext("2d");
+        }
+
+        function draw(x, y){
+            context.lineTo(x,y);
+            context.stroke();
+        }
+
+//        EventUtil.addHandler(dashboard, "mousemove", function(event){
+//            console.log(`pageX: ${event.pageX} pageY: ${event.pageY}`);
+//            event = EventUtil.getEvent(event);
+//            draw(event.pageX, event.pageY);
+//        });
+//
+//        EventUtil.addHandler(dashboard, "mousedown", function(event){
+//            context.beginPath();
+//        });
+        EventUtil.addHandler(dashboard, "mousedown", function(event){
+            console.log(`clientX: ${event.clientX} clientY: ${event.clientY}`);
+            drawFlag = 1;
+
+            context.beginPath();
+            context.moveTo(event.clientX, event.clientY);
+            EventUtil.addHandler(dashboard, "mousemove", function(event){
+                if(drawFlag == 1){
+                    console.log(`clientX: ${event.clientX} clientY: ${event.clientY}`);
+                    event = EventUtil.getEvent(event);
+                    draw(event.clientX, event.clientY);
+                }
+            });
+        });
+        EventUtil.addHandler(dashboard, "mouseup", function(event){
+            drawFlag = 0;
+        });
+        EventUtil.addHandler(createImg, "click", function(event){
+            var imgDta = dashboard.toDataURL("img/png");
+            var img = document.createElement("img");
+            img.src = imgDta;
+            document.body.appendChild(img);
+        });
+    </script>
+</body>
+</html>
