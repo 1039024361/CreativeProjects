@@ -159,14 +159,14 @@
             richEdit.focus();
         });
 
-        EventUtil.addHandler(document.forms[0], "submit", function(){
-            event = EventUtil.getEvent(event);
-            var target = EventUtil.getTarget(event);
+//        EventUtil.addHandler(document.forms[0], "submit", function(event){
+//            event = EventUtil.getEvent(event);
+//            var target = EventUtil.getTarget(event);
+//
+//            target.elements["comments"].value = richEdit.innerHTML;
+//        });
 
-            target.elements["comments"].value = richEdit.innerHTML;
-        });
-
-        EventUtil.addHandler(document.forms[0], "submit", function(){
+        EventUtil.addHandler(document.forms[0], "submit", function(event){
             event = EventUtil.getEvent(event);
             var target = EventUtil.getTarget(event);
 
