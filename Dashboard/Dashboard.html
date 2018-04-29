@@ -80,14 +80,12 @@
         EventUtil.addHandler(dashboard, "touchmove", function(event){
             //if(drawFlag == 1){
                 event = EventUtil.getEvent(event);
+                event.preventDefault();   //阻止滚动
                 console.log(`clientX: ${event.changedTouches[0].clientX} clientY: ${event.changedTouches[0].clientY}`);
                 draw(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
             //}
         });
 
-//        EventUtil.addHandler(dashboard, "mouseup", function(event){
-//            drawFlag = 0;
-//        });
 
         EventUtil.addHandler(createImg, "click", function(event){
             var imgDta = dashboard.toDataURL("img/png");
