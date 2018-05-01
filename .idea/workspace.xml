@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Dashboard/Dashboard.html" afterPath="$PROJECT_DIR$/Dashboard/Drawingboard.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,11 +25,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Win7DrawingBoard.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Win7DrawingBoard.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
+            <state relative-caret-position="97">
+              <caret line="6" column="55" selection-start-line="6" selection-start-column="55" selection-end-line="6" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Win7DrawingBoard.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -56,6 +65,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -70,6 +80,7 @@
         <option value="$PROJECT_DIR$/Dashboard/README.md" />
         <option value="$PROJECT_DIR$/Dashboard/Dashboard.html" />
         <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html" />
+        <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.css" />
       </list>
     </option>
   </component>
@@ -80,10 +91,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
+    <option name="x" value="-1374" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1096" />
+    <option name="width" value="1382" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -190,6 +201,7 @@
     <property name="JavaScriptPreferStrict" value="false" />
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -277,18 +289,18 @@
       <workItem from="1524279965943" duration="1086000" />
       <workItem from="1524978048132" duration="3839000" />
       <workItem from="1525077221660" duration="11015000" />
-      <workItem from="1525152627940" duration="1789000" />
+      <workItem from="1525152627940" duration="7153000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44147000" />
+    <option name="totallyTimeSpent" value="49511000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-1374" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10590095" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14955357" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -658,8 +670,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="62" column="28" selection-start-line="62" selection-start-column="28" selection-end-line="62" selection-end-column="28" />
+        <state relative-caret-position="97">
+          <caret line="6" column="55" selection-start-line="6" selection-start-column="55" selection-end-line="6" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="104" column="30" selection-start-line="104" selection-start-column="30" selection-end-line="104" selection-end-column="30" />
           <folding />
         </state>
       </provider>
