@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画图</title>
+    <link rel="icon" href="images/paint.ico">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        div{
+            border: none;
+            display: inline-block;
+        }
+        /*菜单栏样式*/
+        #menu{
+            width: 100%;
+            height: 104px;
+            /*background-color: #dee8f5;*/
+            /*border-bottom: 1px ridge #CCCCCC;   !*win7中3D外观如何实现？*!*/
+            background: linear-gradient(to bottom, rgba(222, 232, 245, 0.3), rgba(222, 232, 245, 1) 20%, rgba(222, 232, 245, 1) 97%, rgb(177, 187, 203) 100%); /* 标准的语法 */;
+        }
+
+        /*剪切板*/
+        #cutBox{
+            width: 102px;
+            /*text-align: center;*/
+            font-size: 0;
+        }
+        #cutBox-up-left{
+            width: 44px;
+            height: 82px;
+            vertical-align: top;
+            text-align: center;
+            margin-left: 5px;
+        }
+        #cutBox-up-right{
+            vertical-align: top;
+            height: 77px;
+            margin-top: 5px;
+            background: url(images/cut-copy.gif) 0 0 no-repeat;
+        }
+        .fontType{
+            font-family: '华文宋体','宋体', sans-serif;
+            font-size: 14px;
+            text-align: center;
+        }
+        .parse, .cut, .copy{
+            display: inline-block;
+            line-height: 22px;
+        }
+        .title{
+            color: rgba(99, 100, 111, 0.74);
+        }
+        .img-wrap, .parse-wrap{
+            /*display: flex;*/
+            width: 41px;
+            height: 41px;
+        }
+        #cutBox-up-left img{
+            margin: 5px 7px;
+            padding: 0;
+            /*margin: 0;*/
+        }
+        #cutBox-down{
+            width: 102px;
+        }
+        .cut, .copy{
+            padding-left: 22px;
+        }
+
+        #cutBox-up-right .cut{
+            background-position: 0 0;
+        }
+        #cutBox-up-right .copy{
+            background-position: 0 -21px;
+        }
+        .parse:after{
+            content: "";
+            border-top: 3px solid black;;
+            border-left: 3px solid transparent;
+            border-right: none;
+            border-bottom: 3px solid transparent;
+            transform: translate(0, -50%);
+        }
+    </style>
+</head>
+<body>
+<div id="menu">
+    <!--剪贴板-->
+    <div id="cutBox">
+        <div id="cutBox-up">
+            <div id="cutBox-up-left">
+                <div class="img-wrap"><img src="images/paste1.jpg" height="31" width="27"/></div><br>
+                <div class="parse-wrap"><span class="parse fontType">粘贴</span></div>
+            </div>
+            <div id="cutBox-up-right">
+                <span class="fontType cut">剪切</span><br>
+                <span class="fontType copy">复制</span>
+            </div>
+        </div>
+        <div id="cutBox-down" class="fontType title">剪贴板</div>
+    </div>
+</div>
+</body>
+</html>
