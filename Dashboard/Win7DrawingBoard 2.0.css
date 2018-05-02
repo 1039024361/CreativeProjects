@@ -18,74 +18,92 @@ div{
     background: linear-gradient(to bottom, rgba(222, 232, 245, 0.3), rgba(222, 232, 245, 1) 20%, rgba(222, 232, 245, 1) 97%, rgb(177, 187, 203) 100%); /* 标准的语法 */;
 }
 
-/*剪切板*/
+/*剪切板,第一栏样式*/
 #cutBox{
+    width: 102px;
+}
+
+.cut-box-wrap{
     width: 102px;
     /*text-align: center;*/
     font-size: 0;
-    vertical-align: top;
+    /*vertical-align: top;*/
 }
-#cutBox-up-left{
-    width: 44px;
+
+.left-box-2parts{
     height: 82px;
-    vertical-align: top;
-    text-align: center;
-    margin-left: 5px;
     border-radius: 3px;
-    /*border: 1px solid transparent;*/
 }
-#cutBox-up-right{
+.right-box-parts{
     vertical-align: top;
-    height: 77px;
-    margin-top: 5px;
-    /*background: url(images/cut-copy.gif) 0 0 no-repeat;*/
+    height: 82px;
 }
+
+/*字体类型，包括正文（如剪切、粘贴、复制）跟title（如剪切板）*/
 .fontType{
     font-family: '华文宋体','宋体', sans-serif;
     font-size: 13px;
     color: #272664;
-    text-align: center;
+    /*text-align: center;*/
 }
-.parse, .cut, .copy{
+/*.parse, .cut, .copy{*/
+    /*display: inline-block;*/
+    /*line-height: 20px;*/
+/*}*/
+
+.span-inline-block{
     display: inline-block;
     line-height: 20px;
 }
+
+/*如剪贴板、图像等*/
 .title{
     color: rgba(99, 100, 111, 0.74);
+    text-align: center;
+    width: 100%;
+    padding-top: 5px;
 
 }
-.img-wrap, .parse-wrap{
+
+/*设置图标与左外边界间距*/
+.cut-box-wrap-inside{
+    margin-left: 5px;
+}
+
+.img-wrap, .word-wrap{
     position: relative;
-    /*display: flex;*/
     width: 41px;
     height: 41px;
     border: 1px solid transparent;
-}
-.img-wrap img{
-    margin: 5px 7px 0 7px;
-    padding: 0;
-    /*margin: 0;*/
-}
-#cutBox-down{
-    width: 102px;
-    padding-top: 5px;
-}
-.cut, .copy{
-    /*padding-left: 22px;*/
-    border: 1px solid transparent;
-    /*vertical-align: middle;*/
+    border-radius: 3px;
 }
 
-#cutBox-up-right .cut{
-    background-position: 0 0;
+.img-wrap{
+    display: flex;
 }
-#cutBox-up-right .copy{
-    background-position: 0 -21px;
+
+.word-wrap{
+    text-align: center;
 }
-.parse{
+
+.img-wrap-img{
+    margin: auto;   /*flex居中显示*/
+}
+
+/*.cut, .copy{*/
+/*border: 1px solid transparent;*/
+/*}*/
+
+/*#cutBox-up-right .cut{*/
+    /*background-position: 0 0;*/
+/*}*/
+/*#cutBox-up-right .copy{*/
+    /*background-position: 0 -21px;*/
+/*}*/
+.img-down-word{
     position: relative;
 }
-.parse:after{
+.img-down-word:after{
     position: absolute;
     top: 110%;
     left: 50%;
@@ -97,64 +115,53 @@ div{
     transform: translate(-50% ,0);
 }
 
+/*定义每个主题之间的分隔线*/
 .borderDef{
     height: 90px;
     width: 0;
-    /*margin: 6px;*/
     margin-top: 6px;
-    /*background-color: red;*/
     border-left: 1px inset rgba(226, 236, 249, 0.6);  /*#dee8f5*/
-    /*border-right: 1px groove #dee8f5;  !*#dee8f5*!*/
 }
 
 /*hover效果*/
-#cutBox-up-left:hover{
+.left-box-2parts:hover{
     background: linear-gradient(to bottom, rgba(255, 247, 196, 0.5), rgba(255, 201, 104, 0.7) 50%, rgba(255, 247, 196, 0.5) 100%);
-    /*background: ;*/
-    /*border-radius: 3px;*/
-    /*border: 1px solid #f0bd63;*/
 }
 
-#cutBox-up-left:hover .img-wrap{
-    /*border-radius: 3px;*/
-    /*border-bottom: 1px solid #f0bd63;*/
-    border-radius: 3px;
+.left-box-2parts:hover .img-wrap{
     border: 1px solid #f0bd63;
 }
 
-#cutBox-up-left:hover .parse-wrap{
-    /*border-radius: 3px;*/
-    /*border-bottom: 1px solid #f0bd63;*/
-    border-radius: 3px;
+.left-box-2parts:hover .word-wrap{
     border: 1px solid #f0bd63;
 }
 /*粘贴图标hover效果*/
-#cutBox-up-left .img-wrap:hover{
+.left-box-2parts .img-wrap:hover{
     background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 65%, rgb(255, 208, 109) 65%, rgba(255, 208, 109,1) 100%);
     /*background: ;*/
 }
 
 /*粘贴字符的hover效果*/
-#cutBox-up-left .parse-wrap:hover{
+.left-box-2parts .word-wrap:hover{
     background: linear-gradient(to bottom, rgba(255, 208, 109, 1), rgba(255, 201, 104, 0));
 }
 
-.cutBox-up-right-cut:hover, .cutBox-up-right-copy:hover{
+.right-box-parts-list:hover{
     background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
     border-radius: 3px;
     border: 1px solid #f0bd63;
 }
 
-.cutBox-up-right-cut, .cutBox-up-right-copy{
+.right-box-parts-list{
     border: 1px solid transparent;
 }
 
 /*cut效果*/
-#cutBox-up-right img, span{
+.right-box-parts-list img, span{
     vertical-align: middle;
 }
 
-#cutBox-up-right img{
+.right-box-parts-list img{
     padding-right: 3px;
     margin-left: 3px;
 }
@@ -169,14 +176,16 @@ div{
     width: 123px;
     border: 1px solid #c8d1de;
     /*z-index: -1;*/
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;*/
     box-shadow: 4px 4px 2PX rgba(59, 59, 59, 0.5);
     /*vertical-align: middle;*/
     text-align: left;
     padding: 1px;
+    background: linear-gradient(to right, #f3f7fb, #f3f7fb 25%, rgb(170, 179, 195) 25%, rgb(170, 179, 195) 26%, #FFFFFF 26%,#FFFFFF 100%);
 }
 
-.parse-wrap:hover .drop{
+/*箭头下拉样式*/
+.word-wrap:hover .drop{
     display: block;
 }
 
@@ -189,7 +198,6 @@ div{
 
 .drop-source,.drop-parse{
     width: 100%;
-    /*height: 27px;*/
     border: 1px solid transparent;
 }
 
@@ -201,14 +209,10 @@ div{
 
 .drop img{
     /*height: 27px;*/
-    width: 30px;
-    padding: 6px 7px 6px 7px;
+    /*width: 37px;*/
+    padding: 6px 14px 6px 7px;
 }
-.drop span{
-    /*height: 27px;*/
-    /*width: 28px;*/
-    padding: 6px 7px 6px 7px;
-}
+
 
 .drop .underline{
     text-decoration: underline;
