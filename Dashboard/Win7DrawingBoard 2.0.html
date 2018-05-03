@@ -11,22 +11,66 @@
     <!--剪贴板-->
     <div id="cutBox" class="cut-box-wrap">
         <div class="cut-box-wrap-inside">
-            <div id="cutBox-up-left" class="left-box-2parts">
+            <div class="left-box-2parts">
                 <div class="img-wrap"><img src="images/paste1.gif" height="31" width="27" class="img-wrap-img"/></div>
                 <div class="word-wrap"><span class="img-down-word fontType span-inline-block">粘贴</span>
                     <div class="drop">
-                        <div class="drop-parse"><img src="images/drop-parse.gif"/><span class="fontType span-inline-block">粘贴(<span class="underline">P</span>)</span></div>
-                        <div class="drop-source"><img src="images/drop-source.gif"/><span class="fontType span-inline-block">粘贴来源(<span class="underline">F</span>)</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/drop-parse.gif"/><span class="fontType span-inline-block">粘贴(<span class="underline">P</span>)</span></div>
+                            <div class="drop-list"><img src="images/drop-source.gif"/><span class="fontType span-inline-block">粘贴来源(<span class="underline">F</span>)</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="cutBox-up-right" class="right-box-parts">
-                <div class="right-box-parts-list"><img src="images/cut1.gif" height="18" width="17"/><span class="fontType span-inline-block cut">剪切</span></div>
+            <div class="right-box-parts">
+                <div class="right-box-parts-list"><img src="images/cut1.gif" height="18" width="17"/><span class="fontType span-inline-block">剪切</span></div>
                 <br>
-                <div class="right-box-parts-list"><img src="images/copy.gif" height="18" width="17"/><span class="fontType span-inline-block copy">复制</span></div>
+                <div class="right-box-parts-list"><img src="images/copy.gif" height="18" width="17"/><span class="fontType span-inline-block">复制</span></div>
             </div>
         </div>
-        <div id="cutBox-down" class="fontType title">剪贴板</div>
+        <div class="fontType title">剪贴板</div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="imgBox" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts">
+                <div class="img-wrap"><div class="selectBox"></div></div>
+                <div class="word-wrap"><span class="img-down-word fontType span-inline-block">选择</span>
+                    <div class="drop">
+                        <div class="drop-title"><span class="fontType span-inline-block bold">选择形状</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><div class="recselect"></div><span class="fontType span-inline-block">矩形选择(<span class="underline">R</span>)</span></div>
+                            <div class="drop-list"><img src="images/circle.gif"/><span class="fontType span-inline-block">自由图形选择(<span class="underline">F</span>)</span></div>
+                        </div>
+                        <div class="drop-title"><span class="fontType span-inline-block bold">选择选项</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/selectall.gif"/><span class="fontType span-inline-block">全选(<span class="underline">A</span>)</span></div>
+                            <div class="drop-list"><img src="images/oppselect.gif"/><span class="fontType span-inline-block">反向选择(<span class="underline">I</span>)</span></div>
+                            <div class="drop-list"><img src="images/delect.gif"/><span class="fontType span-inline-block">删除(<span class="underline">D</span>)</span></div>
+                            <div class="drop-list"><div class="recopicity"></div><span class="fontType span-inline-block">透明选择(<span class="underline">T</span>)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-box-parts">
+                <div class="right-box-parts-list"><img src="images/tailor.gif" height="18" width="17"/><span class="fontType span-inline-block">裁剪</span></div>
+                <br>
+                <div class="right-box-parts-list"><img src="images/resize.gif" height="18" width="17"/><span class="fontType span-inline-block">重新调整大小</span></div>
+                <br>
+                <div class="right-box-parts-list rotate"><img src="images/rotate.gif" height="18" width="17"/><span class="fontType span-inline-block">旋转</span>
+                    <div class="drop">
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/r90.gif"/><span class="fontType span-inline-block">向右旋转 90 度(<span class="underline">R</span>)</span></div>
+                            <div class="drop-list"><img src="images/l90.gif"/><span class="fontType span-inline-block">向左旋转 90 度(<span class="underline">L</span>)</span></div>
+                            <div class="drop-list"><img src="images/180.gif"/><span class="fontType span-inline-block">旋转 180 度(<span class="underline">T</span>)</span></div>
+                            <div class="drop-list"><img src="images/hr.gif"/><span class="fontType span-inline-block">垂直翻转(<span class="underline">V</span>)</span></div>
+                            <div class="drop-list"><img src="images/vr.gif"/><span class="fontType span-inline-block">水平翻转(<span class="underline">H</span>)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fontType title">图像</div>
     </div>
     <div class="borderDef"></div>
 </div>

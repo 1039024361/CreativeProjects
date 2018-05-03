@@ -43,7 +43,7 @@ div{
 .fontType{
     font-family: '华文宋体','宋体', sans-serif;
     font-size: 13px;
-    color: #272664;
+    color: #395f98;
     /*text-align: center;*/
 }
 /*.parse, .cut, .copy{*/
@@ -117,9 +117,9 @@ div{
 
 /*定义每个主题之间的分隔线*/
 .borderDef{
-    height: 90px;
+    height: 96px;
     width: 0;
-    margin-top: 6px;
+    /*margin-top: 6px;*/
     border-left: 1px inset rgba(226, 236, 249, 0.6);  /*#dee8f5*/
 }
 
@@ -153,6 +153,7 @@ div{
 }
 
 .right-box-parts-list{
+    /*position: relative;*/
     border: 1px solid transparent;
 }
 
@@ -171,9 +172,9 @@ div{
     position: absolute;
     top: 100%;
     left: 0;
-    display: none;
+    display: block;
     /*height: 56px;*/
-    width: 123px;
+
     border: 1px solid #c8d1de;
     /*z-index: -1;*/
     /*background-color: #FFFFFF;*/
@@ -181,33 +182,51 @@ div{
     /*vertical-align: middle;*/
     text-align: left;
     padding: 1px;
-    background: linear-gradient(to right, #f3f7fb, #f3f7fb 25%, rgb(170, 179, 195) 25%, rgb(170, 179, 195) 26%, #FFFFFF 26%,#FFFFFF 100%);
+    background-color: #FFFFFF;
+    z-index: 2;
+
 }
+
+#cutBox .drop{
+    width: 123px;
+}
+
+#imgBox  .left-box-2parts .drop{
+    width: 145px;
+}
+
+#imgBox  .right-box-parts .drop{
+    width: 156px;
+}
+
+.drop-wrap{
+    background: linear-gradient(to right, #f3f7fb, #f3f7fb 28px, rgb(170, 179, 195) 28px, rgb(170, 179, 195) 29px, #FFFFFF 29px,#FFFFFF 100%);
+}
+
+
 
 /*箭头下拉样式*/
 .word-wrap:hover .drop{
     display: block;
 }
 
-.drop-parse img,span{
-    vertical-align: middle;
-}
-.drop-source img,span{
+.drop-list img,span{
     vertical-align: middle;
 }
 
-.drop-source,.drop-parse{
+
+.drop-list{
     width: 100%;
     border: 1px solid transparent;
 }
 
-.drop-source:hover,.drop-parse:hover{
+.drop-list:hover{
     background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
     border-radius: 3px;
     border: 1px solid #f0bd63;
 }
 
-.drop img{
+.drop-list img{
     /*height: 27px;*/
     /*width: 37px;*/
     padding: 6px 14px 6px 7px;
@@ -224,4 +243,63 @@ div{
 }
 
 
+/*第二栏，图像*/
+#imgBox{
+    width: 152px;
+}
 
+.selectBox{
+    width: 30px;
+    height: 26px;
+    border: 1px dotted #272664;
+    margin: auto;
+    border-radius: 1px;
+}
+
+/*选择下拉*/
+.drop-title{
+    /*display: block;*/
+    width: 100%;
+    text-align: left;
+    padding-left: 5px;
+    background-color: #ebf2f7;
+    opacity: 1;
+    font-weight: bold;
+    border-bottom: 1px inset rgba(226, 236, 249, 0.6);
+}
+
+.recselect{
+    width: 16px;
+    height: 16px;
+    border: 1px dotted #272664;
+    margin: 6px 14px 6px 7px;
+    vertical-align: middle;
+}
+
+/*t透明选择*/
+.recopicity{
+    width: 16px;
+    height: 16px;
+    border: 1px dotted transparent;
+    margin: 6px 14px 6px 7px;
+    vertical-align: middle;
+}
+
+/*旋转后下拉菜单*/
+.rotate{
+    position: relative;
+    /*width: 120%;*/
+    padding-right: 20px;
+}
+
+.rotate:after{
+    position: absolute;
+    top: 50%;
+    left: 55px;
+    content: "";
+    border-top: 3px solid black;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    transform: translate(-50% ,0);
+}
