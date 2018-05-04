@@ -133,10 +133,11 @@ div{
 
 /*定义每个主题之间的分隔线*/
 .borderDef{
-    height: 96px;
+    height: 93px;
     width: 0;
     /*margin-top: 6px;*/
     border-left: 1px inset rgba(226, 236, 249, 0.6);  /*#dee8f5*/
+    margin-bottom: 5px;
 }
 
 /*hover效果*/
@@ -188,7 +189,7 @@ div{
     position: absolute;
     top: 100%;
     left: 0;
-    display: block;
+    display: none;
     /*height: 56px;*/
 
     border: 1px solid #c8d1de;
@@ -378,6 +379,25 @@ div{
     background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
 }
 
+/*刷子栏*/
 #brush .drop{
-    width: 164px;
+    width: 172px;
+}
+
+.brush-drop-wrap-img{
+    border-bottom: 1px solid #e5edf7;
+    margin-bottom: 2px;
+}
+
+.brush-drop-wrap-img img{
+    width: 42px;
+    height: 42px;
+    padding: 4px;
+    border: 1px solid transparent;
+}
+
+.brush-drop-wrap-img img:hover{
+    border-radius: 1px;
+    border: 1px solid #f0bd63;
+    background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
 }
