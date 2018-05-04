@@ -172,7 +172,7 @@ div{
     position: absolute;
     top: 100%;
     left: 0;
-    display: block;
+    display: none;
     /*height: 56px;*/
 
     border: 1px solid #c8d1de;
@@ -230,6 +230,7 @@ div{
     /*height: 27px;*/
     /*width: 37px;*/
     padding: 6px 14px 6px 7px;
+    margin: 0;
 }
 
 
@@ -302,4 +303,49 @@ div{
     border-right: 3px solid transparent;
     border-bottom: 3px solid transparent;
     transform: translate(-50% ,0);
+}
+
+.rotate:hover .drop{
+    display: block;
+}
+
+/*工具栏*/
+#tool{
+    /*width: 81px;*/
+}
+
+.tool-wrap{
+    /*border: 1px solid rgba(190, 198, 210, 0.6);*/
+    /*border-radius: 1px;*/
+    display: flex;
+    flex-flow: row nowrap;
+    /*width: 66px;*/
+}
+
+.tool-wrap-img{
+    width: 22px;
+    height: 22px;
+    display: flex;
+    border: 1px inset rgba(201, 210, 223, 0.6);
+    border-radius: 1px;
+    background: linear-gradient(to bottom, rgba(222, 232, 245, 0.4), rgba(222, 232, 245, 0.4) 40%, rgb(222, 232, 245) 40%, rgb(222, 232, 245) 100%);
+}
+
+/*.middle{*/
+    /*width: 24px;*/
+    /*height: 22px;*/
+    /*display: flex;*/
+    /*border-left: 1px ridge rgba(226, 236, 249, 0.6);*/
+    /*border-right: 1px groove rgba(226, 236, 249, 0.6);*/
+    /*border-radius: 1px;*/
+/*}*/
+
+.tool-wrap-img img{
+    margin: auto;
+}
+
+.tool-wrap-img:hover{
+    border-radius: 1px;
+    border: 1px solid #f0bd63;
+    background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
 }
