@@ -180,7 +180,7 @@ div{
 }
 
 .right-box-parts-list img{
-    padding-right: 3px;
+    /*padding-right: 3px;*/
     margin-left: 3px;
 }
 
@@ -188,8 +188,8 @@ div{
 .drop{
     position: absolute;
     top: 100%;
-    left: 0;
-    display: none;
+    left: -1px;
+    display: block;
     /*height: 56px;*/
 
     border: 1px solid #c8d1de;
@@ -246,8 +246,8 @@ div{
 .drop-list img{
     /*height: 27px;*/
     /*width: 37px;*/
-    padding: 6px 14px 6px 7px;
-    margin: 0;
+    margin: 6px 14px 6px 7px;
+    /*margin: 0;*/
 }
 
 
@@ -400,4 +400,198 @@ div{
     border-radius: 1px;
     border: 1px solid #f0bd63;
     background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
+}
+
+
+/*形状栏*/
+.shape-wrap{
+    border: 1px solid #c7d2e2;
+    margin-top: 5px;
+}
+
+.shape-wrap-left{
+    position: relative;   /*设置滚动条的相对定位*/
+    display: flex;
+    flex-flow: row nowrap;
+    /*width: 158px;*/
+}
+
+.shape-wrap-left-img{
+    width: 143px;
+    height: 60px;
+    display: flex;
+    flex-flow: row wrap;
+    overflow: hidden;
+    background-color: #f3f7fc;
+}
+
+.shape-wrap-left:hover .shape-wrap-left-img{
+    background-color: #f6faff;
+}
+
+.shape-img-wrap{
+    width: 20px;
+    height: 20px;
+    border: 1px solid transparent;
+}
+
+.shape-img-wrap:hover{
+    border-radius: 1px;
+    border: 1px solid #f0bd63;
+    background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
+}
+
+/*滚动条样式*/
+.scroll{
+    /*display: flex;*/
+    flex-flow: column nowrap;
+    width: 15px;
+    height: 60px;
+    background: linear-gradient(to right, #a5adb8, #dce6f4 2px, #dce6f4 15px);;
+}
+.scroll-unit{
+    display: flex;
+    width: 15px;
+    height: 20px;
+    border: 1px solid transparent;
+}
+
+.shape-wrap-left:hover .scroll-unit-nohover{
+    border: 1px solid rgb(186, 195, 207);
+    border-radius: 1px;
+    background: linear-gradient(to bottom, rgb(248, 248, 248), rgb(222, 232, 245) 50%, rgb(248, 248, 248) 100%);
+}
+
+.scroll-unit:hover{
+    border-radius: 1px;
+    border: 1px solid #f0bd63;
+    background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
+}
+
+/*这里会比较巧妙*/
+.scroll-arrow{
+    margin: auto;
+}
+
+.arrow-up{
+    border-bottom: 3px solid black;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 3px solid transparent;
+    /*transform: translate(-50% ,0);*/
+}
+
+.arrow-down{
+    border-top: 3px solid black;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    /*transform: translate(-50% ,0);*/
+}
+.arrow-drop{
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
+}
+.arrow-drop-arrow{
+    margin: auto;
+    /*height: 10px;*/
+    border-top: 3px solid black;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    /*transform: translate(-50% ,0);*/
+}
+
+.arrow-drop-line{
+    margin: 2px auto;
+    width: 8px;
+    border-bottom: 1px solid black;
+
+}
+#shape{
+    width: 228px;
+}
+
+#shape .right-box-parts .drop {
+    width: 98px;
+}
+
+/*线粗细选择*/
+#line-weight .left-box-2parts{
+    height: 78px;
+    width: 42px;
+    text-align: center;
+    margin-top: 5px;
+    position: relative;
+}
+
+.line-weight-img-wrap{
+    /*height: 78px;*/
+    width: 42px;
+    margin-bottom: 5px;
+}
+
+#line-weight .drop{
+    height: 165px;
+    width: 132px;
+    padding: 1px;
+}
+
+.line-1{
+    width: 32px;
+    border-color: #120c8c;
+    border-style: solid;
+    margin: 0 0 4px;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+.px1{
+    border-bottom-width: 1px;
+}
+
+.px2{
+    border-bottom-width: 2px;
+}
+
+.px4{
+    border-bottom-width: 4px;
+}
+
+.px6{
+    border-bottom-width: 7px;
+}
+
+.line-arrow-down{
+    margin: 0 5px;
+    border-top: 3px solid black;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    vertical-align: middle;
+}
+
+.small-line-height{
+    line-height: 16px;
+}
+
+.drop-line-wrap{
+    display: flex;
+    width: 128px;
+    height: 40px;
+    border: 1px solid transparent;
+}
+
+.drop-line-wrap:hover{
+    border-radius: 2px;
+    border: 1px solid #f0bd63;
+    background: linear-gradient(to bottom, rgba(253, 229, 203, 0.8), rgba(253, 229, 203, 0.8) 40%, rgb(255, 208, 109) 40%, rgb(255, 247, 196) 100%);
+}
+
+.drop .line-1{
+    width: 124px;
+    margin: auto;
+    /*margin: 0 0 4px;*/
 }
