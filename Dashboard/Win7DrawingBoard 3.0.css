@@ -14,8 +14,71 @@ div{
 /*主页、查看菜单栏样式*/
 #top-menu{
     height: 29px;
-    border: 1px solid #acb2bf;
+    width: 100%;
+    border-bottom: 1px solid #c5ccd9;
+    background-color: #dfe9f5;
+    padding-top: 1px;
+    z-index: 0;
 }
+.top-menu-drop{
+    position: relative;
+    height: 23px;
+
+}
+
+.top-menu-drop-wrap{
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    text-align: center;
+    width: 58px;
+    height: 23px;
+    border-top-right-radius: 5px;
+    border: 1px solid #3056FF;
+    background: linear-gradient(to bottom, rgba(49, 116, 255, 0.3), rgba(49, 116, 255, 0.9) 50%, rgb(48, 86, 255) 50%, rgba(49, 116, 255, 0.3) 100%); /* 标准的语法 */;
+    z-index: 2;
+}
+
+.top-menu-drop img{
+    vertical-align: top;
+    margin: 5px 2px 5px 2px;
+}
+
+.top-menu-drop-arrow{
+    margin: 8px 2px;
+    border-top: 5px solid #dfe9f5;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    vertical-align: top;
+}
+
+.top-menu-drop-down{
+    width: 514px;
+    height: 537px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    /*height: 56px;*/
+
+    border: 1px solid #c8d1de;
+    /*z-index: -1;*/
+    /*background-color: #FFFFFF;*/
+    box-shadow: 4px 4px 2px rgba(59, 59, 59, 0.5);
+    /*vertical-align: middle;*/
+    text-align: left;
+    padding: 1px;
+    background-color: #FFFFFF;
+    z-index: 1;
+}
+
+
+.top-menu-drop:hover{
+    background: linear-gradient(to bottom, rgba(49, 116, 255, 0.1), rgba(49, 116, 255, 0.9) 50%, rgb(48, 86, 255) 50%, rgba(49, 116, 255, 0.1) 100%);
+}
+
 
 
 /*菜单栏样式*/
@@ -206,7 +269,7 @@ div{
     border: 1px solid #c8d1de;
     /*z-index: -1;*/
     /*background-color: #FFFFFF;*/
-    box-shadow: 4px 4px 2PX rgba(59, 59, 59, 0.5);
+    box-shadow: 4px 4px 2px rgba(59, 59, 59, 0.5);
     /*vertical-align: middle;*/
     text-align: left;
     padding: 1px;
