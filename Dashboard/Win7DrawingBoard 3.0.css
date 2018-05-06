@@ -11,6 +11,13 @@ div{
     border: none;
     display: inline-block;
 }
+/*主页、查看菜单栏样式*/
+#top-menu{
+    height: 29px;
+    border: 1px solid #acb2bf;
+}
+
+
 /*菜单栏样式*/
 #menu{
     width: 100%;
@@ -698,7 +705,7 @@ div{
 /*绘图区域*/
 #draw-area{
     position: absolute;
-    top: 110px;
+    top: 139px;
     left: 0;
     bottom: 28px;
     width: 100%;
