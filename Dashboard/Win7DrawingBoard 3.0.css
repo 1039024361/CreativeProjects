@@ -2,6 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-size: 0;   /*使用内联进行布局，将字号设置为0，避免产生不必要间距*/
 }
 /*body{*/
     /*background-color: #d2dbea;*/
@@ -54,7 +55,7 @@ div{
 }
 
 .top-menu-drop-down{
-    width: 514px;
+    width: 517px;
     height: 537px;
 
     position: absolute;
@@ -69,17 +70,50 @@ div{
     box-shadow: 4px 4px 2px rgba(59, 59, 59, 0.5);
     /*vertical-align: middle;*/
     text-align: left;
-    padding: 1px;
+    /*padding: 1px;*/
     background-color: #FFFFFF;
     z-index: 1;
+    font-size: 0;
 }
 
 
-.top-menu-drop:hover{
+.top-menu-drop:hover .top-menu-drop-wrap{
+    height: 25px;
+    border-radius: 0;
     background: linear-gradient(to bottom, rgba(49, 116, 255, 0.1), rgba(49, 116, 255, 0.9) 50%, rgb(48, 86, 255) 50%, rgba(49, 116, 255, 0.1) 100%);
 }
 
+.top-menu-drop-down-top{
+    width: 100%;
+    height: 25px;
+    /*border: 1px solid #a4adb6;*/
+    /*border: 1px solid rgb(186, 195, 207);*/
+    background: linear-gradient(to bottom, rgb(239, 247, 254), rgb(239, 247, 254) 50%, rgba(220, 231, 245, 0.8) 50%, rgba(220, 231, 245, 0.8) 100%);
+    margin: 0;
+}
 
+.top-menu-drop-down-left{
+    width: 186px;
+    height: 497px;
+    border-top: 1px solid #a4adb6;
+    border-right: 2px groove #d0dbe4;
+    border-bottom: 1px solid #a4adb6;
+    background-color: #fcfcfc;
+}
+
+.top-menu-drop-down-right{
+    width: 329px;
+    height: 497px;
+    border-top: 1px solid #a4adb6;
+    border-bottom: 1px solid #a4adb6;
+    background-color: #eff5fa;
+}
+
+.top-menu-drop-down-down{
+    width: 100%;
+    height: 18px;
+    border: 1px solid #a4adb6;
+}
 
 /*菜单栏样式*/
 #menu{
@@ -212,6 +246,8 @@ div{
     /*margin-top: 6px;*/
     border-left: 1px inset rgba(226, 236, 249, 0.6);  /*#dee8f5*/
     margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 /*hover效果*/
