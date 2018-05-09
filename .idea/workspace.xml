@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.css" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,8 +27,8 @@
             <file leaf-file-name="Win7DrawingBoard 3.0.css" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.css">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="511">
-                    <caret line="1060" column="9" selection-start-line="1060" selection-start-column="9" selection-end-line="1060" selection-end-column="9" />
+                  <state relative-caret-position="170">
+                    <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
                     <folding />
                   </state>
                 </provider>
@@ -253,12 +252,12 @@
       <workItem from="1525504133305" duration="9222000" />
       <workItem from="1525570577286" duration="21269000" />
       <workItem from="1525652917051" duration="13742000" />
-      <workItem from="1525787491304" duration="7501000" />
+      <workItem from="1525787491304" duration="8047000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166283000" />
+    <option name="totallyTimeSpent" value="166829000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
@@ -638,8 +637,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="1060" column="9" selection-start-line="1060" selection-start-column="9" selection-end-line="1060" selection-end-column="9" />
+        <state relative-caret-position="170">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
           <folding />
         </state>
       </provider>

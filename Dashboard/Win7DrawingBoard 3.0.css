@@ -4,9 +4,9 @@
     box-sizing: border-box;
     font-size: 0;   /*使用内联进行布局，将字号设置为0，避免产生不必要间距*/
 }
-/*body{*/
-    /*background-color: #d2dbea;*/
-/*}*/
+body{
+    min-width: 904px;
+}
 
 div{
     border: none;
