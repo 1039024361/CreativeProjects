@@ -874,6 +874,14 @@ div{
 
 }
 
+/*绘图区域canvas*/
+#canvasBox{
+    background-color: #ffffff;
+    /*border: 1px solid #000000;*/
+    margin: 7px 0 0 7px;
+    box-shadow: 6px 6px 4px rgba(120, 120, 120, 0.5);
+}
+
 /*底部显示*/
 #bottom-area{
     position: absolute;
@@ -1007,3 +1015,4 @@ div{
 .ratio span{
     margin-left: 10px;
 }
+
