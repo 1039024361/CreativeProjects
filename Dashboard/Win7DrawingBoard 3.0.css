@@ -1099,3 +1099,34 @@ div{
         left: 24px;
     }
 }
+
+/*控制小方框样式*/
+.canvas-wrap{
+    position: relative;
+}
+
+[class*="ctrl"]
+{
+    width: 5px;
+    height: 5px;
+    border: 1px solid #282828;
+    background-color: rgba(255, 255, 255, 0.51);
+    position: absolute;
+}
+
+.ctrl-right{
+    top: 50%;
+    left: 100%;
+    transform: translate(0 ,-50%);
+}
+
+.ctrl-corner{
+    top: 100%;
+    left: 100%;
+}
+
+.ctrl-bottom{
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}

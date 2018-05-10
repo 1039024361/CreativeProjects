@@ -33,6 +33,7 @@ function YConvert(Y){
 }
 
 EventUtil.addHandler(canvasBox, "mousedown", function(event){
+    console.log(`down`);
     console.log(`clientX: ${XConvert(event.clientX)} clientY: ${YConvert(event.clientY)}`);
     drawFlag = 1;
 
@@ -41,14 +42,16 @@ EventUtil.addHandler(canvasBox, "mousedown", function(event){
 });
 
 EventUtil.addHandler(canvasBox, "mousemove", function(event){
-    if(drawFlag == 1){
-        console.log(`clientX: ${XConvert(event.clientX)} clientY: ${YConvert(event.clientY)}`);
+    console.log(`button: ${EventUtil.getButton(event)}`);
+    if(drawFlag === 1){
+        // console.log(`clientX: ${XConvert(event.clientX)} clientY: ${YConvert(event.clientY)}`);
         event = EventUtil.getEvent(event);
         draw(XConvert(event.clientX), YConvert(event.clientY));
     }
 });
 
 EventUtil.addHandler(canvasBox, "mouseup", function(event){
+    console.log(`down`);
     drawFlag = 0;
 });
 
