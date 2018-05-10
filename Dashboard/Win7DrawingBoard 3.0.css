@@ -694,6 +694,15 @@ div{
     text-align: center;
     margin-top: 5px;
     position: relative;
+    border: 1px solid transparent;
+}
+
+#line-weight .left-box-2parts:hover{
+    border: 1px solid #f0bd63;
+}
+
+#line-weight .left-box-2parts:hover .drop{
+    display: block;
 }
 
 .line-weight-img-wrap{
