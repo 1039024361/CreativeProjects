@@ -312,6 +312,7 @@ div{
 
 /*hover效果*/
 .left-box-2parts:hover{
+    /*border: 1px solid #f0bd63;*/
     background: linear-gradient(to bottom, rgba(255, 247, 196, 0.5), rgba(255, 201, 104, 0.7) 50%, rgba(255, 247, 196, 0.5) 100%);
 }
 
@@ -330,6 +331,7 @@ div{
 
 /*粘贴字符的hover效果*/
 .left-box-2parts .word-wrap:hover{
+    border: 1px solid #f0bd63;
     background: linear-gradient(to bottom, rgba(255, 208, 109, 1), rgba(255, 201, 104, 0));
 }
 
@@ -587,7 +589,7 @@ div{
 }
 
 .shape-wrap-left-img{
-    width: 143px;
+    width: 142px;
     height: 60px;
     display: flex;
     flex-flow: row wrap;
@@ -599,10 +601,15 @@ div{
     background-color: #f6faff;
 }
 
-.shape-img-wrap{
+#shape .shape-img-wrap{
+    display: flex;
     width: 20px;
     height: 20px;
     border: 1px solid transparent;
+}
+
+#shape .shape-img-wrap img{
+    margin: auto;
 }
 
 .shape-img-wrap:hover{
@@ -785,6 +792,11 @@ div{
     text-align: center;
     padding-top: 5px;
     position: relative;
+    border: 1px solid transparent;
+}
+
+#colorbox .left-box-2parts:hover{
+    border: 1px solid #f0bd63;
 }
 
 .color-1{
