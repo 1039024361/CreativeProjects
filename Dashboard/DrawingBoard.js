@@ -22,56 +22,145 @@ function XConvert(X){
 function YConvert(Y){
     return Y -= 146;
 }
+//mousedown、mousemove、mouseup操作函数
+function createMouseEvent(target, func){
+    var ctrlEvent = {
+        flag: false,
+        startXY:[0, 0],
+        endXY:[0, 0]
+    };
 
-EventUtil.addHandler(canvasBox, "mousedown", function(event){
-    console.log(`down`);
-    console.log(`clientX: ${XConvert(event.clientX)} clientY: ${YConvert(event.clientY)}`);
-    drawFlag = 1;
+    (function(){
+        EventUtil.addHandler(target, "mousedown", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "mousemove", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "mouseup", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "touchstart", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "touchmove", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+    })();
 
-    context.beginPath();
-    context.moveTo(XConvert(event.clientX), YConvert(event.clientY));
-});
-
-EventUtil.addHandler(canvasBox, "mousemove", function(event){
-    console.log(`button: ${EventUtil.getButton(event)}`);
-    if(drawFlag === 1){
-        // console.log(`clientX: ${XConvert(event.clientX)} clientY: ${YConvert(event.clientY)}`);
-        event = EventUtil.getEvent(event);
-        draw(XConvert(event.clientX), YConvert(event.clientY));
+}
+//绘图函数
+function drawImg(type) {
+    switch(type)
+    {
+        case "mousedown":
+            console.log(`down`);
+            ctrlEvent.flag = true;
+            context.beginPath();
+            context.moveTo(XConvert(event.clientX), YConvert(event.clientY));
+            break;
+        case "mousemove":
+            event.preventDefault();
+            if(ctrlEvent.flag === true){
+                draw(XConvert(event.clientX), YConvert(event.clientY));
+            }
+            break;
+        case "mouseup":
+            console.log(`up`);
+            ctrlEvent.flag = false;
+            break;
+        case "touchstart":
+            context.beginPath();
+            context.moveTo(XConvert(event.touches[0].clientX), YConvert(event.touches[0].clientY));
+            break;
+        case "touchmove":
+            event.preventDefault();   //阻止滚动
+            draw(XConvert(event.changedTouches[0].clientX), YConvert(event.changedTouches[0].clientY));
+            break;
     }
-});
+}
 
-EventUtil.addHandler(canvasBox, "mouseup", function(event){
-    console.log(`up`);
-    drawFlag = 0;
-});
+createMouseEvent(canvasBox, drawImg);
 
-EventUtil.addHandler(canvasBox, "dblclick ", function(event){
-    event.preventDefault();
-});
-
-//添加对触摸事件的支持
-EventUtil.addHandler(canvasBox, "touchstart", function(event){
-    event = EventUtil.getEvent(event);
-    console.log(`clientX: ${XConvert(event.touches[0].clientX)} clientY: ${YConvert(event.touches[0].clientY)}`);
-    //drawFlag = 1;
-
-    context.beginPath();
-    context.moveTo(XConvert(event.touches[0].clientX), YConvert(event.touches[0].clientY));
-});
-
-EventUtil.addHandler(canvasBox, "touchmove", function(event){
-    //if(drawFlag == 1){
-    event = EventUtil.getEvent(event);
-    event.preventDefault();   //阻止滚动
-    console.log(`clientX: ${XConvert(event.changedTouches[0].clientX)} clientY: ${YConvert(event.changedTouches[0].clientY)}`);
-    draw(XConvert(event.changedTouches[0].clientX), YConvert(event.changedTouches[0].clientY));
-
-});
 
 //定义拉伸画布四周小方框，改变画布大小
 var ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
 var ctrlWrapCorner = document.getElementsByClassName("ctrl-wrap-corner")[0];
 var ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
 var virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
+var ctrlEvent = {
+    flag: false,
+    startXY:[0, 0],
+    endXY:[0, 0]
+};
 
+//控制拉伸函数
+//mousedown、mousemove、mouseup操作函数
+function ctrlStretch(target, func){
+    var ctrlEvent = {
+        flag: false,
+        startXY:[0, 0],
+        endXY:[0, 0]
+    };
+
+    (function(){
+        EventUtil.addHandler(target, "mousedown", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "mousemove", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "mouseup", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "touchstart", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+        EventUtil.addHandler(target, "touchmove", function(event){
+            event = EventUtil.getEvent(event);
+            func(event.type);
+        });
+    })();
+
+}
+//绘图函数
+function drawImg(type) {
+    switch(type)
+    {
+        case "mousedown":
+            console.log(`down`);
+            ctrlEvent.flag = true;
+            context.beginPath();
+            context.moveTo(XConvert(event.clientX), YConvert(event.clientY));
+            break;
+        case "mousemove":
+            event.preventDefault();
+            if(ctrlEvent.flag === true){
+                draw(XConvert(event.clientX), YConvert(event.clientY));
+            }
+            break;
+        case "mouseup":
+            console.log(`up`);
+            ctrlEvent.flag = false;
+            break;
+        case "touchstart":
+            context.beginPath();
+            context.moveTo(XConvert(event.touches[0].clientX), YConvert(event.touches[0].clientY));
+            break;
+        case "touchmove":
+            event.preventDefault();   //阻止滚动
+            draw(XConvert(event.changedTouches[0].clientX), YConvert(event.changedTouches[0].clientY));
+            break;
+    }
+}
+
+createMouseEvent(canvasBox, drawImg);
