@@ -1105,28 +1105,49 @@ div{
     position: relative;
 }
 
-[class*="ctrl"]
+/*包裹元素*/
+[class*="ctrl-wrap"]
+{
+    position: absolute;
+}
+
+[class*="ctrl-content"]
 {
     width: 5px;
     height: 5px;
     border: 1px solid #282828;
     background-color: rgba(255, 255, 255, 0.51);
-    position: absolute;
+
 }
 
-.ctrl-right{
-    top: 50%;
-    left: 100%;
-    transform: translate(0 ,-50%);
+.ctrl-content-right{
+    margin: 10px 20px 10px 0;
 }
 
-.ctrl-corner{
-    top: 100%;
-    left: 100%;
+.ctrl-content-corner{
+    margin: 0 20px 20px 0;
 }
 
-.ctrl-bottom{
+.ctrl-content-bottom{
+    margin: 0 10px 20px 10px;
+}
+
+.ctrl-wrap-bottom{
     top: 100%;
     left: 50%;
     transform: translate(-50%, 0);
+    cursor: n-resize;
+}
+
+.ctrl-wrap-right{
+    top: 50%;
+    left: 100%;
+    transform: translate(0 ,-50%);
+    cursor: e-resize;
+}
+
+.ctrl-wrap-corner{
+    top: 100%;
+    left: 100%;
+    cursor: nw-resize;
 }
