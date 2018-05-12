@@ -3,8 +3,10 @@
     <words>
       <w>dblclick</w>
       <w>mousedown</w>
+      <w>mouseleave</w>
       <w>mousemove</w>
       <w>mouseup</w>
+      <w>touchend</w>
       <w>touchmove</w>
       <w>touchstart</w>
     </words>

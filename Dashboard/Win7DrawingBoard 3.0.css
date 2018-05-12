@@ -894,6 +894,7 @@ div{
     bottom: 28px;
     width: 100%;
     background-color: #cbd5e4;
+    overflow: auto;
 
 }
 
@@ -901,8 +902,14 @@ div{
 #canvasBox{
     background-color: #ffffff;
     /*border: 1px solid #000000;*/
-    margin: 7px 0 0 7px;
     box-shadow: 6px 6px 4px rgba(120, 120, 120, 0.5);
+}
+
+.virtual-wrap{
+    margin: 7px;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    /*width: 800px;*/
 }
 
 /*底部显示*/
@@ -1117,7 +1124,7 @@ div{
     height: 5px;
     border: 1px solid #282828;
     background-color: rgba(255, 255, 255, 0.51);
-
+    z-index: -1;
 }
 
 .ctrl-content-right{
@@ -1133,6 +1140,7 @@ div{
 }
 
 .ctrl-wrap-bottom{
+    z-index: 1;
     top: 100%;
     left: 50%;
     transform: translate(-50%, 0);
