@@ -9,6 +9,9 @@ var ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
 var virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
 var bottomFonts = document.getElementsByClassName("bottom-font");
 
+
+
+//初始化
 ctrlWrapRight.style.cursor = "e-resize";
 ctrlWrapCorner.style.cursor = "nw-resize";
 ctrlWrapBottom.style.cursor = "n-resize";
@@ -179,7 +182,7 @@ function stretchAction(ctrlEvent) {
         switch(event.type)
         {
             case "mousedown": case "touchstart":
-                var targetCursor = (target.nextElementSibling !==null? target: target.parentNode); //判断电击的是那个元素
+                var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断电击的是那个元素
                 if(targetCursor === ctrlWrapRight||targetCursor === ctrlWrapCorner||targetCursor === ctrlWrapBottom){
                     console.log(event.type);
                     ctrlEvent.flag = true;
@@ -224,6 +227,42 @@ ctrlStretch(ctrlWrapRight, stretchAction);
 ctrlStretch(ctrlWrapCorner, stretchAction);
 ctrlStretch(ctrlWrapBottom, stretchAction);
 displaySize(canvasBox.width, canvasBox.height);
+
+
+//工具栏添加事件处理程序
+var tool = document.getElementById("tool");
+var pencil = document.getElementById("pencil");
+
+function toolEventHandle(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event),
+        handleTarget;
+
+    if(target.childElementCount){
+        handleTarget = target;
+    }
+    else{
+        handleTarget = target.parentNode;
+    }
+    console.log(`tool的target:`);
+    console.log(target);
+    console.log(`tool的handleTarget:`);
+    console.log(handleTarget);
+
+    switch (handleTarget.id)
+    {
+        case "pencil":
+            console.log("pencil");
+            if(!pencil.classList.contains("selected")){
+                canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+            }
+            pencil.classList.toggle("selected");
+            break;
+    }
+}
+
+EventUtil.addHandler(tool, "click", toolEventHandle);
+EventUtil.addHandler(tool, "touchstart", toolEventHandle);
 
 
 //实现临时保存绘图区域数据的函数
