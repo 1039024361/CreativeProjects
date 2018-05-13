@@ -746,6 +746,14 @@ div{
     border-bottom-width: 2px;
 }
 
+.px3{
+    border-bottom-width: 3px;
+}
+
+.px5{
+    border-bottom-width: 5px;
+}
+
 .px4{
     border-bottom-width: 4px;
 }
@@ -800,7 +808,7 @@ div{
 }
 
 .color-1{
-    width: 42px;
+    /*width: 42px;*/
 }
 
 .font-color-wrap{
@@ -883,7 +891,7 @@ div{
 }
 
 #colorbox{
-    width: 362px;
+    width: 364px;
 }
 
 /*绘图区域*/

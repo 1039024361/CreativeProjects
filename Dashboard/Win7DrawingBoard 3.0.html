@@ -111,7 +111,7 @@
     <div id="tool" class="cut-box-wrap">
         <div class="tool-wrap cut-box-wrap-inside">
             <div class="tool-wrap-first">
-                <div class="tool-wrap-img" id="pencil"><img src="images/pen.gif" height="15" width="15"/></div>
+                <div class="tool-wrap-img selected" id="pencil"><img src="images/pen.gif" height="15" width="15"/></div>
                 <div class="tool-wrap-img middle"><img src="images/fill.gif" height="16" width="16"/></div>
                 <div class="tool-wrap-img"><img src="images/text.gif" height="14" width="15"/></div>
             </div>
@@ -240,11 +240,11 @@
                     <div class="line-arrow-down"></div>
                     <div class="drop">
                         <div class="brush-drop-wrap">
-                            <div class="brush-drop-wrap-img">
-                                <div class="drop-line-wrap selected"> <div class="line-1 px1"></div></div>
-                                <div class="drop-line-wrap"> <div class="line-1 px2"></div></div>
-                                <div class="drop-line-wrap"> <div class="line-1 px4"></div></div>
-                                <div class="drop-line-wrap"> <div class="line-1 px6"></div></div>
+                            <div class="brush-drop-wrap-img" id="drop-line-weight">
+                                <div class="drop-line-wrap selected" id="1px"> <div class="line-1 px1"></div></div>
+                                <div class="drop-line-wrap" id="2px"> <div class="line-1 px2"></div></div>
+                                <div class="drop-line-wrap" id="3px"> <div class="line-1 px3"></div></div>
+                                <div class="drop-line-wrap" id="4px"> <div class="line-1 px4"></div></div>
                             </div>
                         </div>
                     </div>
@@ -256,7 +256,7 @@
     <div class="borderDef"></div>
     <div id="colorbox" class="cut-box-wrap">
         <div class="cut-box-wrap-inside">
-            <div class="left-box-2parts color-1">
+            <div class="left-box-2parts color-1 selected">
                 <div class="line-weight-img-wrap">
                     <div class="font-color-wrap">
                        <div class="font-color"></div>

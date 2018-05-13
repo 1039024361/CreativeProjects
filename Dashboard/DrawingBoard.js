@@ -21,6 +21,7 @@ var drawBoardStatus ={
 ctrlWrapRight.style.cursor = "e-resize";
 ctrlWrapCorner.style.cursor = "nw-resize";
 ctrlWrapBottom.style.cursor = "n-resize";
+canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
 
 //实时显示绘图区域坐标位置
 function displayCursorPos(x, y){
@@ -49,6 +50,7 @@ if(canvasBox.getContext){
 
 
 function draw(x, y){
+    context.lineWidth = drawBoardStatus.lineWeight;
     context.lineTo(x,y);
     context.stroke();
 }
@@ -296,5 +298,21 @@ EventUtil.addHandler(topMenu, "dblclick", function(event){
         menu.style.display = "none" ;
         drawArea.style.top = "29px";
         console.log(drawArea.style.top);
+    }
+});
+
+//线型选择
+var lineWeightDrop = document.getElementById("drop-line-weight");
+var lineWraps = document.querySelectorAll(".drop-line-wrap");
+
+EventUtil.addHandler(lineWeightDrop, "click", function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    var actualTarget = target.firstElementChild? target: target.parentNode;
+
+    if(actualTarget.className === "drop-line-wrap"){
+        lineWraps[drawBoardStatus.lineWeight-1].classList.toggle("selected");
+        lineWraps[parseInt(actualTarget.id)-1].classList.toggle("selected");
+        drawBoardStatus.lineWeight = parseInt(actualTarget.id);
     }
 });
