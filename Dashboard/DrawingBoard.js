@@ -50,7 +50,8 @@ if(canvasBox.getContext){
 
 
 function draw(x, y){
-    context.lineWidth = drawBoardStatus.lineWeight;
+    context.lineWidth = drawBoardStatus.behavior !== "erase"? drawBoardStatus.lineWeight: 8;
+    context.strokeStyle = drawBoardStatus.behavior !== "erase"? drawBoardStatus.color: drawBoardStatus.backgroundColor;
     context.lineTo(x,y);
     context.stroke();
 }
@@ -248,11 +249,14 @@ displaySize(canvasBox.width, canvasBox.height);
 //工具栏添加事件处理程序
 var tool = document.getElementById("tool");
 var pencil = document.getElementById("pencil");
+var erase = document.getElementById("erase");
+var toolImgWrap = document.querySelectorAll(".tool-wrap-img");
 
 function toolEventHandle(event){
     event = EventUtil.getEvent(event);
     var target = EventUtil.getTarget(event),
-        handleTarget;
+        handleTarget, i,
+        len = toolImgWrap.length;
 
     if(target.childElementCount){
         handleTarget = target;
@@ -265,14 +269,27 @@ function toolEventHandle(event){
     console.log(`tool的handleTarget:`);
     console.log(handleTarget);
 
+    for(i=0; i<len; i++){
+        toolImgWrap[i].classList.contains("selected")? toolImgWrap[i].classList.remove("selected"):"";
+    }
+
     switch (handleTarget.id)
     {
         case "pencil":
             console.log("pencil");
             if(!pencil.classList.contains("selected")){
                 canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+                pencil.classList.toggle("selected");
+                drawBoardStatus.behavior = "pencil";
             }
-            pencil.classList.toggle("selected");
+            break;
+        case "erase":
+            console.log("erase");
+            if(!erase.classList.contains("selected")){
+                canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
+                erase.classList.toggle("selected");
+                drawBoardStatus.behavior = "erase";
+            }
             break;
     }
 }
@@ -285,7 +302,7 @@ EventUtil.addHandler(tool, "touchstart", toolEventHandle);
 var topMenu = document.getElementById("top-menu");
 var menu = document.getElementById("menu");
 
-EventUtil.addHandler(topMenu, "dblclick", function(event){
+EventUtil.addHandler(topMenu, "click", function(event){
     event = EventUtil.getEvent(event);
     event.preventDefault();
     console.log("双击");
@@ -301,9 +318,15 @@ EventUtil.addHandler(topMenu, "dblclick", function(event){
     }
 });
 
+
 //线型选择
 var lineWeightDrop = document.getElementById("drop-line-weight");
+var lineWeightWrap = document.getElementById("line-weight-wrap");
 var lineWraps = document.querySelectorAll(".drop-line-wrap");
+
+EventUtil.addHandler(lineWeightWrap, "touchstart", function(event){
+    lineWeightDrop.style.display === "display"? lineWeightDrop.style.display = "none":"display";
+});
 
 EventUtil.addHandler(lineWeightDrop, "click", function(event){
     event = EventUtil.getEvent(event);
@@ -314,5 +337,49 @@ EventUtil.addHandler(lineWeightDrop, "click", function(event){
         lineWraps[drawBoardStatus.lineWeight-1].classList.toggle("selected");
         lineWraps[parseInt(actualTarget.id)-1].classList.toggle("selected");
         drawBoardStatus.lineWeight = parseInt(actualTarget.id);
+    }
+});
+
+//颜色选择处理
+var colorSetButtons = document.querySelectorAll(".color-1");
+var colorBoxes = document.querySelectorAll(".color-box");
+var colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
+var fontColor = document.getElementsByClassName("font-color")[0];
+var backgroundColor = document.getElementsByClassName("background-color")[0];
+
+EventUtil.addHandler(colorSetButtons[0], "click", function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+
+    if(!colorSetButtons[0].classList.contains("selected")){
+        colorSetButtons[0].classList.toggle("selected");
+        colorSetButtons[1].classList.toggle("selected");
+    }
+});
+
+EventUtil.addHandler(colorSetButtons[1], "click", function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+
+    if(!colorSetButtons[1].classList.contains("selected")){
+        colorSetButtons[0].classList.toggle("selected");
+        colorSetButtons[1].classList.toggle("selected");
+    }
+});
+
+EventUtil.addHandler(colorBoxContainer, "click", function(event){
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
+
+    if(actualTarget.style.backgroundColor){
+        if(!colorSetButtons[0].classList.contains("selected")){
+            backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
+            drawBoardStatus.backgroundColor = actualTarget.style.backgroundColor;
+        }
+        else{
+            fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
+            drawBoardStatus.color = actualTarget.style.backgroundColor;
+        }
     }
 });
