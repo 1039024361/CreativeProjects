@@ -9,7 +9,13 @@ var ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
 var virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
 var bottomFonts = document.getElementsByClassName("bottom-font");
 
-
+//记录状态的对象
+var drawBoardStatus ={
+    behavior: "pencil",
+    lineWeight: 1,
+    color: "black",
+    backgroundColor: "white"
+};
 
 //初始化
 ctrlWrapRight.style.cursor = "e-resize";
@@ -40,6 +46,8 @@ if(canvasBox.getContext){
     var context = canvasBox.getContext("2d");
 }
 
+
+
 function draw(x, y){
     context.lineTo(x,y);
     context.stroke();
@@ -47,12 +55,15 @@ function draw(x, y){
 
 //鼠标X坐标转换成绘图区域X坐标
 function xConvert(X){
-    return X -= 7;
+    var bbox = canvasBox.getBoundingClientRect();
+    return X -= bbox.left;
 }
 
 //鼠标Y坐标转换成绘图区域Y坐标
 function yConvert(Y){
-    return Y -= 146;
+    var bbox = canvasBox.getBoundingClientRect();
+    // return Y -= 146;
+    return Y -= bbox.top;
 }
 //mousedown、mousemove、mouseup操作函数
 function createMouseEvent(target, func){
@@ -137,6 +148,8 @@ function ctrlStretch(target, func){
 
 //根据始末坐标重新定义宽、高
 function resizeCanvas(target, ctrlEvent){
+    //先保存图像信息
+    var imgData = context.getImageData(0, 0, canvasBox.width, canvasBox.height);
     switch(ctrlEvent.source)
     {
         case ctrlWrapRight:
@@ -150,6 +163,7 @@ function resizeCanvas(target, ctrlEvent){
             target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
             break;
     }
+    context.putImageData(imgData, 0, 0);   //还原图像
 }
 
 //根据始末坐标重新定义宽、高
@@ -265,4 +279,22 @@ EventUtil.addHandler(tool, "click", toolEventHandle);
 EventUtil.addHandler(tool, "touchstart", toolEventHandle);
 
 
-//实现临时保存绘图区域数据的函数
+//双击折叠菜单栏
+var topMenu = document.getElementById("top-menu");
+var menu = document.getElementById("menu");
+
+EventUtil.addHandler(topMenu, "dblclick", function(event){
+    event = EventUtil.getEvent(event);
+    event.preventDefault();
+    console.log("双击");
+    if(menu.style.display === "none"){
+        menu.style.display = "block";
+        drawArea.style.top = "139px";
+        console.log(drawArea.style.top);
+    }
+    else{
+        menu.style.display = "none" ;
+        drawArea.style.top = "29px";
+        console.log(drawArea.style.top);
+    }
+});
