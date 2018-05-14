@@ -383,3 +383,41 @@ EventUtil.addHandler(colorBoxContainer, "click", function(event){
         }
     }
 });
+
+// var image = document.createElement("img");
+
+//支持拖放图片
+function handleDragEvent(event){
+    var info = "",
+        files,
+        reader = new FileReader();
+
+    EventUtil.preventDefault(event);
+
+    if (event.type == "drop"){
+        files = event.dataTransfer.files;
+        console.log(files[0]);
+
+        //只读取第一个图片
+        if(/image/.test(files[0].type)){
+            reader.readAsDataURL(files[0]);
+            reader.onload = function () {
+                var image = document.createElement("img");
+                image.src = reader.result;
+                console.log(image);
+                document.body.appendChild(image);
+                image.onload = function() {
+                    context.drawImage(image, 0, 0);
+                };
+            };
+        }
+        else{
+            console.log("请传入一幅图片");
+        }
+        
+    }
+}
+
+EventUtil.addHandler(canvasBox, "dragenter", handleDragEvent);
+EventUtil.addHandler(canvasBox, "dragover", handleDragEvent);
+EventUtil.addHandler(canvasBox, "drop", handleDragEvent);
