@@ -385,6 +385,7 @@ EventUtil.addHandler(colorBoxContainer, "click", function(event){
 });
 
 // var image = document.createElement("img");
+var image = document.getElementById("imgContainer");
 
 //支持拖放图片
 function handleDragEvent(event){
@@ -402,7 +403,8 @@ function handleDragEvent(event){
         if(/image/.test(files[0].type)){
             reader.readAsDataURL(files[0]);
             reader.onload = function () {
-                var image = document.createElement("img");
+                // var image = document.createElement("img");
+                // image.style.display = "none";
                 image.src = reader.result;
                 console.log(image);
                 document.body.appendChild(image);
