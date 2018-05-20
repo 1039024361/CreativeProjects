@@ -423,3 +423,14 @@ function handleDragEvent(event){
 EventUtil.addHandler(canvasBox, "dragenter", handleDragEvent);
 EventUtil.addHandler(canvasBox, "dragover", handleDragEvent);
 EventUtil.addHandler(canvasBox, "drop", handleDragEvent);
+
+//提示框
+var getReminder = document.getElementById("get-reminder");
+var reminder = document.getElementById("reminder");
+
+console.log(reminder);
+
+EventUtil.addHandler(getReminder, "click", function(event){
+    console.log(reminder);
+    reminder.style.display = "none";
+});
