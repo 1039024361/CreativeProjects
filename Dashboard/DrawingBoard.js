@@ -2,6 +2,7 @@
  * Created by XING on 2018/5/10.
  */
 var canvasBox = document.getElementById("canvasBox");
+var canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
 var drawArea = document.getElementById("draw-area");
 var ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
 var ctrlWrapCorner = document.getElementsByClassName("ctrl-wrap-corner")[0];
@@ -22,6 +23,7 @@ ctrlWrapRight.style.cursor = "e-resize";
 ctrlWrapCorner.style.cursor = "nw-resize";
 ctrlWrapBottom.style.cursor = "n-resize";
 canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+canvasWrap.style.zIndex = 1;
 
 //实时显示绘图区域坐标位置
 function displayCursorPos(x, y){
@@ -198,10 +200,14 @@ if(client.system.win||client.system.mac||client.system.x11){
             event = EventUtil.getEvent(event);
             var target = EventUtil.getTarget(event);
             // console.log(target);
+            if(canvasWrap.style.zIndex !== -1&&ctrlEvent.flag === true){   //使虚线框在最前)
+                canvasWrap.style.zIndex = -1;
+            }
+
             switch(event.type)
             {
                 case "mousedown": case "touchstart":
-                var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断电击的是那个元素
+                var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断点击的是那个元素
                 if(targetCursor === ctrlWrapRight||targetCursor === ctrlWrapCorner||targetCursor === ctrlWrapBottom){
                     console.log(event.type);
                     ctrlEvent.flag = true;
@@ -230,6 +236,7 @@ if(client.system.win||client.system.mac||client.system.x11){
                 case "mouseup": case "mouseleave": case "touchend":
                 if(ctrlEvent.flag === true) {
                     ctrlEvent.flag = false;
+                    canvasWrap.style.zIndex = 1;    //使canvas在最前
                     virtualWrap.style.border = "none";
                     virtualWrap.style.cursor = "default";
                     resizeCanvas(canvasBox, ctrlEvent);
@@ -400,9 +407,13 @@ function handleDragEvent(event){
 
     EventUtil.preventDefault(event);
 
-    if (event.type == "drop"){
+    if (event.type === "dragenter"){
+        // canvasWrap.style.zIndex = 1;    //使canvas在最前
+    }
+    else if (event.type === "drop"){
         files = event.dataTransfer.files;
         console.log(files[0]);
+
 
         //只读取第一个图片
         if(/image/.test(files[0].type)){
@@ -422,6 +433,9 @@ function handleDragEvent(event){
             console.log("请传入一幅图片");
         }
         
+    }
+    else if(event.type === "dragover"){
+        // canvasWrap.style.zIndex = -1;    //使虚线框在最前
     }
 }
 
