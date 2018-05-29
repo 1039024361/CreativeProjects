@@ -130,75 +130,77 @@ function drawImg(ctrlEvent) {
 createMouseEvent(canvasBox, drawImg);
 
 
-//定义拉伸画布四周小方框，改变画布大小
+//拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
+if(client.system.win||client.system.mac||client.system.x11){
+    //定义拉伸画布四周小方框，改变画布大小
 //控制拉伸函数
-function ctrlStretch(target, func){
-    var ctrlEvent = {
-        flag: false,
-        startXY:[0, 0],
-        middleXY:[0,0],
-        endXY:[0, 0]
-    };
+    function ctrlStretch(target, func){
+        var ctrlEvent = {
+            flag: false,
+            startXY:[0, 0],
+            middleXY:[0,0],
+            endXY:[0, 0]
+        };
 
-    EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
-    EventUtil.addHandler(document.body, "mousemove", func(ctrlEvent));
-    EventUtil.addHandler(document.body, "mouseup", func(ctrlEvent));
-    EventUtil.addHandler(document.body, "mouseleave", func(ctrlEvent));
-    EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
-    EventUtil.addHandler(document.body, "touchmove", func(ctrlEvent));
-    EventUtil.addHandler(document.body, "touchend", func(ctrlEvent));
-}
+        EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
+        EventUtil.addHandler(document.body, "mousemove", func(ctrlEvent));
+        EventUtil.addHandler(document.body, "mouseup", func(ctrlEvent));
+        EventUtil.addHandler(document.body, "mouseleave", func(ctrlEvent));
+        EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
+        EventUtil.addHandler(document.body, "touchmove", func(ctrlEvent));
+        EventUtil.addHandler(document.body, "touchend", func(ctrlEvent));
+    }
 
 //根据始末坐标重新定义宽、高
-function resizeCanvas(target, ctrlEvent){
-    //先保存图像信息
-    var imgData = context.getImageData(0, 0, canvasBox.width, canvasBox.height);
-    switch(ctrlEvent.source)
-    {
-        case ctrlWrapRight:
-            target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
-            break;
-        case ctrlWrapBottom:
-            target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
-            break;
-        case ctrlWrapCorner:
-            target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
-            target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
-            break;
-    }
-    context.putImageData(imgData, 0, 0);   //还原图像
-}
-
-//根据始末坐标重新定义宽、高
-function resizeDiv(target, ctrlEvent){
-    target.style.width = target.style.width? target.style.width:target.offsetWidth+"px";
-    target.style.height = target.style.height? target.style.height:target.offsetHeight+"px";
-    switch(ctrlEvent.source)
-    {
-        case ctrlWrapRight:
-            target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
-            displaySize(parseInt(target.style.width), canvasBox.height);
-            break;
-        case ctrlWrapBottom:
-            target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-            displaySize(canvasBox.width, parseInt(target.style.height));
-            break;
-        case ctrlWrapCorner:
-            target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
-            target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-            displaySize(parseInt(target.style.width), parseInt(target.style.height));
-            break;
-    }
-}
-
-function stretchAction(ctrlEvent) {
-    return function (event) {
-        event = EventUtil.getEvent(event);
-        var target = EventUtil.getTarget(event);
-        // console.log(target);
-        switch(event.type)
+    function resizeCanvas(target, ctrlEvent){
+        //先保存图像信息
+        var imgData = context.getImageData(0, 0, canvasBox.width, canvasBox.height);
+        switch(ctrlEvent.source)
         {
-            case "mousedown": case "touchstart":
+            case ctrlWrapRight:
+                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
+                break;
+            case ctrlWrapBottom:
+                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
+                break;
+            case ctrlWrapCorner:
+                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
+                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
+                break;
+        }
+        context.putImageData(imgData, 0, 0);   //还原图像
+    }
+
+//根据始末坐标重新定义宽、高
+    function resizeDiv(target, ctrlEvent){
+        target.style.width = target.style.width? target.style.width:target.offsetWidth+"px";
+        target.style.height = target.style.height? target.style.height:target.offsetHeight+"px";
+        switch(ctrlEvent.source)
+        {
+            case ctrlWrapRight:
+                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
+                displaySize(parseInt(target.style.width), canvasBox.height);
+                break;
+            case ctrlWrapBottom:
+                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
+                displaySize(canvasBox.width, parseInt(target.style.height));
+                break;
+            case ctrlWrapCorner:
+                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
+                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
+                displaySize(parseInt(target.style.width), parseInt(target.style.height));
+                break;
+        }
+    }
+
+    function stretchAction(ctrlEvent) {
+        return function (event) {
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            // console.log(target);
+            switch(event.type)
+            {
+                case "mousedown": case "touchstart":
                 var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断电击的是那个元素
                 if(targetCursor === ctrlWrapRight||targetCursor === ctrlWrapCorner||targetCursor === ctrlWrapBottom){
                     console.log(event.type);
@@ -211,8 +213,8 @@ function stretchAction(ctrlEvent) {
                     virtualWrap.style.cursor = targetCursor.style.cursor;
                     console.log(ctrlEvent);
                 }
-            break;
-            case "mousemove": case "touchmove":
+                break;
+                case "mousemove": case "touchmove":
                 event.preventDefault();
                 if(ctrlEvent.flag === true){
                     console.log(event.type);
@@ -223,9 +225,9 @@ function stretchAction(ctrlEvent) {
                     ctrlEvent.middleXY[0] = ctrlEvent.endXY[0];
                     ctrlEvent.middleXY[1] = ctrlEvent.endXY[1];
                 }
-            break;
-            case "mouseup": case "mouseleave": case "touchend":
+                break;
 
+                case "mouseup": case "mouseleave": case "touchend":
                 if(ctrlEvent.flag === true) {
                     ctrlEvent.flag = false;
                     virtualWrap.style.border = "none";
@@ -234,16 +236,19 @@ function stretchAction(ctrlEvent) {
 
                     console.log(ctrlEvent);
                 }
-            break;
+                break;
+            }
         }
     }
-}
 
 // createMouseEvent(virtualWrap, stretchAction);
-ctrlStretch(ctrlWrapRight, stretchAction);
-ctrlStretch(ctrlWrapCorner, stretchAction);
-ctrlStretch(ctrlWrapBottom, stretchAction);
-displaySize(canvasBox.width, canvasBox.height);
+    ctrlStretch(ctrlWrapRight, stretchAction);
+    ctrlStretch(ctrlWrapCorner, stretchAction);
+    ctrlStretch(ctrlWrapBottom, stretchAction);
+    displaySize(canvasBox.width, canvasBox.height);
+}
+
+
 
 
 //工具栏添加事件处理程序
