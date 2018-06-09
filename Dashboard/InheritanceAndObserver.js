@@ -84,7 +84,10 @@ var _indexOf = function(array, element){
 };
 
 //实现观察者模式
-var EventTarget ={
+var EventTarget =Class.extend({
+    createHandlers: function(handlers){
+        this._handlers = handlers;
+    },
     addHandler: function (type, handler) {
         if(!this._handlers){
             this._handlers = {};
@@ -129,9 +132,9 @@ var EventTarget ={
                 var handlers = this._handlers[type];
                 var index = _indexOf(handlers, handler);
                 if(index > -1){
-                    handlers.splice(i, 1);
+                    handlers.splice(index, 1);
                 }
             }
         }
     }
-};
+});

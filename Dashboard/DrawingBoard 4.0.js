@@ -1,7 +1,159 @@
 /**
  * Created by XING on 2018/5/10.
  */
-var canvasBox = document.getElementById("canvasBox");
+//组件基对象
+var Base = Class.extend(EventTarget, {
+    init:function(config){
+        this._config = config;    //保存配置信息
+        // this.bind();      //绑定事件处理程序
+    },
+    set: function(key, value){
+        this._config[key] = value;
+    },
+    get: function(key){
+        return this._config[key];
+    },
+    bind: function(target, type, func){
+        var eventTarget = target||document.body;
+        EventUtil.addHandler(eventTarget, type, func);
+    },
+    destroy: function () {
+        //去掉所有的监听事件
+        this.removeHandler();
+    }
+});
+
+
+//绘图模块设计
+var Drawing = Base.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+            "mousedown":[
+                function(event){
+                    console.log(`down`);
+                    this._ctrlEvent.flag = true;
+                    this.context.beginPath();
+                    this.context.moveTo(this._xConvert(event.clientX), this._yConvert(event.clientY));
+                }
+            ],
+            "mousemove":[
+                function(event){
+                    event.preventDefault();
+                    this._displayCursorPos(this._xConvert(event.clientX),  this._yConvert(event.clientY));
+                    if(this._ctrlEvent.flag === true){
+                        this._draw(this._xConvert(event.clientX), this._yConvert(event.clientY));
+                    }
+                }
+            ],
+            "mouseup":[
+                function(event){
+                    console.log(`up`);
+                    this._displayCursorPos(-1,  -1);
+                    this._ctrlEvent.flag = false;
+                }
+            ],
+            "mouseleave":[
+                function(event){
+                    console.log(`up`);
+                    this._displayCursorPos(-1,  -1);
+                    this._ctrlEvent.flag = false;
+                }
+            ],
+            "touchstart":[
+                function(event){
+                    this.context.beginPath();
+                    this.context.moveTo(this._xConvert(event.touches[0].clientX), this._yConvert(event.touches[0].clientY));
+                }
+            ],
+            "touchmove":[
+                function(event){
+                    event.preventDefault();   //阻止滚动
+                    this._displayCursorPos(this._xConvert(event.changedTouches[0].clientX),  this._yConvert(event.changedTouches[0].clientY));
+                    this._draw(this._xConvert(event.changedTouches[0].clientX), this._yConvert(event.changedTouches[0].clientY));
+                }
+            ],
+            "touchend":[
+                function(event){
+                    this._displayCursorPos(-1,  -1);
+                }
+            ],
+    },
+    _ctrlEvent:{
+        flag: false,
+        startXY:[0, 0],
+        middleXY:[0,0],
+        endXY:[0, 0]
+    },
+    //描点函数
+    _draw: function(x, y){
+    this.context.lineWidth = this.get("behavior") !== "erase"? this.get("lineWeight"): 8;
+    this.context.strokeStyle = this.get("behavior") !== "erase"? this.get("color"): this.get("backgroundColor");
+    this.context.lineTo(x,y);
+    this.context.stroke();
+    },
+    //坐标转换
+    _xConvert: function (X){
+    var bbox = canvasBox.getBoundingClientRect();
+    return X -= bbox.left;
+    },
+    _yConvert: function (Y){
+    var bbox = canvasBox.getBoundingClientRect();
+    // return Y -= 146;
+    return Y -= bbox.top;
+    },
+    //实时显示绘图区域坐标位置
+    _displayCursorPos: function(x, y){
+        (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${x}, ${y}像素`: this.bottomFonts[0].textContent ="";
+    },
+   //实时显示绘图区域大小
+    _displaySize: function (x, y){
+        (x>=0&&y>=0)? bottomFonts[2].textContent = `${x} × ${y}像素`: bottomFonts[2].textContent ="";
+    },
+    init: function (config) {
+        console.log(this._super);
+        this._super(config);
+        this.canvasBox = document.getElementById("canvasBox");   //canvas
+        this.context = canvasBox.getContext("2d");
+        this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
+        this.bind();
+        this.createHandlers(this.EVENTS);    //加入到观察者
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.canvasBox, "mousedown", function (event) {
+            self.fire(self.EVENTS["mousedown"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "mousemove", function (event) {
+            self.fire(self.EVENTS["mousemove"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "mouseup", function (event) {
+            self.fire(self.EVENTS["mouseup"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "mouseleave", function (event) {
+            self.fire(self.EVENTS["mouseleave"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "touchstart", function (event) {
+            self.fire(self.EVENTS["touchstart"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "touchmove", function (event) {
+            self.fire(self.EVENTS["touchmove"]);
+        });
+        EventUtil.addHandler(this.canvasBox, "touchend", function (event) {
+            self.fire(self.EVENTS["touchend"]);
+        });
+    }
+});
+
+(function(){
+    var drawingModule = new Drawing({
+        behavior: "pencil",
+        lineWeight: 1,
+        color: "black",
+        backgroundColor: "white"
+    });
+})();
+
+// var canvasBox = document.getElementById("canvasBox");
 var canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
 var drawArea = document.getElementById("draw-area");
 var ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
@@ -26,37 +178,37 @@ canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
 canvasWrap.style.zIndex = 1;
 
 //实时显示绘图区域坐标位置
-function displayCursorPos(x, y){
-    if(x>=0&&y>=0){
-        bottomFonts[0].textContent = `${x}, ${y}像素`;
-    }
-    else{
-        bottomFonts[0].textContent ="";
-    }
-}
-//实时显示绘图区域大小
-function displaySize(x, y){
-    if(x>=0&&y>=0){
-        bottomFonts[2].textContent = `${x} × ${y}像素`;
-    }
-    else{
-        bottomFonts[2].textContent ="";
-    }
-}
+// function displayCursorPos(x, y){
+//     if(x>=0&&y>=0){
+//         bottomFonts[0].textContent = `${x}, ${y}像素`;
+//     }
+//     else{
+//         bottomFonts[0].textContent ="";
+//     }
+// }
+// //实时显示绘图区域大小
+// function displaySize(x, y){
+//     if(x>=0&&y>=0){
+//         bottomFonts[2].textContent = `${x} × ${y}像素`;
+//     }
+//     else{
+//         bottomFonts[2].textContent ="";
+//     }
+// }
+
+//
+// if(canvasBox.getContext){
+//     var context = canvasBox.getContext("2d");
+// }
 
 
-if(canvasBox.getContext){
-    var context = canvasBox.getContext("2d");
-}
 
-
-
-function draw(x, y){
-    context.lineWidth = drawBoardStatus.behavior !== "erase"? drawBoardStatus.lineWeight: 8;
-    context.strokeStyle = drawBoardStatus.behavior !== "erase"? drawBoardStatus.color: drawBoardStatus.backgroundColor;
-    context.lineTo(x,y);
-    context.stroke();
-}
+// function draw(x, y){
+//     context.lineWidth = drawBoardStatus.behavior !== "erase"? drawBoardStatus.lineWeight: 8;
+//     context.strokeStyle = drawBoardStatus.behavior !== "erase"? drawBoardStatus.color: drawBoardStatus.backgroundColor;
+//     context.lineTo(x,y);
+//     context.stroke();
+// }
 
 //鼠标X坐标转换成绘图区域X坐标
 function xConvert(X){
@@ -71,65 +223,65 @@ function yConvert(Y){
     return Y -= bbox.top;
 }
 //mousedown、mousemove、mouseup操作函数
-function createMouseEvent(target, func){
-    var ctrlEvent = {
-        flag: false,
-        startXY:[0, 0],
-        middleXY:[0,0],
-        endXY:[0, 0]
-    };
-
-    EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
-    EventUtil.addHandler(target, "mousemove", func(ctrlEvent));
-    EventUtil.addHandler(target, "mouseup", func(ctrlEvent));
-    EventUtil.addHandler(target, "mouseleave", func(ctrlEvent));
-    EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
-    EventUtil.addHandler(target, "touchmove", func(ctrlEvent));
-    EventUtil.addHandler(target, "touchend", func(ctrlEvent));
-}
-//绘图函数
-function drawImg(ctrlEvent) {
-    return function (event) {
-        event = EventUtil.getEvent(event);
-        switch(event.type)
-        {
-            case "mousedown":
-                console.log(`down`);
-                ctrlEvent.flag = true;
-                context.beginPath();
-                context.moveTo(xConvert(event.clientX), yConvert(event.clientY));
-                break;
-            case "mousemove":
-                event.preventDefault();
-                displayCursorPos(xConvert(event.clientX),  yConvert(event.clientY));
-                if(ctrlEvent.flag === true){
-                    draw(xConvert(event.clientX), yConvert(event.clientY));
-                }
-                break;
-            case "mouseup": case "mouseleave":
-                console.log(`up`);
-                displayCursorPos(-1,  -1);
-                ctrlEvent.flag = false;
-                break;
-            case "touchstart":
-                context.beginPath();
-                context.moveTo(xConvert(event.touches[0].clientX), yConvert(event.touches[0].clientY));
-                break;
-            case "touchmove":
-                event.preventDefault();   //阻止滚动
-                displayCursorPos(xConvert(event.changedTouches[0].clientX),  yConvert(event.changedTouches[0].clientY));
-                draw(xConvert(event.changedTouches[0].clientX), yConvert(event.changedTouches[0].clientY));
-                break;
-            case "touchend":
-                displayCursorPos(-1,  -1);
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-createMouseEvent(canvasBox, drawImg);
+// function createMouseEvent(target, func){
+//     var ctrlEvent = {
+//         flag: false,
+//         startXY:[0, 0],
+//         middleXY:[0,0],
+//         endXY:[0, 0]
+//     };
+//
+//     EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
+//     EventUtil.addHandler(target, "mousemove", func(ctrlEvent));
+//     EventUtil.addHandler(target, "mouseup", func(ctrlEvent));
+//     EventUtil.addHandler(target, "mouseleave", func(ctrlEvent));
+//     EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
+//     EventUtil.addHandler(target, "touchmove", func(ctrlEvent));
+//     EventUtil.addHandler(target, "touchend", func(ctrlEvent));
+// }
+// //绘图函数
+// function drawImg(ctrlEvent) {
+//     return function (event) {
+//         event = EventUtil.getEvent(event);
+//         switch(event.type)
+//         {
+//             case "mousedown":
+//                 console.log(`down`);
+//                 ctrlEvent.flag = true;
+//                 context.beginPath();
+//                 context.moveTo(xConvert(event.clientX), yConvert(event.clientY));
+//                 break;
+//             case "mousemove":
+//                 event.preventDefault();
+//                 displayCursorPos(xConvert(event.clientX),  yConvert(event.clientY));
+//                 if(ctrlEvent.flag === true){
+//                     draw(xConvert(event.clientX), yConvert(event.clientY));
+//                 }
+//                 break;
+//             case "mouseup": case "mouseleave":
+//                 console.log(`up`);
+//                 displayCursorPos(-1,  -1);
+//                 ctrlEvent.flag = false;
+//                 break;
+//             case "touchstart":
+//                 context.beginPath();
+//                 context.moveTo(xConvert(event.touches[0].clientX), yConvert(event.touches[0].clientY));
+//                 break;
+//             case "touchmove":
+//                 event.preventDefault();   //阻止滚动
+//                 displayCursorPos(xConvert(event.changedTouches[0].clientX),  yConvert(event.changedTouches[0].clientY));
+//                 draw(xConvert(event.changedTouches[0].clientX), yConvert(event.changedTouches[0].clientY));
+//                 break;
+//             case "touchend":
+//                 displayCursorPos(-1,  -1);
+//                 break;
+//             default:
+//                 break;
+//         }
+//     }
+// }
+//
+// createMouseEvent(canvasBox, drawImg);
 
 
 //拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
