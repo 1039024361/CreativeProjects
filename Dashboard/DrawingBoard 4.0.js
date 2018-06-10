@@ -19,7 +19,7 @@ var Base = Class.extend({
     },
     destroy: function () {
         //去掉所有的监听事件
-        this.removeHandler();
+        // this.removeHandler();
     }
 });
 
@@ -111,6 +111,15 @@ var RichBase = Base.extend({
     },
 });
 
+
+//创建一个保存配置信息的对象
+var drawingInfo = new Base({
+    behavior: "pencil",
+    lineWeight: 1,
+    color: "black",
+    backgroundColor: "white"
+});
+
 //绘图模块设计
 var Drawing = RichBase.extend({
     //在这里注册所有事件，使用观察者模式
@@ -179,8 +188,8 @@ var Drawing = RichBase.extend({
     },
     //描点函数
     _draw: function(x, y){
-    this.context.lineWidth = this.get("behavior") !== "erase"? this.get("lineWeight"): 8;
-    this.context.strokeStyle = this.get("behavior") !== "erase"? this.get("color"): this.get("backgroundColor");
+    this.context.lineWidth = drawingInfo.get("behavior") !== "erase"? drawingInfo.get("lineWeight"): 8;
+    this.context.strokeStyle = drawingInfo.get("behavior") !== "erase"? drawingInfo.get("color"): drawingInfo.get("backgroundColor");
     this.context.lineTo(x,y);
     this.context.stroke();
     },
@@ -384,74 +393,89 @@ var Stretch = RichBase.extend({
     }
 });
 
+
+//调整绘图区域模块设计
+var Tool = RichBase.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+        "tool":{
+            "click":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event),
+                        handleTarget, i,
+                        len = this.toolImgWrap.length;
+
+                    handleTarget = target.childElementCount? target:target.parentNode;
+
+                    for(i=0; i<len; i++){
+                        this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
+                    }
+
+                    switch (handleTarget.id)
+                    {
+                        case "pencil":
+                            console.log("pencil");
+                            if(!this.pencil.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+                                this.pencil.classList.toggle("selected");
+                                drawingInfo.set("behavior", "pencil");
+                            }
+                            break;
+                        case "erase":
+                            console.log("erase");
+                            if(!this.erase.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
+                                this.erase.classList.toggle("selected");
+                                drawingInfo.set("behavior", "erase");
+                            }
+                            break;
+                    }
+                }
+            ],
+        },
+    },
+    //事件绑定及节流处理
+    init: function (config) {
+        this._super(config);
+        this.tool = document.getElementById("tool");
+        this.pencil = document.getElementById("pencil");
+        this.erase = document.getElementById("erase");
+        this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
+        this.canvasBox = document.getElementById("canvasBox");   //canvas
+        this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
+        this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
+        //初始化
+        this.canvasWrap.style.zIndex = 1;
+        this.bind();
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.tool, "click", function (event) {
+            self.fire(self.tool, "click", event);
+        });
+        EventUtil.addHandler(this.tool, "touchstart", function (event) {
+            self.fire(self.tool, "click", event);   //与click事件处理函数一直
+        });
+    },
+});
+
+
 (function(){
-    var drawingModule = new Drawing({
-        behavior: "pencil",
-        lineWeight: 1,
-        color: "black",
-        backgroundColor: "white"
-    });
+    var drawingModule = new Drawing(
+        // {
+        // behavior: "pencil",
+        // lineWeight: 1,
+        // color: "black",
+        // backgroundColor: "white"}
+        );
 
     //拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
     if(client.system.win||client.system.mac||client.system.x11){
         var StretchModule = new Stretch();
     }
+    var tool = new Tool();
 })();
-
-
-
-
-//工具栏添加事件处理程序
-var tool = document.getElementById("tool");
-var pencil = document.getElementById("pencil");
-var erase = document.getElementById("erase");
-var toolImgWrap = document.querySelectorAll(".tool-wrap-img");
-
-function toolEventHandle(event){
-    event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event),
-        handleTarget, i,
-        len = toolImgWrap.length;
-
-    if(target.childElementCount){
-        handleTarget = target;
-    }
-    else{
-        handleTarget = target.parentNode;
-    }
-    console.log(`tool的target:`);
-    console.log(target);
-    console.log(`tool的handleTarget:`);
-    console.log(handleTarget);
-
-    for(i=0; i<len; i++){
-        toolImgWrap[i].classList.contains("selected")? toolImgWrap[i].classList.remove("selected"):"";
-    }
-
-    switch (handleTarget.id)
-    {
-        case "pencil":
-            console.log("pencil");
-            if(!pencil.classList.contains("selected")){
-                canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
-                pencil.classList.toggle("selected");
-                drawBoardStatus.behavior = "pencil";
-            }
-            break;
-        case "erase":
-            console.log("erase");
-            if(!erase.classList.contains("selected")){
-                canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
-                erase.classList.toggle("selected");
-                drawBoardStatus.behavior = "erase";
-            }
-            break;
-    }
-}
-
-EventUtil.addHandler(tool, "click", toolEventHandle);
-EventUtil.addHandler(tool, "touchstart", toolEventHandle);
-
 
 //双击折叠菜单栏
 var topMenu = document.getElementById("top-menu");
