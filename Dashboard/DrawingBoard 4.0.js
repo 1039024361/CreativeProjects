@@ -25,31 +25,31 @@ var Base = Class.extend({
 
 //加入观察者模式
 var RichBase = Base.extend({
-    createHandlers: function(handlers){
-        this._handlers = handlers;
+    createHandlers: function(target, handlers){
+        target.handlers = handlers;
     },
-    addHandler: function (type, handler) {
-        if(!this._handlers){
-            this._handlers = {};
+    addHandler: function (target, type, handler) {
+        if(!target.handlers){
+            target.handlers = {};
         }
-        if(!this._handlers[type]){
-            this._handlers[type] = [];
+        if(!target.handlers[type]){
+            target.handlers[type] = [];
         }
-        if(_indexOf(this._handlers[type], handler) === -1 && handler === "function"){
-            this._handlers[type].push(handler);
+        if(_indexOf(target.handlers[type], handler) === -1 && handler === "function"){
+            target.handlers[type].push(handler);
         }
 
         return this;
     },
-    fire: function(type){
-        if(!this._handlers&&!this._handlers[type]){
+    fire: function(target, type){
+        if(!target.handlers&&!target.handlers[type]){
             return;
         }
         var i = null,
-            len = this._handlers[type].length,
+            len = target.handlers[type].length,
             arg = Array.prototype.slice(arguments, 1);    //每个handler函数传入参数的方式
-        if( this._handlers[type] instanceof Array){
-            var handlers = this._handlers[type];
+        if( target.handlers[type] instanceof Array){
+            var handlers = target.handlers[type];
             for(i=0; i<len; i++){
                 handlers[i].apply(this, arg);
             }
@@ -57,19 +57,19 @@ var RichBase = Base.extend({
 
         return this;
     },
-    removeHandler: function(type, handler){
+    removeHandler: function(target, type, handler){
         //不传递任何参数，直接清空事件对象
         if(!type&&!handler){
-            this._handlers = {};
+            target.handlers = {};
         }
         //只传递type参数，清空对应type数组
         if(type&&!handler){
-            delete this._handlers[type];
+            delete target.handlers[type];
         }
 
         if(type&&handler){
-            if( this._handlers[type] instanceof Array){
-                var handlers = this._handlers[type];
+            if( target.handlers[type] instanceof Array){
+                var handlers = target.handlers[type];
                 var index = _indexOf(handlers, handler);
                 if(index > -1){
                     handlers.splice(index, 1);
@@ -77,7 +77,7 @@ var RichBase = Base.extend({
             }
         }
     },
-    //加入节流机制
+    //加入节流机制(还需要改进)
     throttle: function(func, delay){
         var prev = Date.now(),
             self = this;
@@ -90,13 +90,32 @@ var RichBase = Base.extend({
                 prev = now;
             }
         }
-    }
+    },
+    //坐标转换
+    _xConvert: function (X){
+        var bbox = this.canvasBox.getBoundingClientRect();
+        return X -= bbox.left;
+    },
+    _yConvert: function (Y){
+        var bbox = this.canvasBox.getBoundingClientRect();
+        // return Y -= 146;
+        return Y -= bbox.top;
+    },
+    //实时显示绘图区域坐标位置
+    _displayCursorPos: function(x, y){
+        (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${x}, ${y}像素`: this.bottomFonts[0].textContent ="";
+    },
+    //实时显示绘图区域大小
+    _displaySize: function (x, y){
+        (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${x} × ${y}像素`: this.bottomFonts[2].textContent ="";
+    },
 });
 
 //绘图模块设计
 var Drawing = RichBase.extend({
     //在这里注册所有事件，使用观察者模式
     EVENTS:{
+        "canvasBox": {
             "mousedown":[
                 function(event){
                     event = EventUtil.getEvent(event);
@@ -150,6 +169,7 @@ var Drawing = RichBase.extend({
                     this._displayCursorPos(-1,  -1);
                 }
             ],
+        }
     },
     _ctrlEvent:{
         flag: false,
@@ -164,58 +184,203 @@ var Drawing = RichBase.extend({
     this.context.lineTo(x,y);
     this.context.stroke();
     },
-    //坐标转换
-    _xConvert: function (X){
-    var bbox = this.canvasBox.getBoundingClientRect();
-    return X -= bbox.left;
-    },
-    _yConvert: function (Y){
-    var bbox = this.canvasBox.getBoundingClientRect();
-    // return Y -= 146;
-    return Y -= bbox.top;
-    },
-    //实时显示绘图区域坐标位置
-    _displayCursorPos: function(x, y){
-        (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${x}, ${y}像素`: this.bottomFonts[0].textContent ="";
-    },
-   //实时显示绘图区域大小
-    _displaySize: function (x, y){
-        (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${x} × ${y}像素`: this.bottomFonts[2].textContent ="";
-    },
     //事件绑定及节流处理
     init: function (config) {
-        console.log(this._super);
         this._super(config);
         this.canvasBox = document.getElementById("canvasBox");   //canvas
         this.context = this.canvasBox.getContext("2d");
         this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
-        this.createHandlers(this.EVENTS);    //加入到观察者
+        this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+        this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
         this.bind();
     },
     bind: function(){
         var self = this;
         EventUtil.addHandler(this.canvasBox, "mousedown", function (event) {
-            self.fire("mousedown", event);
+            self.fire(self.canvasBox, "mousedown", event);
         });
         EventUtil.addHandler(this.canvasBox, "mousemove", function (event) {
             // self.throttle(self.fire, 1).call(self, "mousemove", event);
-            self.fire("mousemove", event);
+            self.fire(self.canvasBox, "mousemove", event);
         });
         EventUtil.addHandler(this.canvasBox, "mouseup", function (event) {
-            self.fire("mouseup", event);
+            self.fire(self.canvasBox, "mouseup", event);
         });
         EventUtil.addHandler(this.canvasBox, "mouseleave", function (event) {
-            self.fire("mouseleave", event);
+            self.fire(self.canvasBox, "mouseleave", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchstart", function (event) {
-            self.fire("touchstart", event);
+            self.fire(self.canvasBox, "touchstart", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchmove", function (event) {
-            self.fire("touchmove", event);
+            self.fire(self.canvasBox, "touchmove", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchend", function (event) {
-            self.fire("touchend", event);
+            self.fire(self.canvasBox, "touchend", event);
         });
+    }
+});
+
+
+//调整绘图区域模块设计
+var Stretch = RichBase.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+        "target":{
+            "mousedown":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event);
+                    if(this.canvasWrap.style.zIndex !== -1&&this._ctrlEvent.flag === true){   //使虚线框在最前)
+                        this.canvasWrap.style.zIndex = -1;
+                    }
+                    var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断点击的是那个元素
+                    if(targetCursor === this.ctrlWrapRight||targetCursor === this.ctrlWrapCorner||targetCursor === this.ctrlWrapBottom){
+                        this._ctrlEvent.flag = true;
+                        this._ctrlEvent.source = targetCursor;
+                        this._ctrlEvent.startXY[0] = this._ctrlEvent.middleXY[0] = this._xConvert(event.clientX);
+                        this._ctrlEvent.startXY[1] = this._ctrlEvent.middleXY[1] = this._yConvert(event.clientY);
+                        console.log(targetCursor);
+                        console.log(targetCursor.style.cursor);
+                        this.virtualWrap.style.cursor = targetCursor.style.cursor;
+                    }
+                }
+            ],
+        },
+        "body": {
+            "mousemove":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
+                        this.canvasWrap.style.zIndex = -1;
+                    }
+                    event.preventDefault();
+                    if(this._ctrlEvent.flag === true){
+                        this.virtualWrap.style.border = "1px dotted black";
+                        this._ctrlEvent.endXY[0] = this._xConvert(event.clientX);
+                        this._ctrlEvent.endXY[1] = this._yConvert(event.clientY);
+                        this.resizeDiv(this.virtualWrap, this._ctrlEvent);
+                        this._ctrlEvent.middleXY[0] = this._ctrlEvent.endXY[0];
+                        this._ctrlEvent.middleXY[1] = this._ctrlEvent.endXY[1];
+                    }
+                }
+            ],
+            "mouseup":[
+                function(event){
+                    if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
+                        this.canvasWrap.style.zIndex = -1;
+                    }
+                if(this._ctrlEvent.flag === true) {
+                        this._ctrlEvent.flag = false;
+                        this.canvasWrap.style.zIndex = 1;    //使canvas在最前
+                        this.virtualWrap.style.border = "none";
+                        this.virtualWrap.style.cursor = "default";
+                        this.resizeCanvas(canvasBox, this._ctrlEvent);
+                        console.log(this._ctrlEvent);
+                    }
+                }
+            ],
+            "mouseleave":[
+                function(event){
+                    if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
+                        this.canvasWrap.style.zIndex = -1;
+                    }
+                    if(this._ctrlEvent.flag === true) {
+                        this._ctrlEvent.flag = false;
+                        this.canvasWrap.style.zIndex = 1;    //使canvas在最前
+                        this.virtualWrap.style.border = "none";
+                        this.virtualWrap.style.cursor = "default";
+                        this.resizeCanvas(canvasBox, this._ctrlEvent);
+                        console.log(this._ctrlEvent);
+                    }
+                }
+            ],
+        }
+    },
+    _ctrlEvent:{
+        flag: false,
+        startXY:[0, 0],
+        middleXY:[0,0],
+        endXY:[0, 0]
+    },
+    //事件绑定及节流处理
+    init: function (config) {
+        this._super(config);
+        this.body = document.body;
+        this.canvasBox = document.getElementById("canvasBox");   //canvas
+        this.context = this.canvasBox.getContext("2d");
+        this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
+        this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
+        this.ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
+        this.ctrlWrapCorner = document.getElementsByClassName("ctrl-wrap-corner")[0];
+        this.ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
+        this.virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
+        this.createHandlers(this.body, this.EVENTS["body"]);               //加入到观察者
+        this.createHandlers(this.ctrlWrapRight, this.EVENTS["target"]);    //加入到观察者，3个对象事件处理程序都一样
+        //初始化
+        this.ctrlWrapRight.style.cursor = "e-resize";
+        this.ctrlWrapCorner.style.cursor = "nw-resize";
+        this.ctrlWrapBottom.style.cursor = "n-resize";
+        this.canvasWrap.style.zIndex = 1;
+        this.bind();
+        this._displaySize(this.canvasBox.width, this.canvasBox.height);
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.ctrlWrapRight, "mousedown", function (event) {
+            self.fire(self.ctrlWrapRight, "mousedown", event);
+        });
+        EventUtil.addHandler(this.ctrlWrapCorner, "mousedown", function (event) {
+            self.fire(self.ctrlWrapRight, "mousedown", event);
+        });
+        EventUtil.addHandler(this.ctrlWrapBottom, "mousedown", function (event) {
+            self.fire(self.ctrlWrapRight, "mousedown", event);
+        });
+
+        EventUtil.addHandler(this.body, "mousemove", function (event) {
+            // self.throttle(self.fire, 1).call(self, "mousemove", event);
+            self.fire(self.body, "mousemove", event);
+        });
+        EventUtil.addHandler(this.body, "mouseup", function (event) {
+            self.fire(self.body, "mouseup", event);
+        });
+    },
+    resizeCanvas: function (target, ctrlEvent) {
+        //先保存图像信息
+        var imgData = this.context.getImageData(0, 0, this.canvasBox.width, this.canvasBox.height);
+        switch (ctrlEvent.source) {
+            case this.ctrlWrapRight:
+                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
+                break;
+            case this.ctrlWrapBottom:
+                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
+                break;
+            case this.ctrlWrapCorner:
+                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
+                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
+                break;
+        }
+        this.context.putImageData(imgData, 0, 0);   //还原图像
+    },
+    resizeDiv: function (target, ctrlEvent){
+        target.style.width = target.style.width? target.style.width:target.offsetWidth+"px";
+        target.style.height = target.style.height? target.style.height:target.offsetHeight+"px";
+        switch(ctrlEvent.source)
+        {
+            case this.ctrlWrapRight:
+                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
+                this._displaySize(parseInt(target.style.width), this.canvasBox.height);
+                break;
+            case this.ctrlWrapBottom:
+                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
+                this._displaySize(this.canvasBox.width, parseInt(target.style.height));
+                break;
+            case this.ctrlWrapCorner:
+                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
+                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
+                this._displaySize(parseInt(target.style.width), parseInt(target.style.height));
+                break;
+        }
     }
 });
 
@@ -226,261 +391,12 @@ var Drawing = RichBase.extend({
         color: "black",
         backgroundColor: "white"
     });
+
+    //拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
+    if(client.system.win||client.system.mac||client.system.x11){
+        var StretchModule = new Stretch();
+    }
 })();
-
-var canvasBox = document.getElementById("canvasBox");
-var canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
-var drawArea = document.getElementById("draw-area");
-var ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
-var ctrlWrapCorner = document.getElementsByClassName("ctrl-wrap-corner")[0];
-var ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
-var virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
-var bottomFonts = document.getElementsByClassName("bottom-font");
-
-//记录状态的对象
-var drawBoardStatus ={
-    behavior: "pencil",
-    lineWeight: 1,
-    color: "black",
-    backgroundColor: "white"
-};
-
-//初始化
-ctrlWrapRight.style.cursor = "e-resize";
-ctrlWrapCorner.style.cursor = "nw-resize";
-ctrlWrapBottom.style.cursor = "n-resize";
-canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
-canvasWrap.style.zIndex = 1;
-
-//实时显示绘图区域坐标位置
-// function displayCursorPos(x, y){
-//     if(x>=0&&y>=0){
-//         bottomFonts[0].textContent = `${x}, ${y}像素`;
-//     }
-//     else{
-//         bottomFonts[0].textContent ="";
-//     }
-// }
-//实时显示绘图区域大小
-function displaySize(x, y){
-    if(x>=0&&y>=0){
-        bottomFonts[2].textContent = `${x} × ${y}像素`;
-    }
-    else{
-        bottomFonts[2].textContent ="";
-    }
-}
-
-//
-// if(canvasBox.getContext){
-//     var context = canvasBox.getContext("2d");
-// }
-
-
-
-// function draw(x, y){
-//     context.lineWidth = drawBoardStatus.behavior !== "erase"? drawBoardStatus.lineWeight: 8;
-//     context.strokeStyle = drawBoardStatus.behavior !== "erase"? drawBoardStatus.color: drawBoardStatus.backgroundColor;
-//     context.lineTo(x,y);
-//     context.stroke();
-// }
-
-//鼠标X坐标转换成绘图区域X坐标
-function xConvert(X){
-    var bbox = canvasBox.getBoundingClientRect();
-    return X -= bbox.left;
-}
-
-//鼠标Y坐标转换成绘图区域Y坐标
-function yConvert(Y){
-    var bbox = canvasBox.getBoundingClientRect();
-    // return Y -= 146;
-    return Y -= bbox.top;
-}
-//mousedown、mousemove、mouseup操作函数
-// function createMouseEvent(target, func){
-//     var ctrlEvent = {
-//         flag: false,
-//         startXY:[0, 0],
-//         middleXY:[0,0],
-//         endXY:[0, 0]
-//     };
-//
-//     EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
-//     EventUtil.addHandler(target, "mousemove", func(ctrlEvent));
-//     EventUtil.addHandler(target, "mouseup", func(ctrlEvent));
-//     EventUtil.addHandler(target, "mouseleave", func(ctrlEvent));
-//     EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
-//     EventUtil.addHandler(target, "touchmove", func(ctrlEvent));
-//     EventUtil.addHandler(target, "touchend", func(ctrlEvent));
-// }
-// //绘图函数
-// function drawImg(ctrlEvent) {
-//     return function (event) {
-//         event = EventUtil.getEvent(event);
-//         switch(event.type)
-//         {
-//             case "mousedown":
-//                 console.log(`down`);
-//                 ctrlEvent.flag = true;
-//                 context.beginPath();
-//                 context.moveTo(xConvert(event.clientX), yConvert(event.clientY));
-//                 break;
-//             case "mousemove":
-//                 event.preventDefault();
-//                 displayCursorPos(xConvert(event.clientX),  yConvert(event.clientY));
-//                 if(ctrlEvent.flag === true){
-//                     draw(xConvert(event.clientX), yConvert(event.clientY));
-//                 }
-//                 break;
-//             case "mouseup": case "mouseleave":
-//                 console.log(`up`);
-//                 displayCursorPos(-1,  -1);
-//                 ctrlEvent.flag = false;
-//                 break;
-//             case "touchstart":
-//                 context.beginPath();
-//                 context.moveTo(xConvert(event.touches[0].clientX), yConvert(event.touches[0].clientY));
-//                 break;
-//             case "touchmove":
-//                 event.preventDefault();   //阻止滚动
-//                 displayCursorPos(xConvert(event.changedTouches[0].clientX),  yConvert(event.changedTouches[0].clientY));
-//                 draw(xConvert(event.changedTouches[0].clientX), yConvert(event.changedTouches[0].clientY));
-//                 break;
-//             case "touchend":
-//                 displayCursorPos(-1,  -1);
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
-// }
-//
-// createMouseEvent(canvasBox, drawImg);
-
-
-//拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
-if(client.system.win||client.system.mac||client.system.x11){
-    //定义拉伸画布四周小方框，改变画布大小
-//控制拉伸函数
-    function ctrlStretch(target, func){
-        var ctrlEvent = {
-            flag: false,
-            startXY:[0, 0],
-            middleXY:[0,0],
-            endXY:[0, 0]
-        };
-
-        EventUtil.addHandler(target, "mousedown", func(ctrlEvent));
-        EventUtil.addHandler(document.body, "mousemove", func(ctrlEvent));
-        EventUtil.addHandler(document.body, "mouseup", func(ctrlEvent));
-        EventUtil.addHandler(document.body, "mouseleave", func(ctrlEvent));
-        EventUtil.addHandler(target, "touchstart", func(ctrlEvent));
-        EventUtil.addHandler(document.body, "touchmove", func(ctrlEvent));
-        EventUtil.addHandler(document.body, "touchend", func(ctrlEvent));
-    }
-
-//根据始末坐标重新定义宽、高
-    function resizeCanvas(target, ctrlEvent){
-        //先保存图像信息
-        var imgData = context.getImageData(0, 0, canvasBox.width, canvasBox.height);
-        switch(ctrlEvent.source)
-        {
-            case ctrlWrapRight:
-                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
-                break;
-            case ctrlWrapBottom:
-                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
-                break;
-            case ctrlWrapCorner:
-                target.width += (ctrlEvent.endXY[0] - ctrlEvent.startXY[0]);
-                target.height += (ctrlEvent.endXY[1] - ctrlEvent.startXY[1]);
-                break;
-        }
-        context.putImageData(imgData, 0, 0);   //还原图像
-    }
-
-//根据始末坐标重新定义宽、高
-    function resizeDiv(target, ctrlEvent){
-        target.style.width = target.style.width? target.style.width:target.offsetWidth+"px";
-        target.style.height = target.style.height? target.style.height:target.offsetHeight+"px";
-        switch(ctrlEvent.source)
-        {
-            case ctrlWrapRight:
-                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
-                displaySize(parseInt(target.style.width), canvasBox.height);
-                break;
-            case ctrlWrapBottom:
-                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-                displaySize(canvasBox.width, parseInt(target.style.height));
-                break;
-            case ctrlWrapCorner:
-                target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
-                target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-                displaySize(parseInt(target.style.width), parseInt(target.style.height));
-                break;
-        }
-    }
-
-    function stretchAction(ctrlEvent) {
-        return function (event) {
-            event = EventUtil.getEvent(event);
-            var target = EventUtil.getTarget(event);
-            // console.log(target);
-            if(canvasWrap.style.zIndex !== -1&&ctrlEvent.flag === true){   //使虚线框在最前)
-                canvasWrap.style.zIndex = -1;
-            }
-
-            switch(event.type)
-            {
-                case "mousedown": case "touchstart":
-                var targetCursor = (target.firstElementChild !==null? target: target.parentNode); //判断点击的是那个元素
-                if(targetCursor === ctrlWrapRight||targetCursor === ctrlWrapCorner||targetCursor === ctrlWrapBottom){
-                    console.log(event.type);
-                    ctrlEvent.flag = true;
-                    ctrlEvent.source = targetCursor;
-                    ctrlEvent.startXY[0] = ctrlEvent.middleXY[0] = xConvert(event.clientX);
-                    ctrlEvent.startXY[1] = ctrlEvent.middleXY[1] = yConvert(event.clientY);
-                    console.log(targetCursor);
-                    console.log(targetCursor.style.cursor);
-                    virtualWrap.style.cursor = targetCursor.style.cursor;
-                    console.log(ctrlEvent);
-                }
-                break;
-                case "mousemove": case "touchmove":
-                event.preventDefault();
-                if(ctrlEvent.flag === true){
-                    console.log(event.type);
-                    virtualWrap.style.border = "1px dotted black";
-                    ctrlEvent.endXY[0] = xConvert(event.clientX);
-                    ctrlEvent.endXY[1] = yConvert(event.clientY);
-                    resizeDiv(virtualWrap, ctrlEvent);
-                    ctrlEvent.middleXY[0] = ctrlEvent.endXY[0];
-                    ctrlEvent.middleXY[1] = ctrlEvent.endXY[1];
-                }
-                break;
-
-                case "mouseup": case "mouseleave": case "touchend":
-                if(ctrlEvent.flag === true) {
-                    ctrlEvent.flag = false;
-                    canvasWrap.style.zIndex = 1;    //使canvas在最前
-                    virtualWrap.style.border = "none";
-                    virtualWrap.style.cursor = "default";
-                    resizeCanvas(canvasBox, ctrlEvent);
-
-                    console.log(ctrlEvent);
-                }
-                break;
-            }
-        }
-    }
-
-// createMouseEvent(virtualWrap, stretchAction);
-    ctrlStretch(ctrlWrapRight, stretchAction);
-    ctrlStretch(ctrlWrapCorner, stretchAction);
-    ctrlStretch(ctrlWrapBottom, stretchAction);
-    displaySize(canvasBox.width, canvasBox.height);
-}
 
 
 
