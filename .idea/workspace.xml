@@ -2,15 +2,13 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/../PersonalHomepage/HomePage.html" description="        .first{&#10;            background-color: #3ba..." line="0" />
-    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="122" />
+    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="196" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/XING.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/XING.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" afterPath="$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js" afterPath="$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,8 +34,8 @@
       <file leaf-file-name="Win7DrawingBoard 4.0.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+            <state relative-caret-position="527">
+              <caret line="36" column="80" selection-start-line="36" selection-start-column="80" selection-end-line="36" selection-end-column="80" />
               <folding />
             </state>
           </provider>
@@ -56,9 +54,23 @@
       <file leaf-file-name="DrawingBoard 4.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="112" column="33" selection-start-line="112" selection-start-column="33" selection-end-line="112" selection-end-column="33" />
-              <folding />
+            <state relative-caret-position="254">
+              <caret line="222" column="37" selection-start-line="222" selection-start-column="37" selection-end-line="222" selection-end-column="37" />
+              <folding>
+                <element signature="e#9443#9476#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DrawingBoard.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="92" column="42" selection-start-line="92" selection-start-column="8" selection-end-line="92" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#40#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,8 +78,8 @@
       <file leaf-file-name="InheritanceAndObserver.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="44" column="62" selection-start-line="44" selection-start-column="62" selection-end-line="44" selection-end-column="62" />
+            <state relative-caret-position="736">
+              <caret line="107" column="9" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
               <folding>
                 <element signature="e#0#39#0" expanded="false" />
               </folding>
@@ -148,7 +160,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -184,6 +195,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -305,11 +317,12 @@
       <workItem from="1527993792966" duration="7328000" />
       <workItem from="1528240994978" duration="15498000" />
       <workItem from="1528522673074" duration="13458000" />
+      <workItem from="1528593566834" duration="5648000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="293025000" />
+    <option name="totallyTimeSpent" value="298673000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -667,10 +680,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="107" column="9" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#39#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="122" column="26" selection-start-line="122" selection-start-column="18" selection-end-line="122" selection-end-column="26" />
+        <state relative-caret-position="195">
+          <caret line="92" column="42" selection-start-line="92" selection-start-column="8" selection-end-line="92" selection-end-column="42" />
           <folding>
             <element signature="e#0#40#0" expanded="false" />
           </folding>
@@ -679,27 +702,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+        <state relative-caret-position="527">
+          <caret line="36" column="80" selection-start-line="36" selection-start-column="80" selection-end-line="36" selection-end-column="80" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="44" column="62" selection-start-line="44" selection-start-column="62" selection-end-line="44" selection-end-column="62" />
-          <folding>
-            <element signature="e#0#39#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="112" column="33" selection-start-line="112" selection-start-column="33" selection-end-line="112" selection-end-column="33" />
-          <folding />
+        <state relative-caret-position="254">
+          <caret line="222" column="37" selection-start-line="222" selection-start-column="37" selection-end-line="222" selection-end-column="37" />
+          <folding>
+            <element signature="e#9443#9476#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

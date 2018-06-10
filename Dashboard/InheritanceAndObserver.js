@@ -84,6 +84,7 @@ var _indexOf = function(array, element){
 };
 
 //实现观察者模式
+//将观察者模式基类直接加到基类，不再调用下面的类，原因是基于jQuery的class不能对两个属性同事继承
 var EventTarget =Class.extend({
     createHandlers: function(handlers){
         this._handlers = handlers;
@@ -105,8 +106,8 @@ var EventTarget =Class.extend({
         if(!this._handlers&&!this._handlers[type]){
             return;
         }
-        var i,
-            len,
+        var i = null,
+            len = this._handlers[type].length,
             arg = Array.prototype.slice(arguments, 1);    //每个handler函数传入参数的方式
         if( this._handlers[type] instanceof Array){
             var handlers = this._handlers[type];

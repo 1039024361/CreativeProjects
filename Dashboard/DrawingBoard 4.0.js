@@ -2,7 +2,7 @@
  * Created by XING on 2018/5/10.
  */
 //组件基对象
-var Base = Class.extend(EventTarget, {
+var Base = Class.extend({
     init:function(config){
         this._config = config;    //保存配置信息
         // this.bind();      //绑定事件处理程序
@@ -23,13 +23,83 @@ var Base = Class.extend(EventTarget, {
     }
 });
 
+//加入观察者模式
+var RichBase = Base.extend({
+    createHandlers: function(handlers){
+        this._handlers = handlers;
+    },
+    addHandler: function (type, handler) {
+        if(!this._handlers){
+            this._handlers = {};
+        }
+        if(!this._handlers[type]){
+            this._handlers[type] = [];
+        }
+        if(_indexOf(this._handlers[type], handler) === -1 && handler === "function"){
+            this._handlers[type].push(handler);
+        }
+
+        return this;
+    },
+    fire: function(type){
+        if(!this._handlers&&!this._handlers[type]){
+            return;
+        }
+        var i = null,
+            len = this._handlers[type].length,
+            arg = Array.prototype.slice(arguments, 1);    //每个handler函数传入参数的方式
+        if( this._handlers[type] instanceof Array){
+            var handlers = this._handlers[type];
+            for(i=0; i<len; i++){
+                handlers[i].apply(this, arg);
+            }
+        }
+
+        return this;
+    },
+    removeHandler: function(type, handler){
+        //不传递任何参数，直接清空事件对象
+        if(!type&&!handler){
+            this._handlers = {};
+        }
+        //只传递type参数，清空对应type数组
+        if(type&&!handler){
+            delete this._handlers[type];
+        }
+
+        if(type&&handler){
+            if( this._handlers[type] instanceof Array){
+                var handlers = this._handlers[type];
+                var index = _indexOf(handlers, handler);
+                if(index > -1){
+                    handlers.splice(index, 1);
+                }
+            }
+        }
+    },
+    //加入节流机制
+    throttle: function(func, delay){
+        var prev = Date.now(),
+            self = this;
+
+        return function () {
+            var arg = Array.prototype.slice.call(arguments, 0);
+            var now = Date.now();
+            if(now-prev >= delay){
+                func.apply(self, arg);
+                prev = now;
+            }
+        }
+    }
+});
 
 //绘图模块设计
-var Drawing = Base.extend({
+var Drawing = RichBase.extend({
     //在这里注册所有事件，使用观察者模式
     EVENTS:{
             "mousedown":[
                 function(event){
+                    event = EventUtil.getEvent(event);
                     console.log(`down`);
                     this._ctrlEvent.flag = true;
                     this.context.beginPath();
@@ -38,6 +108,7 @@ var Drawing = Base.extend({
             ],
             "mousemove":[
                 function(event){
+                    event = EventUtil.getEvent(event);
                     event.preventDefault();
                     this._displayCursorPos(this._xConvert(event.clientX),  this._yConvert(event.clientY));
                     if(this._ctrlEvent.flag === true){
@@ -61,12 +132,14 @@ var Drawing = Base.extend({
             ],
             "touchstart":[
                 function(event){
+                    event = EventUtil.getEvent(event);
                     this.context.beginPath();
                     this.context.moveTo(this._xConvert(event.touches[0].clientX), this._yConvert(event.touches[0].clientY));
                 }
             ],
             "touchmove":[
                 function(event){
+                    event = EventUtil.getEvent(event);
                     event.preventDefault();   //阻止滚动
                     this._displayCursorPos(this._xConvert(event.changedTouches[0].clientX),  this._yConvert(event.changedTouches[0].clientY));
                     this._draw(this._xConvert(event.changedTouches[0].clientX), this._yConvert(event.changedTouches[0].clientY));
@@ -93,11 +166,11 @@ var Drawing = Base.extend({
     },
     //坐标转换
     _xConvert: function (X){
-    var bbox = canvasBox.getBoundingClientRect();
+    var bbox = this.canvasBox.getBoundingClientRect();
     return X -= bbox.left;
     },
     _yConvert: function (Y){
-    var bbox = canvasBox.getBoundingClientRect();
+    var bbox = this.canvasBox.getBoundingClientRect();
     // return Y -= 146;
     return Y -= bbox.top;
     },
@@ -107,39 +180,41 @@ var Drawing = Base.extend({
     },
    //实时显示绘图区域大小
     _displaySize: function (x, y){
-        (x>=0&&y>=0)? bottomFonts[2].textContent = `${x} × ${y}像素`: bottomFonts[2].textContent ="";
+        (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${x} × ${y}像素`: this.bottomFonts[2].textContent ="";
     },
+    //事件绑定及节流处理
     init: function (config) {
         console.log(this._super);
         this._super(config);
         this.canvasBox = document.getElementById("canvasBox");   //canvas
-        this.context = canvasBox.getContext("2d");
+        this.context = this.canvasBox.getContext("2d");
         this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
-        this.bind();
         this.createHandlers(this.EVENTS);    //加入到观察者
+        this.bind();
     },
     bind: function(){
         var self = this;
         EventUtil.addHandler(this.canvasBox, "mousedown", function (event) {
-            self.fire(self.EVENTS["mousedown"]);
+            self.fire("mousedown", event);
         });
         EventUtil.addHandler(this.canvasBox, "mousemove", function (event) {
-            self.fire(self.EVENTS["mousemove"]);
+            // self.throttle(self.fire, 1).call(self, "mousemove", event);
+            self.fire("mousemove", event);
         });
         EventUtil.addHandler(this.canvasBox, "mouseup", function (event) {
-            self.fire(self.EVENTS["mouseup"]);
+            self.fire("mouseup", event);
         });
         EventUtil.addHandler(this.canvasBox, "mouseleave", function (event) {
-            self.fire(self.EVENTS["mouseleave"]);
+            self.fire("mouseleave", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchstart", function (event) {
-            self.fire(self.EVENTS["touchstart"]);
+            self.fire("touchstart", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchmove", function (event) {
-            self.fire(self.EVENTS["touchmove"]);
+            self.fire("touchmove", event);
         });
         EventUtil.addHandler(this.canvasBox, "touchend", function (event) {
-            self.fire(self.EVENTS["touchend"]);
+            self.fire("touchend", event);
         });
     }
 });
@@ -153,7 +228,7 @@ var Drawing = Base.extend({
     });
 })();
 
-// var canvasBox = document.getElementById("canvasBox");
+var canvasBox = document.getElementById("canvasBox");
 var canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
 var drawArea = document.getElementById("draw-area");
 var ctrlWrapRight = document.getElementsByClassName("ctrl-wrap-right")[0];
@@ -186,15 +261,15 @@ canvasWrap.style.zIndex = 1;
 //         bottomFonts[0].textContent ="";
 //     }
 // }
-// //实时显示绘图区域大小
-// function displaySize(x, y){
-//     if(x>=0&&y>=0){
-//         bottomFonts[2].textContent = `${x} × ${y}像素`;
-//     }
-//     else{
-//         bottomFonts[2].textContent ="";
-//     }
-// }
+//实时显示绘图区域大小
+function displaySize(x, y){
+    if(x>=0&&y>=0){
+        bottomFonts[2].textContent = `${x} × ${y}像素`;
+    }
+    else{
+        bottomFonts[2].textContent ="";
+    }
+}
 
 //
 // if(canvasBox.getContext){
