@@ -854,6 +854,10 @@ div{
     margin: 1px;
 }
 
+.line-highlight:hover{
+    border: 1px solid #f0bd63;
+}
+
 .color-box{
     /*margin: 1px;*/
     /*border: 1px solid #a9b2bf;*/

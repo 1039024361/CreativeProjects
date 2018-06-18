@@ -612,89 +612,66 @@ var Color = RichBase.extend({
                 }
             ],
         },
-    },
-    //事件绑定及节流处理
-    init: function (config) {
-        this._super(config);
-        this.colorSetButtons = document.querySelectorAll(".color-1");
-        this.colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
-        this.fontColor = document.getElementsByClassName("font-color")[0];
-        this.backgroundColor = document.getElementsByClassName("background-color")[0];
-        this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
-        this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
-        this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
-        //初始化
-        this.bind();
-    },
-    bind: function(){
-        var self = this;
-        EventUtil.addHandler(this.colorSetButtons[0], "click", function (event) {
-            self.fire(self.colorSetButtons[0], "click", event);
-        });
-        EventUtil.addHandler(this.colorSetButtons[1], "click", function (event) {
-            self.fire(self.colorSetButtons[1], "click", event);   //与click事件处理函数一直
-        });
-        EventUtil.addHandler(this.colorBoxContainer, "click", function (event) {
-            self.fire(self.colorBoxContainer, "click", event);   //与click事件处理函数一直
-        });
-    },
-});
-
-//拖拽图片
-var DragPic = RichBase.extend({
-    //在这里注册所有事件，使用观察者模式
-    EVENTS:{
-        "colorSetButtons[0]": {
-            "click": [
-                function (event) {
-                    if(!this.colorSetButtons[0].classList.contains("selected")){
-                        this.colorSetButtons[0].classList.toggle("selected");
-                        this.colorSetButtons[1].classList.toggle("selected");
-                    }
-                }
-            ],
-        },
-        "colorSetButtons[1]": {
-            "click": [
-                function (event) {
-                    if(!this.colorSetButtons[1].classList.contains("selected")){
-                        this.colorSetButtons[0].classList.toggle("selected");
-                        this.colorSetButtons[1].classList.toggle("selected");
-                    }
-                }
-            ],
-        },
-        "colorBoxContainer": {
-            "click": [
+        "colorInput": {
+            "change": [
                 function (event) {
                     event = EventUtil.getEvent(event);
                     var target = EventUtil.getTarget(event);
-                    var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
+                    var newColor = target.value;
+                    // var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
 
-                    if(actualTarget.style.backgroundColor){
+                    if(typeof newColor === "string"){
+                        this._arrangeNewColorArray(this.newColor, newColor);
+                        this._renderNewColorBoxes(this.colorBoxes, this.newColor);
                         if(!this.colorSetButtons[0].classList.contains("selected")){
-                            this.backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
-                            drawingInfo.set("backgroundColor", actualTarget.style.backgroundColor);
+                            this.backgroundColor.style.backgroundColor = newColor;
+                            drawingInfo.set("backgroundColor", newColor);
                         }
                         else{
-                            this.fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
-                            drawingInfo.set("color", actualTarget.style.backgroundColor);
+                            this.fontColor.style.backgroundColor = newColor;
+                            drawingInfo.set("color", newColor);
                         }
                     }
                 }
             ],
         },
     },
+    _arrangeNewColorArray: function(array, newColor){
+        var index = array.indexOf(newColor);
+
+        if(index < 0){
+            if(array.length >= 10){
+                array.shift();
+            }
+        }
+        else{
+            array.splice(index, 1);
+
+        }
+        array.push(newColor);
+    },
+    _renderNewColorBoxes: function(boxes, array){
+        var i = null,
+            len = array.length;
+        for(i = 0; i<len; i++){
+            boxes[i+20].classList.add("line-highlight");
+            boxes[i+20].firstElementChild.style.backgroundColor = array[i];
+        }
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
         this.colorSetButtons = document.querySelectorAll(".color-1");
         this.colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
+        this.colorBoxes = document.querySelectorAll(".color-box-wrap");
         this.fontColor = document.getElementsByClassName("font-color")[0];
         this.backgroundColor = document.getElementsByClassName("background-color")[0];
+        this.colorInput = document.querySelector("#colorInput");
+        this.newColor = [];
         this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
         this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
         this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
+        this.createHandlers(this.colorInput, this.EVENTS["colorInput"]);
         //初始化
         this.bind();
     },
@@ -709,8 +686,85 @@ var DragPic = RichBase.extend({
         EventUtil.addHandler(this.colorBoxContainer, "click", function (event) {
             self.fire(self.colorBoxContainer, "click", event);   //与click事件处理函数一直
         });
+        EventUtil.addHandler(this.colorInput, "change", function (event) {
+            self.fire(self.colorInput, "change", event);   //与click事件处理函数一直
+        });
     },
 });
+
+// //拖拽图片
+// var DragPic = RichBase.extend({
+//     //在这里注册所有事件，使用观察者模式
+//     EVENTS:{
+//         "colorSetButtons[0]": {
+//             "click": [
+//                 function (event) {
+//                     if(!this.colorSetButtons[0].classList.contains("selected")){
+//                         this.colorSetButtons[0].classList.toggle("selected");
+//                         this.colorSetButtons[1].classList.toggle("selected");
+//                     }
+//                 }
+//             ],
+//         },
+//         "colorSetButtons[1]": {
+//             "click": [
+//                 function (event) {
+//                     if(!this.colorSetButtons[1].classList.contains("selected")){
+//                         this.colorSetButtons[0].classList.toggle("selected");
+//                         this.colorSetButtons[1].classList.toggle("selected");
+//                     }
+//                 }
+//             ],
+//         },
+//         "colorBoxContainer": {
+//             "click": [
+//                 function (event) {
+//                     event = EventUtil.getEvent(event);
+//                     var target = EventUtil.getTarget(event);
+//                     var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
+//
+//                     if(actualTarget.style.backgroundColor){
+//                         if(!this.colorSetButtons[0].classList.contains("selected")){
+//                             this.backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
+//                             drawingInfo.set("backgroundColor", actualTarget.style.backgroundColor);
+//                         }
+//                         else{
+//                             this.fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
+//                             drawingInfo.set("color", actualTarget.style.backgroundColor);
+//                         }
+//                     }
+//                 }
+//             ],
+//         },
+//     },
+//
+//     //事件绑定及节流处理
+//     init: function (config) {
+//         this._super(config);
+//         this.colorSetButtons = document.querySelectorAll(".color-1");
+//
+//         this.colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
+//         this.fontColor = document.getElementsByClassName("font-color")[0];
+//         this.backgroundColor = document.getElementsByClassName("background-color")[0];
+//         this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
+//         this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
+//         this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
+//         //初始化
+//         this.bind();
+//     },
+//     bind: function(){
+//         var self = this;
+//         EventUtil.addHandler(this.colorSetButtons[0], "click", function (event) {
+//             self.fire(self.colorSetButtons[0], "click", event);
+//         });
+//         EventUtil.addHandler(this.colorSetButtons[1], "click", function (event) {
+//             self.fire(self.colorSetButtons[1], "click", event);   //与click事件处理函数一直
+//         });
+//         EventUtil.addHandler(this.colorBoxContainer, "click", function (event) {
+//             self.fire(self.colorBoxContainer, "click", event);   //与click事件处理函数一直
+//         });
+//     },
+// });
 
 (function(){
     var drawingModule = new Drawing(
