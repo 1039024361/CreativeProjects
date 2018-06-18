@@ -2,7 +2,7 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/../PersonalHomepage/HomePage.html" description="        .first{&#10;            background-color: #3ba..." line="0" />
-    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="242" />
+    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="257" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
@@ -24,17 +24,39 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DockManager">
+    <window id="2">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="DrawingBoard.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="434">
+                    <caret line="172" column="53" selection-start-line="172" selection-start-column="8" selection-end-line="172" selection-end-column="53" />
+                    <folding>
+                      <element signature="e#0#40#0" expanded="false" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="CreativeProjects" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Win7DrawingBoard 4.0.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Win7DrawingBoard 4.0.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="339" column="69" selection-start-line="339" selection-start-column="69" selection-end-line="339" selection-end-column="69" />
+            <state relative-caret-position="1599">
+              <caret line="365" column="28" selection-start-line="365" selection-start-column="28" selection-end-line="365" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -50,11 +72,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DrawingBoard 4.0.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DrawingBoard 4.0.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="733" column="43" selection-start-line="733" selection-start-column="43" selection-end-line="733" selection-end-column="43" />
+            <state relative-caret-position="652">
+              <caret line="218" column="20" selection-start-line="218" selection-start-column="20" selection-end-line="218" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -337,12 +359,12 @@
       <workItem from="1528522673074" duration="13458000" />
       <workItem from="1528593566834" duration="22673000" />
       <workItem from="1529143854749" duration="1874000" />
-      <workItem from="1529287052862" duration="9302000" />
+      <workItem from="1529287052862" duration="12267000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="326874000" />
+    <option name="totallyTimeSpent" value="329839000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -712,26 +734,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="429" column="14" selection-start-line="429" selection-start-column="14" selection-end-line="429" selection-end-column="14" />
+        <state relative-caret-position="434">
+          <caret line="172" column="53" selection-start-line="172" selection-start-column="8" selection-end-line="172" selection-end-column="53" />
           <folding>
             <element signature="e#0#40#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html">
+    <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="339" column="69" selection-start-line="339" selection-start-column="69" selection-end-line="339" selection-end-column="69" />
+        <state relative-caret-position="652">
+          <caret line="218" column="20" selection-start-line="218" selection-start-column="20" selection-end-line="218" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
+    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="733" column="43" selection-start-line="733" selection-start-column="43" selection-end-line="733" selection-end-column="43" />
+        <state relative-caret-position="1599">
+          <caret line="365" column="28" selection-start-line="365" selection-start-column="28" selection-end-line="365" selection-end-column="28" />
           <folding />
         </state>
       </provider>

@@ -197,6 +197,7 @@ var Drawing = RichBase.extend({
                             console.log(this.image);
                             // document.body.appendChild(image);
                             this.image.onload = function() {
+                                this._resizeCanvasBox(this.canvasBox, this.image.width, this.image.height);
                                 this.context.drawImage(this.image, 0, 0);
                             }.bind(this);
                         }.bind(this);
@@ -226,6 +227,20 @@ var Drawing = RichBase.extend({
     this.context.strokeStyle = drawingInfo.get("behavior") !== "erase"? drawingInfo.get("color"): drawingInfo.get("backgroundColor");
     this.context.lineTo(x,y);
     this.context.stroke();
+    },
+    _resizeCanvasBox: function(target, width, height){
+        //先保存图像信息
+        var imgData = target.getContext("2d").getImageData(0, 0, target.width, target.height);
+        if(!target){
+            return null;
+        }
+        if(typeof width === "number"){
+            target.width = width;
+        }
+        if(typeof height === "number"){
+            target.height = height;
+        }
+        target.getContext("2d").putImageData(imgData, 0, 0);   //还原图像
     },
     //事件绑定及节流处理
     init: function (config) {
