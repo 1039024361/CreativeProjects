@@ -173,9 +173,43 @@ var Drawing = RichBase.extend({
                     this._draw(this._xConvert(event.changedTouches[0].clientX), this._yConvert(event.changedTouches[0].clientY));
                 }
             ],
-            "touchend":[
+            //drag事件用于拖放图片
+            "dragenter":[
                 function(event){
-                    this._displayCursorPos(-1,  -1);
+                    event = EventUtil.getEvent(event);
+                    EventUtil.preventDefault(event);
+                }
+            ],
+            "drop":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    EventUtil.preventDefault(event);
+                    var files,
+                        reader = new FileReader();
+                    files = event.dataTransfer.files;
+                    console.log(files[0]);
+
+                    //只读取第一个图片
+                    if(/image/.test(files[0].type)){
+                        reader.readAsDataURL(files[0]);
+                        reader.onload = function () {
+                            this.image.src = reader.result;
+                            console.log(this.image);
+                            // document.body.appendChild(image);
+                            this.image.onload = function() {
+                                this.context.drawImage(this.image, 0, 0);
+                            }.bind(this);
+                        }.bind(this);
+                    }
+                    else{
+                        console.log("请传入一幅图片");
+                    }
+                }
+            ],
+            "dragover":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    EventUtil.preventDefault(event);
                 }
             ],
         }
@@ -199,6 +233,7 @@ var Drawing = RichBase.extend({
         this.canvasBox = document.getElementById("canvasBox");   //canvas
         this.context = this.canvasBox.getContext("2d");
         this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
+        this.image = document.getElementById("imgContainer");
         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
         this.bind();
@@ -209,7 +244,6 @@ var Drawing = RichBase.extend({
             self.fire(self.canvasBox, "mousedown", event);
         });
         EventUtil.addHandler(this.canvasBox, "mousemove", function (event) {
-            // self.throttle(self.fire, 1).call(self, "mousemove", event);
             self.fire(self.canvasBox, "mousemove", event);
         });
         EventUtil.addHandler(this.canvasBox, "mouseup", function (event) {
@@ -226,6 +260,16 @@ var Drawing = RichBase.extend({
         });
         EventUtil.addHandler(this.canvasBox, "touchend", function (event) {
             self.fire(self.canvasBox, "touchend", event);
+        });
+        //拖放图片事件
+        EventUtil.addHandler(this.canvasBox, "dragenter", function (event) {
+            self.fire(self.canvasBox, "dragenter", event);
+        });
+        EventUtil.addHandler(this.canvasBox, "drop", function (event) {
+            self.fire(self.canvasBox, "drop", event);
+        });
+        EventUtil.addHandler(this.canvasBox, "dragover", function (event) {
+            self.fire(self.canvasBox, "dragover", event);
         });
     }
 });
@@ -460,6 +504,198 @@ var Tool = RichBase.extend({
     },
 });
 
+//线型选择
+var Line = RichBase.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+        "lineWeightDrop": {
+            "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event);
+                    var actualTarget = target.firstElementChild ? target : target.parentNode;
+
+                    if (actualTarget.className === "drop-line-wrap") {
+                        this.lineWraps[drawingInfo.get('lineWeight') - 1].classList.toggle("selected");
+                        this.lineWraps[parseInt(actualTarget.id) - 1].classList.toggle("selected");
+                        drawingInfo.set('lineWeight', parseInt(actualTarget.id));
+                    }
+                }
+            ],
+        },
+        "lineWeightWrap": {
+            "touchstart": [
+                function (event) {
+                    this.lineWeightDrop.style.display === "display" ? this.lineWeightDrop.style.display = "none" : "display";
+                }
+            ],
+        }
+        },
+    //事件绑定及节流处理
+    init: function (config) {
+        this._super(config);
+        this.lineWeightDrop = document.getElementById("drop-line-weight");
+        this.lineWeightWrap = document.getElementById("line-weight-wrap");
+        this.lineWraps = document.querySelectorAll(".drop-line-wrap");
+        this.createHandlers(this.lineWeightDrop, this.EVENTS["lineWeightDrop"]);               //加入到观察者
+        this.createHandlers(this.lineWeightWrap, this.EVENTS["lineWeightWrap"]);               //加入到观察者
+        //初始化
+        this.bind();
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.lineWeightDrop, "click", function (event) {
+            self.fire(self.lineWeightDrop, "click", event);
+        });
+        EventUtil.addHandler(this.lineWeightWrap, "touchstart", function (event) {
+            self.fire(self.lineWeightWrap, "touchstart", event);   //与click事件处理函数一直
+        });
+    },
+});
+
+//颜色选择
+var Color = RichBase.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+        "colorSetButtons[0]": {
+            "click": [
+                function (event) {
+                    if(!this.colorSetButtons[0].classList.contains("selected")){
+                        this.colorSetButtons[0].classList.toggle("selected");
+                        this.colorSetButtons[1].classList.toggle("selected");
+                    }
+                }
+            ],
+        },
+        "colorSetButtons[1]": {
+            "click": [
+                function (event) {
+                    if(!this.colorSetButtons[1].classList.contains("selected")){
+                        this.colorSetButtons[0].classList.toggle("selected");
+                        this.colorSetButtons[1].classList.toggle("selected");
+                    }
+                }
+            ],
+        },
+        "colorBoxContainer": {
+            "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event);
+                    var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
+
+                    if(actualTarget.style.backgroundColor){
+                        if(!this.colorSetButtons[0].classList.contains("selected")){
+                            this.backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
+                            drawingInfo.set("backgroundColor", actualTarget.style.backgroundColor);
+                        }
+                        else{
+                            this.fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
+                            drawingInfo.set("color", actualTarget.style.backgroundColor);
+                        }
+                    }
+                }
+            ],
+        },
+    },
+    //事件绑定及节流处理
+    init: function (config) {
+        this._super(config);
+        this.colorSetButtons = document.querySelectorAll(".color-1");
+        this.colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
+        this.fontColor = document.getElementsByClassName("font-color")[0];
+        this.backgroundColor = document.getElementsByClassName("background-color")[0];
+        this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
+        this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
+        this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
+        //初始化
+        this.bind();
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.colorSetButtons[0], "click", function (event) {
+            self.fire(self.colorSetButtons[0], "click", event);
+        });
+        EventUtil.addHandler(this.colorSetButtons[1], "click", function (event) {
+            self.fire(self.colorSetButtons[1], "click", event);   //与click事件处理函数一直
+        });
+        EventUtil.addHandler(this.colorBoxContainer, "click", function (event) {
+            self.fire(self.colorBoxContainer, "click", event);   //与click事件处理函数一直
+        });
+    },
+});
+
+//拖拽图片
+var DragPic = RichBase.extend({
+    //在这里注册所有事件，使用观察者模式
+    EVENTS:{
+        "colorSetButtons[0]": {
+            "click": [
+                function (event) {
+                    if(!this.colorSetButtons[0].classList.contains("selected")){
+                        this.colorSetButtons[0].classList.toggle("selected");
+                        this.colorSetButtons[1].classList.toggle("selected");
+                    }
+                }
+            ],
+        },
+        "colorSetButtons[1]": {
+            "click": [
+                function (event) {
+                    if(!this.colorSetButtons[1].classList.contains("selected")){
+                        this.colorSetButtons[0].classList.toggle("selected");
+                        this.colorSetButtons[1].classList.toggle("selected");
+                    }
+                }
+            ],
+        },
+        "colorBoxContainer": {
+            "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event);
+                    var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
+
+                    if(actualTarget.style.backgroundColor){
+                        if(!this.colorSetButtons[0].classList.contains("selected")){
+                            this.backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
+                            drawingInfo.set("backgroundColor", actualTarget.style.backgroundColor);
+                        }
+                        else{
+                            this.fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
+                            drawingInfo.set("color", actualTarget.style.backgroundColor);
+                        }
+                    }
+                }
+            ],
+        },
+    },
+    //事件绑定及节流处理
+    init: function (config) {
+        this._super(config);
+        this.colorSetButtons = document.querySelectorAll(".color-1");
+        this.colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
+        this.fontColor = document.getElementsByClassName("font-color")[0];
+        this.backgroundColor = document.getElementsByClassName("background-color")[0];
+        this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
+        this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
+        this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
+        //初始化
+        this.bind();
+    },
+    bind: function(){
+        var self = this;
+        EventUtil.addHandler(this.colorSetButtons[0], "click", function (event) {
+            self.fire(self.colorSetButtons[0], "click", event);
+        });
+        EventUtil.addHandler(this.colorSetButtons[1], "click", function (event) {
+            self.fire(self.colorSetButtons[1], "click", event);   //与click事件处理函数一直
+        });
+        EventUtil.addHandler(this.colorBoxContainer, "click", function (event) {
+            self.fire(self.colorBoxContainer, "click", event);   //与click事件处理函数一直
+        });
+    },
+});
 
 (function(){
     var drawingModule = new Drawing(
@@ -475,140 +711,30 @@ var Tool = RichBase.extend({
         var StretchModule = new Stretch();
     }
     var tool = new Tool();
+    var line = new Line();
+    var colorSelect = new Color();
 })();
 
 //双击折叠菜单栏
-var topMenu = document.getElementById("top-menu");
-var menu = document.getElementById("menu");
+// var topMenu = document.getElementById("top-menu");
+// var menu = document.getElementById("menu");
+//
+// EventUtil.addHandler(topMenu, "click", function(event){
+//     event = EventUtil.getEvent(event);
+//     event.preventDefault();
+//     console.log("双击");
+//     if(menu.style.display === "none"){
+//         menu.style.display = "block";
+//         drawArea.style.top = "139px";
+//         console.log(drawArea.style.top);
+//     }
+//     else{
+//         menu.style.display = "none" ;
+//         drawArea.style.top = "29px";
+//         console.log(drawArea.style.top);
+//     }
+// });
 
-EventUtil.addHandler(topMenu, "click", function(event){
-    event = EventUtil.getEvent(event);
-    event.preventDefault();
-    console.log("双击");
-    if(menu.style.display === "none"){
-        menu.style.display = "block";
-        drawArea.style.top = "139px";
-        console.log(drawArea.style.top);
-    }
-    else{
-        menu.style.display = "none" ;
-        drawArea.style.top = "29px";
-        console.log(drawArea.style.top);
-    }
-});
-
-
-//线型选择
-var lineWeightDrop = document.getElementById("drop-line-weight");
-var lineWeightWrap = document.getElementById("line-weight-wrap");
-var lineWraps = document.querySelectorAll(".drop-line-wrap");
-
-EventUtil.addHandler(lineWeightWrap, "touchstart", function(event){
-    lineWeightDrop.style.display === "display"? lineWeightDrop.style.display = "none":"display";
-});
-
-EventUtil.addHandler(lineWeightDrop, "click", function(event){
-    event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event);
-    var actualTarget = target.firstElementChild? target: target.parentNode;
-
-    if(actualTarget.className === "drop-line-wrap"){
-        lineWraps[drawBoardStatus.lineWeight-1].classList.toggle("selected");
-        lineWraps[parseInt(actualTarget.id)-1].classList.toggle("selected");
-        drawBoardStatus.lineWeight = parseInt(actualTarget.id);
-    }
-});
-
-//颜色选择处理
-var colorSetButtons = document.querySelectorAll(".color-1");
-var colorBoxes = document.querySelectorAll(".color-box");
-var colorBoxContainer = document.getElementsByClassName("color-box-container")[0];
-var fontColor = document.getElementsByClassName("font-color")[0];
-var backgroundColor = document.getElementsByClassName("background-color")[0];
-
-EventUtil.addHandler(colorSetButtons[0], "click", function(event){
-    event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event);
-
-    if(!colorSetButtons[0].classList.contains("selected")){
-        colorSetButtons[0].classList.toggle("selected");
-        colorSetButtons[1].classList.toggle("selected");
-    }
-});
-
-EventUtil.addHandler(colorSetButtons[1], "click", function(event){
-    event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event);
-
-    if(!colorSetButtons[1].classList.contains("selected")){
-        colorSetButtons[0].classList.toggle("selected");
-        colorSetButtons[1].classList.toggle("selected");
-    }
-});
-
-EventUtil.addHandler(colorBoxContainer, "click", function(event){
-    event = EventUtil.getEvent(event);
-    var target = EventUtil.getTarget(event);
-    var actualTarget = (target.childElementCount === 0 && target.className === "color-box")? target: target.firstElementChild;
-
-    if(actualTarget.style.backgroundColor){
-        if(!colorSetButtons[0].classList.contains("selected")){
-            backgroundColor.style.backgroundColor = actualTarget.style.backgroundColor;
-            drawBoardStatus.backgroundColor = actualTarget.style.backgroundColor;
-        }
-        else{
-            fontColor.style.backgroundColor = actualTarget.style.backgroundColor;
-            drawBoardStatus.color = actualTarget.style.backgroundColor;
-        }
-    }
-});
-
-// var image = document.createElement("img");
-var image = document.getElementById("imgContainer");
-
-//支持拖放图片
-function handleDragEvent(event){
-    var info = "",
-        files,
-        reader = new FileReader();
-
-    EventUtil.preventDefault(event);
-
-    if (event.type === "dragenter"){
-        // canvasWrap.style.zIndex = 1;    //使canvas在最前
-    }
-    else if (event.type === "drop"){
-        files = event.dataTransfer.files;
-        console.log(files[0]);
-
-
-        //只读取第一个图片
-        if(/image/.test(files[0].type)){
-            reader.readAsDataURL(files[0]);
-            reader.onload = function () {
-                // var image = document.createElement("img");
-                // image.style.display = "none";
-                image.src = reader.result;
-                console.log(image);
-                document.body.appendChild(image);
-                image.onload = function() {
-                    context.drawImage(image, 0, 0);
-                };
-            };
-        }
-        else{
-            console.log("请传入一幅图片");
-        }
-        
-    }
-    else if(event.type === "dragover"){
-        // canvasWrap.style.zIndex = -1;    //使虚线框在最前
-    }
-}
-
-EventUtil.addHandler(canvasBox, "dragenter", handleDragEvent);
-EventUtil.addHandler(canvasBox, "dragover", handleDragEvent);
-EventUtil.addHandler(canvasBox, "drop", handleDragEvent);
 
 //提示框
 var getReminder = document.getElementById("get-reminder");
