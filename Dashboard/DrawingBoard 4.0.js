@@ -269,11 +269,13 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var imageRight90 = function(){
                         this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                         this.context.translate(this.canvasBox.width, 0);
                         this.context.rotate(0.5*Math.PI);
                         this.context.drawImage(this.image, 0, 0);
-                        this.context.translate(-this.canvasBox.width, 0);
-                        this.context.rotate(-0.5*Math.PI);  //恢复坐标
+                        // this.context.translate(-this.canvasBox.width, 0);
+                        // this.context.rotate(-0.5*Math.PI);  //恢复坐标
+                        this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", imageRight90);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageRight90);
@@ -283,11 +285,13 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var imageLeft90 = function(){
                         this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                         this.context.translate(0, this.canvasBox.height);
                         this.context.rotate(-0.5*Math.PI);
                         this.context.drawImage(this.image, 0, 0);
-                        this.context.translate(0, -this.canvasBox.height);
-                        this.context.rotate(0.5*Math.PI);  //恢复坐标
+                        // this.context.translate(0, -this.canvasBox.height);
+                        // this.context.rotate(0.5*Math.PI);  //恢复坐标
+                        this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", imageLeft90);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageLeft90);
@@ -297,17 +301,14 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var rotate180 = function(){
                         // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
-                        this.context.strokeStyle = "black";
-                        this.context.strokeRect(0, 0, 100, 50);
-                        this.context.translate(this.canvasBox.width, this.canvasBox.height);
-                        this.context.rotate(Math.PI);
-                        this.context.strokeStyle = "#ff0000";
-                        this.context.strokeRect(0, 0, 100, 50);
+                        // this.context.translate(this.canvasBox.width, this.canvasBox.height);
+                        // this.context.rotate(Math.PI);
+                        this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                        this.context.setTransform(-1, 0, 0, -1, this.canvasBox.width, this.canvasBox.height);
                         this.context.drawImage(this.image, 0, 0);
-                        this.context.translate(-this.canvasBox.width, -this.canvasBox.height);
-                        this.context.rotate(-Math.PI);  //恢复坐标
-                        this.context.strokeStyle = "black";
-                        this.context.strokeRect(0, 0, 100, 50);
+                        // this.context.translate(-this.canvasBox.width, -this.canvasBox.height);
+                        // this.context.rotate(-Math.PI);  //恢复坐标
+                        this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", rotate180);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", rotate180);
@@ -317,11 +318,14 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var flipVertical = function(){
                         // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
-                        this.context.translate(0, this.canvasBox.height);
-                        this.context.scale(1.0, -1.0);
+                        // this.context.translate(0, this.canvasBox.height);
+                        // this.context.scale(1.0, -1.0);
+                        this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                        this.context.setTransform(1, 0, 0, -1, 0, this.canvasBox.height);
                         this.context.drawImage(this.image, 0, 0);
-                        this.context.translate(0, -this.canvasBox.height);
-                        this.context.scale(1.0, -1.0);
+                        // this.context.translate(0, -this.canvasBox.height);
+                        // this.context.scale(1.0, -1.0);
+                        this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", flipVertical);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipVertical);
@@ -331,11 +335,14 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var flipHorizontal = function(){
                         // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
-                        this.context.translate(this.canvasBox.width, 0);
-                        this.context.scale(-1.0, 1.0);
+                        // this.context.translate(this.canvasBox.width, 0);
+                        // this.context.scale(-1.0, 1.0);
+                        this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                        this.context.setTransform(-1, 0, 0, 1, this.canvasBox.width, 0);
                         this.context.drawImage(this.image, 0, 0);
-                        this.context.translate(-this.canvasBox.width, 0);
-                        this.context.scale(-1.0, 1.0);
+                        // this.context.translate(-this.canvasBox.width, 0);
+                        // this.context.scale(-1.0, 1.0);
+                        this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", flipHorizontal);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipHorizontal);
