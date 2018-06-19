@@ -297,11 +297,17 @@ var Drawing = RichBase.extend({
                     this.image.src = canvasBox.toDataURL("image/png");
                     var rotate180 = function(){
                         // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.strokeStyle = "black";
+                        this.context.strokeRect(0, 0, 100, 50);
                         this.context.translate(this.canvasBox.width, this.canvasBox.height);
                         this.context.rotate(Math.PI);
+                        this.context.strokeStyle = "#ff0000";
+                        this.context.strokeRect(0, 0, 100, 50);
                         this.context.drawImage(this.image, 0, 0);
                         this.context.translate(-this.canvasBox.width, -this.canvasBox.height);
                         this.context.rotate(-Math.PI);  //恢复坐标
+                        this.context.strokeStyle = "black";
+                        this.context.strokeRect(0, 0, 100, 50);
                         EventUtil.removeHandler(this.image, "load", rotate180);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", rotate180);
@@ -875,12 +881,12 @@ var Color = RichBase.extend({
 
 
 //提示框
-var getReminder = document.getElementById("get-reminder");
-var reminder = document.getElementById("reminder");
-
-console.log(reminder);
-
-EventUtil.addHandler(getReminder, "click", function(event){
-    console.log(reminder);
-    reminder.style.display = "none";
-});
+// var getReminder = document.getElementById("get-reminder");
+// var reminder = document.getElementById("reminder");
+//
+// console.log(reminder);
+//
+// EventUtil.addHandler(getReminder, "click", function(event){
+//     console.log(reminder);
+//     reminder.style.display = "none";
+// });
