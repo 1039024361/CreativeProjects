@@ -228,11 +228,11 @@ var Drawing = RichBase.extend({
                     height = null,
                     preWidth = drawingInfo.get("canvasW"),
                     preHeight = drawingInfo.get("canvasH");
-                if(arrayPixel.length != 2){
+                if(!arrayPixel||(arrayPixel&&arrayPixel.length != 2)){
                     alert("输入参数不合理");
                     return null;
                 }
-                if(arrayPer.length === 0){
+                if(!arrayPer||(arrayPer&&arrayPer.length === 0)){
                     width = parseInt(arrayPixel[0]);
                     if(keepRatio === true){
                         height = preWidth/preHeight*width;
@@ -241,7 +241,7 @@ var Drawing = RichBase.extend({
                         height = parseInt(arrayPixel[1]);
                     }
                 }
-                else if(arrayPer.length === 2){
+                else if(arrayPer&&arrayPer.length === 2){
                     width = preWidth*parseInt(arrayPixel[0])/100;
                     if(keepRatio === true){
                         height = preWidth/preHeight*width;
