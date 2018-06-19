@@ -198,10 +198,14 @@ var Drawing = RichBase.extend({
                             this.image.src = reader.result;
                             console.log(this.image);
                             // document.body.appendChild(image);
-                            this.image.onload = function() {
+                            var imageDropHandle = function() {
                                 this._resizeCanvasBox(this.canvasBox, this.image.width, this.image.height);
                                 this.context.drawImage(this.image, 0, 0);
+                                // this.image.onload = null;
+                                EventUtil.removeHandler(this.image, "load", imageDropHandle);   //图片加载完成后，清除事件处理程序
                             }.bind(this);
+                            // this.image.onload =
+                            EventUtil.addHandler(this.image, "load", imageDropHandle);
                         }.bind(this);
                     }
                     else{
@@ -256,6 +260,82 @@ var Drawing = RichBase.extend({
                 this._resizeCanvasBox(this.canvasBox, width, height);
             }
             ]},
+        "rotateDrop": {"click": [
+            function(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                if(target.id === "right-90"||target.parentNode.id === "right-90"){
+                    //向右旋转90°
+                    this.image.src = canvasBox.toDataURL("image/png");
+                    var imageRight90 = function(){
+                        this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.translate(this.canvasBox.width, 0);
+                        this.context.rotate(0.5*Math.PI);
+                        this.context.drawImage(this.image, 0, 0);
+                        this.context.translate(-this.canvasBox.width, 0);
+                        this.context.rotate(-0.5*Math.PI);  //恢复坐标
+                        EventUtil.removeHandler(this.image, "load", imageRight90);
+                    }.bind(this);
+                    EventUtil.addHandler(this.image, "load", imageRight90);
+                }
+                else if(target.id === "left-90"||target.parentNode.id === "left-90"){
+                    //向左旋转90°
+                    this.image.src = canvasBox.toDataURL("image/png");
+                    var imageLeft90 = function(){
+                        this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.translate(0, this.canvasBox.height);
+                        this.context.rotate(-0.5*Math.PI);
+                        this.context.drawImage(this.image, 0, 0);
+                        this.context.translate(0, -this.canvasBox.height);
+                        this.context.rotate(0.5*Math.PI);  //恢复坐标
+                        EventUtil.removeHandler(this.image, "load", imageLeft90);
+                    }.bind(this);
+                    EventUtil.addHandler(this.image, "load", imageLeft90);
+                }
+                else if(target.id === "rotate-180"||target.parentNode.id === "rotate-180"){
+                    //旋转180°
+                    this.image.src = canvasBox.toDataURL("image/png");
+                    var rotate180 = function(){
+                        // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.translate(this.canvasBox.width, this.canvasBox.height);
+                        this.context.rotate(Math.PI);
+                        this.context.drawImage(this.image, 0, 0);
+                        this.context.translate(-this.canvasBox.width, -this.canvasBox.height);
+                        this.context.rotate(-Math.PI);  //恢复坐标
+                        EventUtil.removeHandler(this.image, "load", rotate180);
+                    }.bind(this);
+                    EventUtil.addHandler(this.image, "load", rotate180);
+                }
+                else if(target.id === "flip-vertical"||target.parentNode.id === "flip-vertical"){
+                    //垂直翻转
+                    this.image.src = canvasBox.toDataURL("image/png");
+                    var flipVertical = function(){
+                        // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.translate(0, this.canvasBox.height);
+                        this.context.scale(1.0, -1.0);
+                        this.context.drawImage(this.image, 0, 0);
+                        this.context.translate(0, -this.canvasBox.height);
+                        this.context.scale(1.0, -1.0);
+                        EventUtil.removeHandler(this.image, "load", flipVertical);
+                    }.bind(this);
+                    EventUtil.addHandler(this.image, "load", flipVertical);
+                }
+                else if(target.id === "flip-horizontal"||target.parentNode.id === "flip-horizontal"){
+                    //水平翻转
+                    this.image.src = canvasBox.toDataURL("image/png");
+                    var flipHorizontal = function(){
+                        // this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
+                        this.context.translate(this.canvasBox.width, 0);
+                        this.context.scale(-1.0, 1.0);
+                        this.context.drawImage(this.image, 0, 0);
+                        this.context.translate(-this.canvasBox.width, 0);
+                        this.context.scale(-1.0, 1.0);
+                        EventUtil.removeHandler(this.image, "load", flipHorizontal);
+                    }.bind(this);
+                    EventUtil.addHandler(this.image, "load", flipHorizontal);
+                }
+                }
+        ]},
     },
     _ctrlEvent:{
         flag: false,
@@ -272,7 +352,8 @@ var Drawing = RichBase.extend({
     },
     _resizeCanvasBox: function(target, width, height){
         //先保存图像信息
-        var imgData = target.getContext("2d").getImageData(0, 0, target.width, target.height);
+        var ctx = target.getContext("2d");
+        var imgData = ctx.getImageData(0, 0, target.width, target.height);
         if(!target){
             return null;
         }
@@ -284,7 +365,7 @@ var Drawing = RichBase.extend({
             target.height = height;
             drawingInfo.set("canvasH", height);
         }
-        target.getContext("2d").putImageData(imgData, 0, 0);   //还原图像
+        ctx.putImageData(imgData, 0, 0);   //还原图像
     },
     //事件绑定及节流处理
     init: function (config) {
@@ -295,8 +376,10 @@ var Drawing = RichBase.extend({
         this.image = document.getElementById("imgContainer");
         this.adjustCanvas = document.querySelector("#adjust-canvas");
         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+        this.rotateDrop = document.querySelector("#rotate-drop");
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
         this.createHandlers(this.adjustCanvas, this.EVENTS["adjustCanvas"]);    //加入到观察者
+        this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
         this.bind();
     },
     bind: function(){
@@ -335,6 +418,10 @@ var Drawing = RichBase.extend({
         //弹出新长宽输入框
         EventUtil.addHandler(this.adjustCanvas, "click", function (event) {
             self.fire(self.adjustCanvas, "click", event);
+        });
+        //旋转
+        EventUtil.addHandler(this.rotateDrop, "click", function (event) {
+            self.fire(self.rotateDrop, "click", event);
         });
     }
 });
