@@ -2,11 +2,10 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/../PersonalHomepage/HomePage.html" description="        .first{&#10;            background-color: #3ba..." line="0" />
-    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="399" />
+    <bookmark url="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" description="        EventUtil.addHandler(this.canvasBox, &quot;mous..." line="421" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" afterPath="$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" />
     </list>
     <ignored path="CreativeProjects.iws" />
@@ -88,8 +87,8 @@
       <file leaf-file-name="DrawingBoard 4.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="287" column="98" selection-start-line="287" selection-start-column="98" selection-end-line="287" selection-end-column="98" />
+            <state relative-caret-position="374">
+              <caret line="293" column="76" selection-start-line="293" selection-start-column="76" selection-end-line="293" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -344,15 +343,15 @@
       <workItem from="1529287052862" duration="20107000" />
       <workItem from="1529334498735" duration="1482000" />
       <workItem from="1529376524367" duration="16980000" />
-      <workItem from="1529418832616" duration="1481000" />
+      <workItem from="1529418832616" duration="5870000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="357622000" />
+    <option name="totallyTimeSpent" value="362011000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13435195" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
@@ -738,8 +737,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="287" column="98" selection-start-line="287" selection-start-column="98" selection-end-line="287" selection-end-column="98" />
+        <state relative-caret-position="374">
+          <caret line="293" column="76" selection-start-line="293" selection-start-column="76" selection-end-line="293" selection-end-column="76" />
           <folding />
         </state>
       </provider>
