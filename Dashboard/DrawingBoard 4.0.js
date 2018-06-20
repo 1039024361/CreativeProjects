@@ -291,10 +291,11 @@ var Drawing = RichBase.extend({
                     this._resizeCanvasBox(this.canvasBox, width, height);
                     this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                     //水平倾斜
-                    context.setTransform(1, 0, verticalIncline/90, 1, 0, 0);
+                    this.context.setTransform(1, 0, verticalIncline/90, 1, 0, 0);
                     //垂直倾斜
+                    this.context.setTransform(1, horizontalIncline/90, 0, 1, 0, 0);
                     this.context.drawImage(this.image, 0, 0);
-                    this.context.setTransform(1, horizontalIncline/90, 0, 1, 0, 0); //恢复坐标
+                    this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                     EventUtil.removeHandler(this.image, "load", imageRight90);
                 }.bind(this);
                 EventUtil.addHandler(this.image, "load", imageRight90);
