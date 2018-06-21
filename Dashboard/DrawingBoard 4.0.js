@@ -232,6 +232,8 @@ var Drawing = RichBase.extend({
                     height = null,
                     preWidth = drawingInfo.get("canvasW"),
                     preHeight = drawingInfo.get("canvasH"),
+                    scaleX = null,
+                    scaleY = null,
                     verticalIncline = null,
                     horizontalIncline = null;   //垂直倾斜角度
                 if(!arrayPixel||(arrayPixel&&arrayPixel.length != 4)){
@@ -283,20 +285,28 @@ var Drawing = RichBase.extend({
                 }
                 else{
                     alert("输入参数不合理");
+                    return null;
                 }
+
                 var imageIncline = function(){
                     var tanV = Math.tan(verticalIncline*Math.PI/180);
                     var tanY = Math.tan(horizontalIncline*Math.PI/180);
                     //下面这个顺序非常重要
                     var diffX = height*tanV;
+                    var diffY0 = width*tanY;
                     width += diffX;
                     var diffY = width*tanY;
                     height += diffY;
 
+                    scaleX = width/preWidth;
+                    scaleY = height/preHeight;
                     this._resizeCanvasBox(this.canvasBox, width, height);
                     this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                     //倾斜
-                    this.context.setTransform(1, -tanY, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
+                    // this.context.setTransform(1, -tanY, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
+                    // this.context.scale(scaleX, scaleY);
+                    this.context.transform(scaleX, -tanY, 0, 1, diffX, 0);
+                    this.context.transform(1, 0, -tanV, scaleY, 0, diffY0);
                     this.context.drawImage(this.image, 0, 0);
                     this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                     EventUtil.removeHandler(this.image, "load", imageIncline);
@@ -406,6 +416,10 @@ var Drawing = RichBase.extend({
         }
         ctx.putImageData(imgData, 0, 0);   //还原图像
     },
+    //设置图像倾斜
+    // _inclineCanvasBox: function(){
+    //
+    // },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
