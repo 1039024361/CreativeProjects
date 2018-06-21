@@ -103,11 +103,11 @@ var RichBase = Base.extend({
     },
     //实时显示绘图区域坐标位置
     _displayCursorPos: function(x, y){
-        (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${x}, ${y}像素`: this.bottomFonts[0].textContent ="";
+        (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${Math.round(x)}, ${Math.round(y)}像素`: this.bottomFonts[0].textContent ="";
     },
     //实时显示绘图区域大小
     _displaySize: function (x, y){
-        (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${x} × ${y}像素`: this.bottomFonts[2].textContent ="";
+        (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${Math.round(x)} × ${Math.round(y)}像素`: this.bottomFonts[2].textContent ="";
     },
 });
 
@@ -223,7 +223,7 @@ var Drawing = RichBase.extend({
         "adjustCanvas": {"click": [
             function(event){
                 var keepRatio = confirm("保持纵横比？");
-                var inputData = prompt("输入图片新的宽度、高度、水平倾斜角度(°)、垂直倾斜角度(°)，格式如'400, 300'或者'400%, 300%'", "100%, 100%, 0, 0");
+                var inputData = prompt("输入图片新的宽度、高度、水平倾斜角度(°)、垂直倾斜角度(°)，格式如'400, 300, 0 ,0'或者'400%, 300%, 0, 0'", "100%, 100%, 0, 0");
                 var regExpPixel = /\d{1,10}/g,
                     regExpPer = /\d{1,10}%/g;
                 var arrayPixel = inputData.match(regExpPixel);
@@ -260,22 +260,22 @@ var Drawing = RichBase.extend({
                 horizontalIncline = parseInt(arrayPixel[3]);
                 width = limit(width, 1, 500);
                 height = limit(height, 1, 500);
-                verticalIncline = -limit(verticalIncline, -89, 89);       // 倾斜角度
-                horizontalIncline = -limit(horizontalIncline, -89, 89);   //
+                verticalIncline = limit(verticalIncline, -89, 89);       // 倾斜角度
+                horizontalIncline = limit(horizontalIncline, -89, 89);   //
 
                 if(!arrayPer||(arrayPer&&arrayPer.length === 0)){
                     // width = parseInt(arrayPixel[0]);
                     if(keepRatio === true){
-                        height = preWidth/preHeight*width;
+                        height = preHeight/preWidth*width;
                     }
                     else{
                         // height = parseInt(arrayPixel[1]);
                     }
                 }
                 else if(arrayPer&&arrayPer.length === 2){
-                    width = width/100;
+                    width = preWidth*width/100;
                     if(keepRatio === true){
-                        height = preWidth/preHeight*width;
+                        height = preHeight/preWidth*width;
                     }
                     else{
                         height = preHeight*height/100;
@@ -284,21 +284,25 @@ var Drawing = RichBase.extend({
                 else{
                     alert("输入参数不合理");
                 }
-                this.image.src = canvasBox.toDataURL("image/png");
-                var imageRight90 = function(){
-                    width += height*Math.tan(verticalIncline);
-                    height += width*Math.tan(horizontalIncline);
+                var imageIncline = function(){
+                    var tanV = Math.tan(verticalIncline*Math.PI/180);
+                    var tanY = Math.tan(horizontalIncline*Math.PI/180);
+                    //下面这个顺序非常重要
+                    var diffX = height*tanV;
+                    width += diffX;
+                    var diffY = width*tanY;
+                    height += diffY;
+
                     this._resizeCanvasBox(this.canvasBox, width, height);
                     this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
-                    //水平倾斜
-                    this.context.setTransform(1, 0, verticalIncline/90, 1, 0, 0);
-                    //垂直倾斜
-                    this.context.setTransform(1, horizontalIncline/90, 0, 1, 0, 0);
+                    //倾斜
+                    this.context.setTransform(1, -tanY, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
                     this.context.drawImage(this.image, 0, 0);
                     this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
-                    EventUtil.removeHandler(this.image, "load", imageRight90);
+                    EventUtil.removeHandler(this.image, "load", imageIncline);
                 }.bind(this);
-                EventUtil.addHandler(this.image, "load", imageRight90);
+                EventUtil.addHandler(this.image, "load", imageIncline);
+                this.image.src = this.canvasBox.toDataURL("image/png");
             }
             ]},
         //旋转
@@ -308,7 +312,6 @@ var Drawing = RichBase.extend({
                 var target = EventUtil.getTarget(event);
                 if(target.id === "right-90"||target.parentNode.id === "right-90"){
                     //向右旋转90°
-                    this.image.src = canvasBox.toDataURL("image/png");
                     var imageRight90 = function(){
                         this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
                         this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
@@ -319,10 +322,10 @@ var Drawing = RichBase.extend({
                         EventUtil.removeHandler(this.image, "load", imageRight90);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageRight90);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
                 }
                 else if(target.id === "left-90"||target.parentNode.id === "left-90"){
                     //向左旋转90°
-                    this.image.src = canvasBox.toDataURL("image/png");
                     var imageLeft90 = function(){
                         this._resizeCanvasBox(this.canvasBox, this.canvasBox.height, this.canvasBox.width);
                         this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
@@ -333,10 +336,10 @@ var Drawing = RichBase.extend({
                         EventUtil.removeHandler(this.image, "load", imageLeft90);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageLeft90);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
                 }
                 else if(target.id === "rotate-180"||target.parentNode.id === "rotate-180"){
                     //旋转180°
-                    this.image.src = canvasBox.toDataURL("image/png");
                     var rotate180 = function(){
                         this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                         this.context.setTransform(-1, 0, 0, -1, this.canvasBox.width, this.canvasBox.height);
@@ -345,10 +348,10 @@ var Drawing = RichBase.extend({
                         EventUtil.removeHandler(this.image, "load", rotate180);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", rotate180);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
                 }
                 else if(target.id === "flip-vertical"||target.parentNode.id === "flip-vertical"){
                     //垂直翻转
-                    this.image.src = canvasBox.toDataURL("image/png");
                     var flipVertical = function(){
                         this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                         this.context.setTransform(1, 0, 0, -1, 0, this.canvasBox.height);
@@ -357,10 +360,10 @@ var Drawing = RichBase.extend({
                         EventUtil.removeHandler(this.image, "load", flipVertical);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipVertical);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
                 }
                 else if(target.id === "flip-horizontal"||target.parentNode.id === "flip-horizontal"){
                     //水平翻转
-                    this.image.src = canvasBox.toDataURL("image/png");
                     var flipHorizontal = function(){
                         this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                         this.context.setTransform(-1, 0, 0, 1, this.canvasBox.width, 0);
@@ -369,6 +372,7 @@ var Drawing = RichBase.extend({
                         EventUtil.removeHandler(this.image, "load", flipHorizontal);
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipHorizontal);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
                 }
                 }
         ]},
@@ -393,13 +397,12 @@ var Drawing = RichBase.extend({
         if(!target){
             return null;
         }
-        if(typeof width === "number"){
+        if(typeof width === "number"&&typeof height === "number"){
             target.width = width;
-            drawingInfo.set("canvasW", width);
-        }
-        if(typeof height === "number"){
             target.height = height;
+            drawingInfo.set("canvasW", width);
             drawingInfo.set("canvasH", height);
+            this._displaySize(width, height);
         }
         ctx.putImageData(imgData, 0, 0);   //还原图像
     },
@@ -594,17 +597,20 @@ var Stretch = RichBase.extend({
         switch (ctrlEvent.source) {
             case this.ctrlWrapRight:
                 target.width += width;
-                drawingInfo.set("canvasW", width);
+                drawingInfo.set("canvasW", target.width);
+                this._displaySize(target.width, target.height);
                 break;
             case this.ctrlWrapBottom:
                 target.height += height;
-                drawingInfo.set("canvasH", height);
+                drawingInfo.set("canvasH", target.height);
+                this._displaySize(target.width, target.height);
                 break;
             case this.ctrlWrapCorner:
                 target.width += width;
                 target.height += height;
-                drawingInfo.set("canvasW", width);
-                drawingInfo.set("canvasH", height);
+                drawingInfo.set("canvasW", target.width);
+                drawingInfo.set("canvasH", target.height);
+                this._displaySize(target.width, target.height);
                 break;
         }
         this.context.putImageData(imgData, 0, 0);   //还原图像
@@ -616,16 +622,16 @@ var Stretch = RichBase.extend({
         {
             case this.ctrlWrapRight:
                 target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
-                this._displaySize(parseInt(target.style.width), this.canvasBox.height);
+                // this._displaySize(parseInt(target.style.width), this.canvasBox.height);
                 break;
             case this.ctrlWrapBottom:
                 target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-                this._displaySize(this.canvasBox.width, parseInt(target.style.height));
+                // this._displaySize(this.canvasBox.width, parseInt(target.style.height));
                 break;
             case this.ctrlWrapCorner:
                 target.style.width = parseInt(target.style.width) +(ctrlEvent.endXY[0] - ctrlEvent.middleXY[0]) +"px";
                 target.style.height = parseInt(target.style.height) +(ctrlEvent.endXY[1] - ctrlEvent.middleXY[1]) +"px";
-                this._displaySize(parseInt(target.style.width), parseInt(target.style.height));
+                // this._displaySize(parseInt(target.style.width), parseInt(target.style.height));
                 break;
         }
     }
