@@ -20,3 +20,34 @@ Win7DrawingBoard 3.0实现功能：
 待解决问题：
 按住鼠标快速划线的时候，线条无法滑到边缘
 拖放依照图片之后，再重新拖放图片，拉伸调整canvas大小会有问题
+
+//下面方案一次性实现图片倾斜有问题：
+var imageIncline = function(){
+                    var tanV = Math.tan(verticalIncline*Math.PI/180);
+                    var tanH = Math.tan(horizontalIncline*Math.PI/180);
+                    //下面这个顺序非常重要
+                    var diffX = height*tanV;
+                    var diffY0 = width*tanH;
+                    width += diffX;
+                    var diffY = width*tanH;
+                    height += diffY;
+
+                    var diffX1 = preHeight*tanV;
+                    var diffY01 = preWidth*tanH;
+
+                    //transform(a, b, c, d, e, f);   //a水平拉伸，b水平倾斜（与X轴正方向夹角，即对应tanH,垂直倾斜
+                    this._resizeCanvasBox(this.canvasBox, width, height);
+                    this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                    //倾斜
+                    // this.context.setTransform(1, -tanH, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
+                    this.context.scale(scaleX, scaleY);
+                    this.context.drawImage(this.image, 0, 0);
+                    this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                    this.context.transform(1, -tanH, 0, 1, diffX, 0);
+                    this.context.transform(1, 0, -tanV, 1, 0, diffY0);
+                    this.context.drawImage(this.image, 0, 0);
+                    this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
+                    EventUtil.removeHandler(this.image, "load", imageIncline);
+                }.bind(this);
+                EventUtil.addHandler(this.image, "load", imageIncline);
+                this.image.src = this.canvasBox.toDataURL("image/png");

@@ -234,8 +234,8 @@ var Drawing = RichBase.extend({
                     preHeight = drawingInfo.get("canvasH"),
                     scaleX = null,
                     scaleY = null,
-                    verticalIncline = null,
-                    horizontalIncline = null;   //垂直倾斜角度
+                    verticalIncline = null,     //与Y轴负方向的夹角，水平倾斜
+                    horizontalIncline = null;   //与X轴正方向的夹角，垂直倾斜
                 if(!arrayPixel||(arrayPixel&&arrayPixel.length != 4)){
                     alert("输入参数不合理");
                     return null;
@@ -287,32 +287,60 @@ var Drawing = RichBase.extend({
                     alert("输入参数不合理");
                     return null;
                 }
+                scaleX = width/preWidth;
+                scaleY = height/preHeight;
 
-                var imageIncline = function(){
-                    var tanV = Math.tan(verticalIncline*Math.PI/180);
-                    var tanY = Math.tan(horizontalIncline*Math.PI/180);
-                    //下面这个顺序非常重要
-                    var diffX = height*tanV;
-                    var diffY0 = width*tanY;
-                    width += diffX;
-                    var diffY = width*tanY;
-                    height += diffY;
+                var imageStretch = function(){
+                    // var tanV = Math.tan(verticalIncline*Math.PI/180);
+                    // var tanH = Math.tan(horizontalIncline*Math.PI/180);
+                    // //下面这个顺序非常重要
+                    // var diffX = height*tanV;
+                    // var diffY0 = width*tanH;
+                    // width += diffX;
+                    // var diffY = width*tanH;
+                    // height += diffY;
 
-                    scaleX = width/preWidth;
-                    scaleY = height/preHeight;
+
+                    //transform(a, b, c, d, e, f);   //a水平拉伸，b水平倾斜（与X轴正方向夹角，即对应tanH,垂直倾斜
                     this._resizeCanvasBox(this.canvasBox, width, height);
                     this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
                     //倾斜
-                    // this.context.setTransform(1, -tanY, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
-                    // this.context.scale(scaleX, scaleY);
-                    this.context.transform(scaleX, -tanY, 0, 1, diffX, 0);
-                    this.context.transform(1, 0, -tanV, scaleY, 0, diffY0);
+                    // this.context.setTransform(1, -tanH, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
+                    this.context.scale(scaleX, scaleY);
+                    this.context.drawImage(this.image, 0, 0);
+                    this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
+                    EventUtil.removeHandler(this.image, "load", imageStretch);
+                    EventUtil.addHandler(this.image, "load", imageIncline);
+                    this.image.src = this.canvasBox.toDataURL("image/png");
+                }.bind(this);
+
+                var imageIncline = function(){
+                    var tanV = Math.tan(verticalIncline*Math.PI/180);
+                    var tanH = Math.tan(horizontalIncline*Math.PI/180);
+                    //下面这个顺序非常重要
+                    var diffX = height*tanV;
+                    var diffY0 = width*tanH;
+                    width += diffX;
+                    var diffY = width*tanH;
+                    height += diffY;
+
+                    //transform(a, b, c, d, e, f);   //a水平拉伸，b水平倾斜（与X轴正方向夹角，即对应tanH,垂直倾斜
+                    this._resizeCanvasBox(this.canvasBox, width, height);
+                    this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                    //倾斜
+                    // this.context.setTransform(1, -tanH, -tanV, 1, diffX, diffY);    //注意，倾斜用的参数为tan值
+                    this.context.drawImage(this.image, 0, 0);
+                    this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+                    this.context.transform(1, -tanH, 0, 1, diffX, 0);
+                    this.context.transform(1, 0, -tanV, 1, 0, diffY0);
                     this.context.drawImage(this.image, 0, 0);
                     this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                     EventUtil.removeHandler(this.image, "load", imageIncline);
                 }.bind(this);
-                EventUtil.addHandler(this.image, "load", imageIncline);
+
+                EventUtil.addHandler(this.image, "load", imageStretch);
                 this.image.src = this.canvasBox.toDataURL("image/png");
+
             }
             ]},
         //旋转
