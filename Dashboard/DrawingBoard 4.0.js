@@ -42,19 +42,19 @@ var RichBase = Base.extend({
         return this;
     },
     fire: function(target, type){
+        var that = this;
         if(!target.handlers&&!target.handlers[type]){
             return;
         }
         var i = null,
             len = target.handlers[type].length,
-            arg = Array.prototype.slice(arguments, 1);    //每个handler函数传入参数的方式
+            arg = Array.prototype.slice.call(arguments, 2)||[];    //每个handler函数传入参数的方式
         if( target.handlers[type] instanceof Array){
             var handlers = target.handlers[type];
             for(i=0; i<len; i++){
                 handlers[i].apply(this, arg);
             }
         }
-
         return this;
     },
     removeHandler: function(target, type, handler){
@@ -122,6 +122,72 @@ var drawingInfo = new Base({
     canvasH: 600
 });
 
+//创建一个获取canvasBox坐标的对象
+// var PositionInfo = RichBase.extend({
+//     //在这里注册所有事件，使用观察者模式
+//     EVENTS:{
+//         "canvasBox": {
+//             "mousedown": [
+//                 function (event) {
+//                     event = EventUtil.getEvent(event);
+//                     this.set("X", this._xConvert(event.clientX));
+//                     this.set("Y", this._yConvert(event.clientY));
+//                 }
+//             ],
+//             "mousemove": [
+//                 function (event) {
+//                     event = EventUtil.getEvent(event);
+//                     event.preventDefault();
+//                     this.set("X", this._xConvert(event.clientX));
+//                     this.set("Y", this._yConvert(event.clientY));
+//                 }
+//             ],
+//             "touchstart": [
+//                 function (event) {
+//                     event = EventUtil.getEvent(event);
+//                     this.set("X", this._xConvert(event.touches[0].clientX));
+//                     this.set("Y", this._yConvert(event.touches[0].clientY));
+//                 }
+//             ],
+//             "touchmove": [
+//                 function (event) {
+//                     event = EventUtil.getEvent(event);
+//                     event.preventDefault();   //阻止滚动
+//                     this.set("X", this._xConvert(event.touches[0].clientX));
+//                     this.set("Y", this._yConvert(event.touches[0].clientY));
+//                 }
+//             ],
+//         }
+//     },
+//     //事件绑定及节流处理
+//     init: function (config) {
+//         this._super(config);
+//         this.canvasBox = document.getElementById("canvasBox");   //canvas
+//         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
+//         this.bind();
+//     },
+//     bind: function(){
+//         var self = this;
+//         EventUtil.addHandler(this.canvasBox, "mousedown",function (event) {
+//             self.fire(self.canvasBox, "mousedown", event);
+//         });
+//         EventUtil.addHandler(this.canvasBox, "mousemove", function (event) {
+//             self.fire(self.canvasBox, "mousemove", event);
+//         });
+//         EventUtil.addHandler(this.canvasBox, "touchstart", function (event) {
+//             self.fire(self.canvasBox, "touchstart", event);
+//         });
+//         EventUtil.addHandler(this.canvasBox, "touchmove", function (event) {
+//             self.fire(self.canvasBox, "touchmove", event);
+//         });
+//     }
+// });
+//
+// var positionInfo  = new PositionInfo({
+//     X: null,
+//     Y: null
+// });
+
 //绘图模块设计
 var Drawing = RichBase.extend({
     //在这里注册所有事件，使用观察者模式
@@ -134,6 +200,11 @@ var Drawing = RichBase.extend({
                     this._ctrlEvent.flag = true;
                     this.context.beginPath();
                     this.context.moveTo(this._xConvert(event.clientX), this._yConvert(event.clientY));
+                },
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    this.set("X", this._xConvert(event.clientX));
+                    this.set("Y", this._yConvert(event.clientY));
                 }
             ],
             "mousemove":[
@@ -144,6 +215,12 @@ var Drawing = RichBase.extend({
                     if(this._ctrlEvent.flag === true){
                         this._draw(this._xConvert(event.clientX), this._yConvert(event.clientY));
                     }
+                },
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    event.preventDefault();
+                    this.set("X", this._xConvert(event.clientX));
+                    this.set("Y", this._yConvert(event.clientY));
                 }
             ],
             "mouseup":[
@@ -165,6 +242,11 @@ var Drawing = RichBase.extend({
                     event = EventUtil.getEvent(event);
                     this.context.beginPath();
                     this.context.moveTo(this._xConvert(event.touches[0].clientX), this._yConvert(event.touches[0].clientY));
+                },
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    this.set("X", this._xConvert(event.touches[0].clientX));
+                    this.set("Y", this._yConvert(event.touches[0].clientY));
                 }
             ],
             "touchmove":[
@@ -173,6 +255,12 @@ var Drawing = RichBase.extend({
                     event.preventDefault();   //阻止滚动
                     this._displayCursorPos(this._xConvert(event.changedTouches[0].clientX),  this._yConvert(event.changedTouches[0].clientY));
                     this._draw(this._xConvert(event.changedTouches[0].clientX), this._yConvert(event.changedTouches[0].clientY));
+                },
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    event.preventDefault();   //阻止滚动
+                    this.set("X", this._xConvert(event.touches[0].clientX));
+                    this.set("Y", this._yConvert(event.touches[0].clientY));
                 }
             ],
             //drag事件用于拖放图片
@@ -414,6 +502,43 @@ var Drawing = RichBase.extend({
                 }
                 }
         ]},
+        //工具栏
+        "tool":{
+            "click":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event),
+                        handleTarget, i,
+                        len = this.toolImgWrap.length;
+
+                    handleTarget = target.childElementCount? target:target.parentNode;
+
+                    for(i=0; i<len; i++){
+                        this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
+                    }
+
+                    switch (handleTarget.id)
+                    {
+                        case "pencil":
+                            console.log("pencil");
+                            if(!this.pencil.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+                                this.pencil.classList.toggle("selected");
+                                drawingInfo.set("behavior", "pencil");
+                            }
+                            break;
+                        case "erase":
+                            console.log("erase");
+                            if(!this.erase.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
+                                this.erase.classList.toggle("selected");
+                                drawingInfo.set("behavior", "erase");
+                            }
+                            break;
+                    }
+                }
+            ],
+        },
     },
     _ctrlEvent:{
         flag: false,
@@ -444,10 +569,37 @@ var Drawing = RichBase.extend({
         }
         ctx.putImageData(imgData, 0, 0);   //还原图像
     },
-    //设置图像倾斜
-    // _inclineCanvasBox: function(){
-    //
-    // },
+    //返回指定点的RGB值
+    _getRGB(index){
+        var red = null,
+            green = null,
+            blue = null;
+            alpha = null;
+        if(!(typeof index === "number"&&index>=0)){
+            return null;
+        }
+        var imageRGBArr = this.context.getImageData(0, 0, this.canvasBox.width, this.canvasBox.height).data;
+        red = imageRGBArr[index].toString(16);
+        green = imageRGBArr[index+1].toString(16);
+        blue = imageRGBArr[index+2].toString(16);
+        // alpha = imageRGBArr[index+3].toString(16);
+        return {
+            RGB: "#"+red+green+blue,
+            R: imageRGBArr[index],
+            G: imageRGBArr[index+1],
+            B: imageRGBArr[index+2],
+            alpha: imageRGBArr[index+3]
+        };
+    },
+    //根据坐标返回RGB值
+    _getRGBByXY(X, Y){
+        var index = null;
+        if(!(typeof X === "number"&&typeof Y === "number")){
+            return null;
+        }
+        index = (X + Y * this.canvasBox.width)*4;
+        return this._getRGB(index);
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -458,6 +610,18 @@ var Drawing = RichBase.extend({
         this.adjustCanvas = document.querySelector("#adjust-canvas");
         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
         this.rotateDrop = document.querySelector("#rotate-drop");
+        //tool栏
+        this.tool = document.querySelector("#tool");
+        this.pencil = document.querySelector("#pencil");
+        this.erase = document.querySelector("#erase");
+        this.fill = document.querySelector("#fill");
+        this.straw = document.querySelector("#straw");
+        this.magnifier = document.querySelector("#magnifier");
+        this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
+        this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
+        this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
+        //初始化
+        this.canvasWrap.style.zIndex = 1;
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
         this.createHandlers(this.adjustCanvas, this.EVENTS["adjustCanvas"]);    //加入到观察者
         this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
@@ -504,6 +668,14 @@ var Drawing = RichBase.extend({
         EventUtil.addHandler(this.rotateDrop, "click", function (event) {
             self.fire(self.rotateDrop, "click", event);
         });
+        //tool工具
+        EventUtil.addHandler(this.tool, "click", function (event) {
+            self.fire(self.tool, "click", event);
+        });
+        EventUtil.addHandler(this.tool, "touchstart", function (event) {
+            self.fire(self.tool, "click", event);   //与click事件处理函数一直
+        });
+
     }
 });
 
@@ -681,70 +853,70 @@ var Stretch = RichBase.extend({
 
 
 //调整绘图区域模块设计
-var Tool = RichBase.extend({
-    //在这里注册所有事件，使用观察者模式
-    EVENTS:{
-        "tool":{
-            "click":[
-                function(event){
-                    event = EventUtil.getEvent(event);
-                    var target = EventUtil.getTarget(event),
-                        handleTarget, i,
-                        len = this.toolImgWrap.length;
-
-                    handleTarget = target.childElementCount? target:target.parentNode;
-
-                    for(i=0; i<len; i++){
-                        this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
-                    }
-
-                    switch (handleTarget.id)
-                    {
-                        case "pencil":
-                            console.log("pencil");
-                            if(!this.pencil.classList.contains("selected")){
-                                this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
-                                this.pencil.classList.toggle("selected");
-                                drawingInfo.set("behavior", "pencil");
-                            }
-                            break;
-                        case "erase":
-                            console.log("erase");
-                            if(!this.erase.classList.contains("selected")){
-                                this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
-                                this.erase.classList.toggle("selected");
-                                drawingInfo.set("behavior", "erase");
-                            }
-                            break;
-                    }
-                }
-            ],
-        },
-    },
-    //事件绑定及节流处理
-    init: function (config) {
-        this._super(config);
-        this.tool = document.getElementById("tool");
-        this.pencil = document.getElementById("pencil");
-        this.erase = document.getElementById("erase");
-        this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
-        this.canvasBox = document.getElementById("canvasBox");   //canvas
-        this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
-        this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
-        //初始化
-        this.canvasWrap.style.zIndex = 1;
-        this.bind();
-    },
-    bind: function(){
-        var self = this;
-        EventUtil.addHandler(this.tool, "click", function (event) {
-            self.fire(self.tool, "click", event);
-        });
-        EventUtil.addHandler(this.tool, "touchstart", function (event) {
-            self.fire(self.tool, "click", event);   //与click事件处理函数一直
-        });
-    },
-});
+// var Tool = RichBase.extend({
+//     //在这里注册所有事件，使用观察者模式
+//     EVENTS:{
+//         "tool":{
+//             "click":[
+//                 function(event){
+//                     event = EventUtil.getEvent(event);
+//                     var target = EventUtil.getTarget(event),
+//                         handleTarget, i,
+//                         len = this.toolImgWrap.length;
+//
+//                     handleTarget = target.childElementCount? target:target.parentNode;
+//
+//                     for(i=0; i<len; i++){
+//                         this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
+//                     }
+//
+//                     switch (handleTarget.id)
+//                     {
+//                         case "pencil":
+//                             console.log("pencil");
+//                             if(!this.pencil.classList.contains("selected")){
+//                                 this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
+//                                 this.pencil.classList.toggle("selected");
+//                                 drawingInfo.set("behavior", "pencil");
+//                             }
+//                             break;
+//                         case "erase":
+//                             console.log("erase");
+//                             if(!this.erase.classList.contains("selected")){
+//                                 this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
+//                                 this.erase.classList.toggle("selected");
+//                                 drawingInfo.set("behavior", "erase");
+//                             }
+//                             break;
+//                     }
+//                 }
+//             ],
+//         },
+//     },
+//     //事件绑定及节流处理
+//     init: function (config) {
+//         this._super(config);
+//         this.tool = document.getElementById("tool");
+//         this.pencil = document.getElementById("pencil");
+//         this.erase = document.getElementById("erase");
+//         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
+//         this.canvasBox = document.getElementById("canvasBox");   //canvas
+//         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
+//         this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
+//         //初始化
+//         this.canvasWrap.style.zIndex = 1;
+//         this.bind();
+//     },
+//     bind: function(){
+//         var self = this;
+//         EventUtil.addHandler(this.tool, "click", function (event) {
+//             self.fire(self.tool, "click", event);
+//         });
+//         EventUtil.addHandler(this.tool, "touchstart", function (event) {
+//             self.fire(self.tool, "click", event);   //与click事件处理函数一直
+//         });
+//     },
+// });
 
 //线型选择
 var Line = RichBase.extend({
@@ -920,7 +1092,10 @@ var Color = RichBase.extend({
 });
 
 (function(){
-    var drawingModule = new Drawing(
+    var drawingModule = new Drawing({
+            X: null,
+            Y: null
+        }
         // {
         // behavior: "pencil",
         // lineWeight: 1,
