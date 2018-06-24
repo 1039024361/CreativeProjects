@@ -283,7 +283,7 @@ var Drawing = RichBase.extend({
                     EventUtil.preventDefault(event);
                 }
             ],
-            // "click":[]
+            "click":[]
         },
         "adjustCanvas": {"click": [
             function(event){
@@ -947,6 +947,10 @@ var Drawing = RichBase.extend({
         });
         EventUtil.addHandler(this.canvasBox, "touchend", function (event) {
             self.fire(self.canvasBox, "touchend", event);
+        });
+        //吸管事件
+        EventUtil.addHandler(this.canvasBox, "click", function (event) {
+            self.fire(self.canvasBox, "click", event);
         });
         //拖放图片事件
         EventUtil.addHandler(this.canvasBox, "dragenter", function (event) {
