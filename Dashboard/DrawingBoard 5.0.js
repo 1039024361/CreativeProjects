@@ -1,6 +1,8 @@
 /**
  * Created by XING on 2018/5/10.
  */
+var debug = 0;
+
 //组件基对象
 var Base = Class.extend({
     init:function(config){
@@ -116,8 +118,8 @@ var RichBase = Base.extend({
 var drawingInfo = new Base({
     behavior: "pencil",
     lineWeight: 1,
-    color: "black",
-    backgroundColor: "white",
+    color: "#000000",
+    backgroundColor: "#FFFFFF",
     canvasW: 800,
     canvasH: 600
 });
@@ -501,6 +503,7 @@ var Drawing = RichBase.extend({
                                 handleTarget.classList.toggle("selected");
                                 drawingInfo.set("behavior", "pencil");
                                 this._removeStrawHandler();
+                                this._removeFillHandler();
                                 this._addDrawLineHandler();
                             }
                         break;
@@ -591,6 +594,44 @@ var Drawing = RichBase.extend({
         }
         ctx.putImageData(imgData, 0, 0);   //还原图像
     },
+    //字符串颜色值转换成rgba颜色值
+    _hexToRgba: function(hex){
+        var R = null,
+            G = null,
+            B = null,
+            alpha = null;
+        if(/^#[0-9|A-Z|a-z]{6}$/.test(hex)){
+            return {
+                R: parseInt("0x" + hex.slice(1, 3)),
+                G: parseInt("0x" + hex.slice(3, 5)),
+                B: parseInt("0x" + hex.slice(5, 7)),
+                alpha: 255
+            };
+        }
+        else if(/^rgb/i.test(hex)){
+            var regExp = /\d{1,3}/g;
+            var rgbArray = hex.match(regExp);
+            if(rgbArray.length === 3){
+                return {
+                    R: parseInt(rgbArray[0]),
+                    G: parseInt(rgbArray[1]),
+                    B: parseInt(rgbArray[2]),
+                    alpha: 255
+                };
+            }
+            else if(rgbArray.length === 4){
+                return {
+                    R: parseInt(rgbArray[0]),
+                    G: parseInt(rgbArray[1]),
+                    B: parseInt(rgbArray[2]),
+                    alpha: parseInt(rgbArray[3])
+                };
+            }
+        }
+        else{
+            return null;
+        }
+    },
     //返回指定点的RGB值
     _getRGB(imageRGBArr, index){
         var red = null,
@@ -623,11 +664,11 @@ var Drawing = RichBase.extend({
         return this._getRGB(imageRGBArr, index);
     },
     //设置RGB
-    _setRGB(imageRGBArr, index, RGBObj){
-        imageRGBArr[index] = RGBObj.R;
-        imageRGBArr[index+1] = RGBObj.G;
-        imageRGBArr[index+2] = RGBObj.B;
-        imageRGBArr[index+2] = RGBObj.B;
+    _setRGB(imageRGBArr, index, color){
+        imageRGBArr[index] = color.R;
+        imageRGBArr[index+1] = color.G;
+        imageRGBArr[index+2] = color.B;
+        imageRGBArr[index+3] = color.alpha;
         // alpha = imageRGBArr[index+3].toString(16);
         return imageRGBArr;
     },
@@ -710,20 +751,21 @@ var Drawing = RichBase.extend({
     //注入填充区域算法
     //颜色格式为rgba
     _floodFill8: function f(imageRGBArr, x, y, oldColor, newColor){
+        console.log(++debug);
         if(x < 0 || x > drawingInfo.canvasW || y < 0 || y > drawingInfo.canvasH){
             return null;
         }
         var color = this._getRGBByXY(imageRGBArr, x, y);
-        if(color === oldColor){
+        if(color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha){
             this._setRGBByXY(imageRGBArr, x, y, newColor);
-            f(x, y-1, oldColor, newColor);
-            f(x, y+1, oldColor, newColor);
-            f(x-1, y, oldColor, newColor);
-            f(x+1, y, oldColor, newColor);
-            f(x+1, y-1, oldColor, newColor);
-            f(x+1, y+1, oldColor, newColor);
-            f(x-1, y-1, oldColor, newColor);
-            f(x-1, y+1, oldColor, newColor);
+            f.call(this, imageRGBArr, x, y-1, oldColor, newColor);
+            f.call(this, imageRGBArr, x, y+1, oldColor, newColor);
+            f.call(this, imageRGBArr, x-1, y, oldColor, newColor);
+            f.call(this, imageRGBArr, x+1, y, oldColor, newColor);
+            // f.call(this, imageRGBArr, x+1, y-1, oldColor, newColor);
+            // f.call(this, imageRGBArr, x+1, y+1, oldColor, newColor);
+            // f.call(this, imageRGBArr, x-1, y-1, oldColor, newColor);
+            // f.call(this, imageRGBArr, x-1, y+1, oldColor, newColor);
         }
     },
     _fillHandler: function(event){
@@ -733,14 +775,16 @@ var Drawing = RichBase.extend({
         var imageRGBArr = null;
         var X = null,
             Y = null,
-            newColor = null;
+            newColor = null,
+            oldColor = null;
         X = this.get("X");
         Y = this.get("Y");
+
         if(button === 0 ){
-            newColor = drawingInfo.color;
+            newColor = this._hexToRgba(drawingInfo.get("color"));
         }
         else if(button === 2){
-            newColor = drawingInfo.backgroundColor;
+            newColor = this._hexToRgba(drawingInfo.get("backgroundColor"));
         }
         else{
             return null;
@@ -748,16 +792,17 @@ var Drawing = RichBase.extend({
         //如果是在触摸设备，则选择前景色就填充前景色，选择背景色，就填充背景色
         if(!(client.system.win||client.system.mac||client.system.x11)){
             if(this.colorSetButtons[0].classList.contains("selected")){
-                newColor = drawingInfo.color;
+                newColor = this._hexToRgba(drawingInfo.get("color"));
             }
             else{
-                newColor = drawingInfo.backgroundColor;
+                newColor = this._hexToRgba(drawingInfo.get("backgroundColor"));
             }
         }
         // newColor = (event.type === "click"? drawingInfo.color:drawingInfo.backgroundColor);
         imageData = this.context.getImageData(0, 0, this.canvasBox.width, this.canvasBox.height);
         imageRGBArr = imageData.data;
-        this._floodFill8(imageRGBArr, X, Y, this._getRGBByXY(imageRGBArr, ), newColor);
+        oldColor = this._getRGBByXY(imageRGBArr, X, Y);
+        this._floodFill8(imageRGBArr, X, Y, oldColor, newColor);
         imageData.data = imageRGBArr;
         this.context.putImageData(imageData, 0, 0);
     },
