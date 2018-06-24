@@ -289,6 +289,9 @@ var Drawing = RichBase.extend({
             function(event){
                 var keepRatio = confirm("保持纵横比？");
                 var inputData = prompt("输入图片新的宽度、高度、水平倾斜角度(°)、垂直倾斜角度(°)，格式如'400, 300, 0 ,0'或者'400%, 300%, 0, 0'", "100%, 100%, 0, 0");
+                if(typeof inputData !== "string"){
+                    return null;
+                }
                 var regExpPixel = /\d{1,10}/g,
                     regExpPer = /\d{1,10}%/g;
                 var arrayPixel = inputData.match(regExpPixel);
@@ -633,7 +636,7 @@ var Drawing = RichBase.extend({
         }
     },
     //返回指定点的RGB值
-    _getRGB(imageRGBArr, index){
+    _getRGB: function(imageRGBArr, index){
         var red = null,
             green = null,
             blue = null;
@@ -655,16 +658,16 @@ var Drawing = RichBase.extend({
         };
     },
     //根据坐标返回RGB值
-    _getRGBByXY(imageRGBArr, X, Y){
+    _getRGBByXY: function(imageRGBArr, X, Y){
         var index = null;
-        if(!(typeof X === "number"&&typeof Y === "number")){
+        if(typeof X !== "number"||typeof Y !== "number"||X<0||X>drawingInfo.get("canvasW")||Y<0||Y>drawingInfo.get("canvasH")){
             return null;
         }
         index = (X + Y * this.canvasBox.width)*4;
         return this._getRGB(imageRGBArr, index);
     },
     //设置RGB
-    _setRGB(imageRGBArr, index, color){
+    _setRGB: function(imageRGBArr, index, color){
         imageRGBArr[index] = color.R;
         imageRGBArr[index+1] = color.G;
         imageRGBArr[index+2] = color.B;
@@ -673,7 +676,7 @@ var Drawing = RichBase.extend({
         return imageRGBArr;
     },
     //设置RGB
-    _setRGBByXY(imageRGBArr, X, Y, color){
+    _setRGBByXY: function(imageRGBArr, X, Y, color){
         var index =  (X + Y * this.canvasBox.width)*4;
         return this._setRGB(imageRGBArr, index, color);
     },
@@ -762,10 +765,87 @@ var Drawing = RichBase.extend({
             f.call(this, imageRGBArr, x, y+1, oldColor, newColor);
             f.call(this, imageRGBArr, x-1, y, oldColor, newColor);
             f.call(this, imageRGBArr, x+1, y, oldColor, newColor);
-            // f.call(this, imageRGBArr, x+1, y-1, oldColor, newColor);
-            // f.call(this, imageRGBArr, x+1, y+1, oldColor, newColor);
-            // f.call(this, imageRGBArr, x-1, y-1, oldColor, newColor);
-            // f.call(this, imageRGBArr, x-1, y+1, oldColor, newColor);
+            f.call(this, imageRGBArr, x+1, y-1, oldColor, newColor);
+            f.call(this, imageRGBArr, x+1, y+1, oldColor, newColor);
+            f.call(this, imageRGBArr, x-1, y-1, oldColor, newColor);
+            f.call(this, imageRGBArr, x-1, y+1, oldColor, newColor);
+        }
+    },
+    //扫描线填充算法，非迭代法
+    _floodFillScanLineWithStack: function(imageRGBArr, x, y, oldColor, newColor){
+        if(newColor.R === oldColor.R&&newColor.G === oldColor.G&&newColor.B === oldColor.B&&newColor.alpha === oldColor.alpha) {
+            console.log("do nothing !!!, filled area!!");
+            return null;
+        }
+        var xStack = [],
+            yStack = [];
+
+
+        var y1,
+            spanLeft,
+            spanRight,
+            width = drawingInfo.get("canvasW"),
+            height = drawingInfo.get("canvasH");
+        var pushXY = function (x, y){
+            xStack.push(x);
+            yStack.push(y);
+        };
+        var popx = function(){
+            return xStack.pop();
+        };
+        var popy = function(){
+            return yStack.pop();
+        };
+
+        pushXY(x, y);
+
+        while(true)
+        {
+            // console.log(++debug);
+            x = popx();
+            if(x === undefined) {
+                return null;
+            }
+            // if(xStack.length ===0){
+            //     return null;
+            // }
+            y = popy();
+            y1 = y;
+            var color = this._getRGBByXY(imageRGBArr, x, y1);
+            while(y1 >= 0 && color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha) {
+                y1--;
+                color = this._getRGBByXY(imageRGBArr, x, y1);
+            } // go to line top/bottom
+            y1++; // start from line starting point pixel
+            spanLeft = false;
+            spanRight = false;
+            color = this._getRGBByXY(imageRGBArr, x, y1);
+            while(y1 < height && color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha) {
+                this._setRGBByXY(imageRGBArr, x, y1, newColor);
+                color = this._getRGBByXY(imageRGBArr, x-1, y1);
+                if(!spanLeft && x > 0 && color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha)// just keep left line once in the stack
+                {
+                    pushXY(x - 1, y1);
+                    spanLeft = true;
+                }
+                else if(spanLeft && x > 0 && (color.R !== oldColor.R||color.G !== oldColor.G||color.B !== oldColor.B||color.alpha !== oldColor.alpha))
+                {
+                    spanLeft = false;
+                }
+
+                color = this._getRGBByXY(imageRGBArr, x+1, y1);
+                if(!spanRight && x < width - 1 && color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha) // just keep right line once in the stack
+                {
+                    pushXY(x + 1, y1);
+                    spanRight = true;
+                }
+                else if(spanRight && x < width - 1 && (color.R !== oldColor.R||color.G !== oldColor.G||color.B !== oldColor.B||color.alpha !== oldColor.alpha))
+                {
+                    spanRight = false;
+                }
+                y1++;
+                color = this._getRGBByXY(imageRGBArr, x, y1);
+            }
         }
     },
     _fillHandler: function(event){
@@ -802,7 +882,8 @@ var Drawing = RichBase.extend({
         imageData = this.context.getImageData(0, 0, this.canvasBox.width, this.canvasBox.height);
         imageRGBArr = imageData.data;
         oldColor = this._getRGBByXY(imageRGBArr, X, Y);
-        this._floodFill8(imageRGBArr, X, Y, oldColor, newColor);
+        // this._floodFill8(imageRGBArr, X, Y, oldColor, newColor);
+        this._floodFillScanLineWithStack(imageRGBArr, X, Y, oldColor, newColor);
         imageData.data = imageRGBArr;
         this.context.putImageData(imageData, 0, 0);
     },
