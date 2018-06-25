@@ -121,7 +121,8 @@ var drawingInfo = new Base({
     color: "#000000",
     backgroundColor: "#FFFFFF",
     canvasW: 800,
-    canvasH: 600
+    canvasH: 600,
+    gain: 1   //图形放大系数
 });
 
 //创建一个获取canvasBox坐标的对象
@@ -644,7 +645,6 @@ var Drawing = RichBase.extend({
         if(!(typeof index === "number"&&index>=0)){
             return null;
         }
-
         // red = imageRGBArr[index].toString(16);
         // green = imageRGBArr[index+1].toString(16);
         // blue = imageRGBArr[index+2].toString(16);
@@ -753,24 +753,24 @@ var Drawing = RichBase.extend({
     },
     //注入填充区域算法
     //颜色格式为rgba
-    _floodFill8: function f(imageRGBArr, x, y, oldColor, newColor){
-        console.log(++debug);
-        if(x < 0 || x > drawingInfo.canvasW || y < 0 || y > drawingInfo.canvasH){
-            return null;
-        }
-        var color = this._getRGBByXY(imageRGBArr, x, y);
-        if(color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha){
-            this._setRGBByXY(imageRGBArr, x, y, newColor);
-            f.call(this, imageRGBArr, x, y-1, oldColor, newColor);
-            f.call(this, imageRGBArr, x, y+1, oldColor, newColor);
-            f.call(this, imageRGBArr, x-1, y, oldColor, newColor);
-            f.call(this, imageRGBArr, x+1, y, oldColor, newColor);
-            f.call(this, imageRGBArr, x+1, y-1, oldColor, newColor);
-            f.call(this, imageRGBArr, x+1, y+1, oldColor, newColor);
-            f.call(this, imageRGBArr, x-1, y-1, oldColor, newColor);
-            f.call(this, imageRGBArr, x-1, y+1, oldColor, newColor);
-        }
-    },
+    // _floodFill8: function f(imageRGBArr, x, y, oldColor, newColor){
+    //     console.log(++debug);
+    //     if(x < 0 || x > drawingInfo.canvasW || y < 0 || y > drawingInfo.canvasH){
+    //         return null;
+    //     }
+    //     var color = this._getRGBByXY(imageRGBArr, x, y);
+    //     if(color.R === oldColor.R&&color.G === oldColor.G&&color.B === oldColor.B&&color.alpha === oldColor.alpha){
+    //         this._setRGBByXY(imageRGBArr, x, y, newColor);
+    //         f.call(this, imageRGBArr, x, y-1, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x, y+1, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x-1, y, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x+1, y, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x+1, y-1, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x+1, y+1, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x-1, y-1, oldColor, newColor);
+    //         f.call(this, imageRGBArr, x-1, y+1, oldColor, newColor);
+    //     }
+    // },
     //扫描线填充算法，非迭代法
     _floodFillScanLineWithStack: function(imageRGBArr, x, y, oldColor, newColor){
         if(newColor.R === oldColor.R&&newColor.G === oldColor.G&&newColor.B === oldColor.B&&newColor.alpha === oldColor.alpha) {
@@ -894,6 +894,58 @@ var Drawing = RichBase.extend({
     _removeFillHandler: function(){
         this.removeHandler(this.canvasBox, "mousedown", this._fillHandler);
     },
+    //放大镜
+    /*
+    * option：
+    *    isDisplay： 是否显示， 参数为true或者false
+    *    top： 绝对定位，数值类型
+    *    left： 绝对定位，数值类型
+    *    width：宽度，数值类型
+    *    height：高度，数值类型
+    * */
+    _magnifierWrapStyle: function(options){
+        if(options.isDisplay){
+            this.magnifierWrap.style.display = "block";
+            this.magnifierWrap.style.top = options.top + "px";
+            this.magnifierWrap.style.left = options.left + "px";
+            this.magnifierWrap.style.width = options.width + "px";
+            this.magnifierWrap.style.height = options.height + "px";
+        }
+        else{
+            this.magnifierWrap.style.display = "none";
+        }
+    },
+    _magnify: function(xGain, yGain){
+        xGain = xGain|| 1;
+        yGain = yGain||xGain;
+        var width = null,
+            height = null,
+            preWidth = drawingInfo.get("canvasW"),
+            preHeight = drawingInfo.get("canvasH"),
+            gain = drawingInfo.get("gain");
+        width = preWidth * (gain + xGain);   //注意gain的计算方式
+        height = preHeight * (gain + yGain);
+
+        var imageStretch = function(){
+            this._resizeCanvasBox(this.canvasBox, width, height);
+            this.context.clearRect(0, 0, this.canvasBox.width, this.canvasBox.height);
+            this.context.scale(xGain, yGain);
+            this.context.drawImage(this.image, 0, 0);
+            this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
+            EventUtil.removeHandler(this.image, "load", imageStretch);
+            drawingInfo.set("canvasW", width);
+            drawingInfo.set("canvasH", height);
+            drawingInfo.set("gain", gain + xGain);   //默认为xGain=yGain的放大
+        }.bind(this);
+        EventUtil.addHandler(this.image, "load", imageStretch);
+        this.image.src = this.canvasBox.toDataURL("image/png");
+    },
+    _magnifierHandler: function (){
+          var canvasW = drawingInfo.get("canvasW"),
+              canvasH = drawingInfo.get("canvasH"),
+              wrapW = null,
+
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -906,6 +958,7 @@ var Drawing = RichBase.extend({
         this.rotateDrop = document.querySelector("#rotate-drop");
         //tool栏
         this.tool = document.querySelector("#tool");
+        this.magnifierWrap = document.querySelector("#magnifier-wrap");
         // this.pencil = document.querySelector("#pencil");
         // this.erase = document.querySelector("#erase");
         // this.fill = document.querySelector("#fill");
@@ -1152,73 +1205,6 @@ var Stretch = RichBase.extend({
         }
     }
 });
-
-
-//调整绘图区域模块设计
-// var Tool = RichBase.extend({
-//     //在这里注册所有事件，使用观察者模式
-//     EVENTS:{
-//         "tool":{
-//             "click":[
-//                 function(event){
-//                     event = EventUtil.getEvent(event);
-//                     var target = EventUtil.getTarget(event),
-//                         handleTarget, i,
-//                         len = this.toolImgWrap.length;
-//
-//                     handleTarget = target.childElementCount? target:target.parentNode;
-//
-//                     for(i=0; i<len; i++){
-//                         this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
-//                     }
-//
-//                     switch (handleTarget.id)
-//                     {
-//                         case "pencil":
-//                             console.log("pencil");
-//                             if(!this.pencil.classList.contains("selected")){
-//                                 this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
-//                                 this.pencil.classList.toggle("selected");
-//                                 drawingInfo.set("behavior", "pencil");
-//                             }
-//                             break;
-//                         case "erase":
-//                             console.log("erase");
-//                             if(!this.erase.classList.contains("selected")){
-//                                 this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
-//                                 this.erase.classList.toggle("selected");
-//                                 drawingInfo.set("behavior", "erase");
-//                             }
-//                             break;
-//                     }
-//                 }
-//             ],
-//         },
-//     },
-//     //事件绑定及节流处理
-//     init: function (config) {
-//         this._super(config);
-//         this.tool = document.getElementById("tool");
-//         this.pencil = document.getElementById("pencil");
-//         this.erase = document.getElementById("erase");
-//         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
-//         this.canvasBox = document.getElementById("canvasBox");   //canvas
-//         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
-//         this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
-//         //初始化
-//         this.canvasWrap.style.zIndex = 1;
-//         this.bind();
-//     },
-//     bind: function(){
-//         var self = this;
-//         EventUtil.addHandler(this.tool, "click", function (event) {
-//             self.fire(self.tool, "click", event);
-//         });
-//         EventUtil.addHandler(this.tool, "touchstart", function (event) {
-//             self.fire(self.tool, "click", event);   //与click事件处理函数一直
-//         });
-//     },
-// });
 
 //线型选择
 var Line = RichBase.extend({

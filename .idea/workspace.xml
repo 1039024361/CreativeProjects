@@ -6,7 +6,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" afterPath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,6 +26,29 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="DrawingBoard 4.0.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="515">
+                    <caret line="429" column="71" selection-start-line="428" selection-start-column="16" selection-end-line="429" selection-end-column="71" />
+                    <folding>
+                      <element signature="e#28954#37321#0" expanded="false" />
+                      <element signature="e#37326#37338#0" expanded="false" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="CreativeProjects" />
@@ -32,8 +58,21 @@
       <file leaf-file-name="Win7DrawingBoard 5.0.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="281" column="18" selection-start-line="281" selection-start-column="18" selection-end-line="281" selection-end-column="18" />
+            <state relative-caret-position="341">
+              <caret line="352" column="45" selection-start-line="352" selection-start-column="45" selection-end-line="352" selection-end-column="45" />
+              <folding>
+                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Win7DrawingBoard 5.0.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="328">
+              <caret line="1209" column="0" selection-start-line="1209" selection-start-column="0" selection-end-line="1209" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -42,19 +81,11 @@
       <file leaf-file-name="DrawingBoard 5.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="482">
-              <caret line="285" column="22" selection-start-line="285" selection-start-column="22" selection-end-line="285" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Win7DrawingBoard 4.0.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14229">
-              <caret line="837" column="28" selection-start-line="837" selection-start-column="28" selection-end-line="837" selection-end-column="28" />
-              <folding />
+            <state relative-caret-position="441">
+              <caret line="945" column="27" selection-start-line="945" selection-start-column="27" selection-end-line="945" selection-end-column="27" />
+              <folding>
+                <element signature="e#32853#35874#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -135,9 +166,10 @@
         <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.css" />
         <option value="$PROJECT_DIR$/TextEditAndinnerHTML/PortalMessageCreate.html" />
         <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.html" />
-        <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" />
         <option value="$PROJECT_DIR$/Dashboard/README.md" />
         <option value="$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js" />
+        <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" />
+        <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" />
         <option value="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" />
       </list>
     </option>
@@ -180,10 +212,41 @@
     </navigator>
     <panes>
       <pane id="ProjectPane">
-        <subPane />
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CreativeProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CreativeProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CreativeProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CreativeProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CreativeProjects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Dashboard" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -312,18 +375,19 @@
       <workItem from="1529376524367" duration="16980000" />
       <workItem from="1529418832616" duration="48300000" />
       <workItem from="1529804281119" duration="24400000" />
-      <workItem from="1529853726594" duration="5790000" />
+      <workItem from="1529853726594" duration="6683000" />
+      <workItem from="1529936127545" duration="4592000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434631000" />
+    <option name="totallyTimeSpent" value="440116000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13549416" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13540569" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296582" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -630,14 +694,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14229">
-          <caret line="837" column="28" selection-start-line="837" selection-start-column="28" selection-end-line="837" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 3.0.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -665,14 +721,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/InheritanceAndObserver.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1751">
@@ -691,18 +739,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 4.0.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="834">
+          <caret line="837" column="28" selection-start-line="837" selection-start-column="28" selection-end-line="837" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="1209" column="0" selection-start-line="1209" selection-start-column="0" selection-end-line="1209" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="281" column="18" selection-start-line="281" selection-start-column="18" selection-end-line="281" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="341">
+          <caret line="352" column="45" selection-start-line="352" selection-start-column="45" selection-end-line="352" selection-end-column="45" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 4.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="264" column="14" selection-start-line="264" selection-start-column="14" selection-end-line="264" selection-end-column="14" />
+        <state relative-caret-position="515">
+          <caret line="429" column="71" selection-start-line="428" selection-start-column="16" selection-end-line="429" selection-end-column="71" />
           <folding>
             <element signature="e#28954#37321#0" expanded="false" />
             <element signature="e#37326#37338#0" expanded="false" />
@@ -712,9 +779,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
-          <caret line="285" column="22" selection-start-line="285" selection-start-column="22" selection-end-line="285" selection-end-column="22" />
-          <folding />
+        <state relative-caret-position="441">
+          <caret line="945" column="27" selection-start-line="945" selection-start-column="27" selection-end-line="945" selection-end-column="27" />
+          <folding>
+            <element signature="e#32853#35874#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
