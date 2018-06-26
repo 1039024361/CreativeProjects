@@ -508,6 +508,7 @@ var Drawing = RichBase.extend({
                                 drawingInfo.set("behavior", "pencil");
                                 this._removeStrawHandler();
                                 this._removeFillHandler();
+                                this._removeMagnifierHandler();
                                 this._addDrawLineHandler();
                             }
                         break;
@@ -519,6 +520,7 @@ var Drawing = RichBase.extend({
                                 drawingInfo.set("behavior", "erase");
                                 this._removeStrawHandler();
                                 this._removeFillHandler();
+                                this._removeMagnifierHandler();
                                 this._addDrawLineHandler();
                             }
                         break;
@@ -530,6 +532,7 @@ var Drawing = RichBase.extend({
                                 drawingInfo.set("behavior", "fill");
                                 this._removeStrawHandler();
                                 this._removeDrawLineHandler();
+                                this._removeMagnifierHandler();
                                 this._addFillHandler();
                             }
                         break;
@@ -541,19 +544,22 @@ var Drawing = RichBase.extend({
                                 drawingInfo.set("behavior", "straw");
                                 this._removeDrawLineHandler();
                                 this._removeFillHandler();
+                                this._removeMagnifierHandler();
                                 this._addStrawHandler();
                             }
                         break;
-                        // case "magnifier":
-                        //     console.log("erase");
-                        //     if(!handleTarget.classList.contains("selected")){
-                        //         this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
-                        //         handleTarget.classList.toggle("selected");
-                        //         drawingInfo.set("behavior", "erase");
-                        //         this._removeStrawHandler();
-                        //         this._addDrawLineHandler();
-                        //     }
-                        // break;
+                        case "magnifier":
+                            console.log("magnifier");
+                            if(!handleTarget.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "url(images/magnifier.gif) 0 20, auto";
+                                handleTarget.classList.toggle("selected");
+                                drawingInfo.set("behavior", "magnifier");
+                                this._removeStrawHandler();
+                                this._removeDrawLineHandler();
+                                this._removeFillHandler();
+                                this._addMagnifierHandler();
+                            }
+                        break;
                         // case "text":
                         //     console.log("erase");
                         //     if(!handleTarget.classList.contains("selected")){
@@ -568,6 +574,9 @@ var Drawing = RichBase.extend({
                 }
             ],
         },
+        "magnifierWrap":{
+            "click":[],
+        }
     },
     _ctrlEvent:{
         flag: false,
@@ -904,16 +913,16 @@ var Drawing = RichBase.extend({
     *    height：高度，数值类型
     * */
     _magnifierWrapStyle: function(options){
-        if(options.isDisplay){
-            this.magnifierWrap.style.display = "block";
+        //if(options.isDisplay){
+            this.magnifierWrap.style.display = options.isDisplay? "block":"none";
             this.magnifierWrap.style.top = options.top + "px";
             this.magnifierWrap.style.left = options.left + "px";
             this.magnifierWrap.style.width = options.width + "px";
             this.magnifierWrap.style.height = options.height + "px";
-        }
-        else{
-            this.magnifierWrap.style.display = "none";
-        }
+        //}
+        //else{
+        //    this.magnifierWrap.style.display = "none";
+        //}
     },
     _magnify: function(xGain, yGain){
         xGain = xGain|| 1;
@@ -940,11 +949,82 @@ var Drawing = RichBase.extend({
         EventUtil.addHandler(this.image, "load", imageStretch);
         this.image.src = this.canvasBox.toDataURL("image/png");
     },
-    _magnifierHandler: function (){
-          var canvasW = drawingInfo.get("canvasW"),
-              canvasH = drawingInfo.get("canvasH"),
-              wrapW = null,
+    //计算包裹边框的放大系数
+    _magnifierFactor: function(){
+        return document.body.clientWidth*960/1903;   //以1903的时候，wrap边框宽度为960作为参考
+    },
+    _updateMagnifierWrapStyle: function(){
+        var canvasW = drawingInfo.get("canvasW"),
+            canvasH = drawingInfo.get("canvasH"),
+            wrapW = null,
+            wrapH = null,
+            top = null,
+            left = null,
+            factor = this._magnifierFactor(),
+            xGain = drawingInfo.get("gain"),
+            X = drawingInfo.get("X"),
+            Y = drawingInfo.get("Y");
 
+        if(canvasW <= 960*factor){
+            wrapW = canvasW;
+            left = 0;
+        }
+        else{
+            wrapW = 960*factor;
+            left = X-0.5*wrapW;
+            left = left>=0? left: 0;   //不超过左侧
+            left = (left+0.5*wrapW) > canvasW? canvasW-wrapW: left;  //不超过右侧
+        }
+
+        if(canvasH <= 428*factor){
+            wrapH = canvasH;
+            top = 0;
+        }
+        else{
+            wrapH = 428*factor;
+            top = Y-0.5*wrapH;
+            top = top>=0? top: 0;   //不超过上侧
+            top = (top+0.5*wrapH) > canvasH? canvasH-wrapH: top;  //不超过右侧
+        }
+        this._magnifierWrapStyle({
+            isDisplay: true,
+            top: top,
+            left: left,
+            height: wrapH,
+            width: wrapW
+        });
+    },
+    _magnifierHandler: function (event){
+        event = EventUtil.getEvent(event);
+        var xGain = drawingInfo.get("gain");
+
+        if(event.type === "click"){
+            if(xGain >0 &&xGain <1){
+                xGain = xGain*2;
+            }
+            else{
+                xGain = xGain+1;
+            }
+            this._magnify(xGain);
+        }
+        this._updateMagnifierWrapStyle();
+    },
+    //
+    _addMagnifierHandler: function(){
+        this.addHandler(this.canvasBox, "mousemove", this._magnifierHandler);
+        this.addHandler(this.magnifierWrap, "click", this._magnifierHandler);
+    },
+    //
+    _removeMagnifierHandler: function () {
+         this.removeHandler(this.canvasBox, "mousemove", this._magnifierHandler);
+        this.removeHandler(this.magnifierWrap, "click", this._magnifierHandler);
+         this._magnifierWrapStyle({
+             isDisplay: false,
+             top: drawingInfo.get("canvasH"),
+             left: drawingInfo.get("canvasW"),
+             height: 0,
+             width: 0
+         });
     },
     //事件绑定及节流处理
     init: function (config) {
@@ -975,7 +1055,8 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
         this.createHandlers(this.adjustCanvas, this.EVENTS["adjustCanvas"]);    //加入到观察者
         this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
-        this._addDrawLineHandler();
+        this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
+        this._addDrawLineHandler();   //默认为绘制线条
         this.bind();
     },
     bind: function(){
@@ -1028,9 +1109,12 @@ var Drawing = RichBase.extend({
             self.fire(self.tool, "click", event);
         });
         EventUtil.addHandler(this.tool, "touchstart", function (event) {
-            self.fire(self.tool, "click", event);   //与click事件处理函数一直
+            self.fire(self.tool, "click", event);   //与click事件处理函数一致
         });
-
+        //绑定放大镜事件处理
+        EventUtil.addHandler(this.magnifierWrap, "click", function (event) {
+            self.fire(self.magnifierWrap, "click", event);
+        });
     }
 });
 

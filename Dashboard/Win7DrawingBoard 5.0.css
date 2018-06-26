@@ -1227,8 +1227,9 @@ div{
 }
 
 /*放大镜选择框样式*/
-.magnifier-wrap{
+#magnifier-wrap{
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.5);
     display: none;
+    z-index: 5;
 }
