@@ -1233,3 +1233,82 @@ div{
     display: none;
     z-index: 5;
 }
+
+/*文本输入样式*/
+#element-wrap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px dashed #00bfff;
+}
+
+#move-style-wrap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+#input-div{
+    display: inline-block;
+    width: 120px;
+    min-height: 20px;
+    padding: 2px;
+    background-color: #ffffff;
+    font-size: 16px;
+}
+
+.drag-box{
+    position: absolute;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border: 1px solid #242424;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+}
+
+#top-left{
+    top: 0;
+    left: 0;
+}
+
+#top-middle{
+    top: 0;
+    left: 50%;
+}
+
+#top-right{
+    top: 0;
+    left: 100%;
+}
+
+#right-middle{
+    top: 50%;
+    left: 100%;
+}
+
+#right-bottom{
+    top: 100%;
+    left: 100%;
+}
+
+#bottom-middle{
+    top: 100%;
+    left: 50%;
+}
+
+#left-bottom{
+    top: 100%;
+    left: 0;
+}
+
+#left-middle{
+    top: 50%;
+    left: 0;
+}
