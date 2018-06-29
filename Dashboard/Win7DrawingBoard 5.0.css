@@ -1257,58 +1257,106 @@ div{
     display: inline-block;
     width: 120px;
     min-height: 20px;
+    line-height: 20px;
     padding: 2px;
     background-color: #ffffff;
     font-size: 16px;
 }
 
 .drag-box{
-    position: absolute;
-    box-sizing: border-box;
+    /*position: absolute;*/
+    /*box-sizing: border-box;*/
     display: inline-block;
     width: 5px;
     height: 5px;
     border: 1px solid #242424;
+    background-color: rgba(255, 255, 255, 0.51);
+    z-index: -1;
+}
+
+#element-wrap [class*="ctrl-wrap"]{
+    position: absolute;
     transform: translate(-50%, -50%);
-    background-color: #ffffff;
 }
 
+.ctrl-wrap-top-left{
+    top: 0;
+    left: 0;
+    cursor: nw-resize;
+}
 #top-left{
-    top: 0;
-    left: 0;
+    /*margin: 20px 0 0 20px;*/
 }
 
+.ctrl-wrap-top-middle{
+    top: 0;
+    left: 50%;
+    cursor: n-resize;
+}
 #top-middle{
-    top: 0;
-    left: 50%;
+    margin: 0 10px 0 10px;
 }
 
+.ctrl-wrap-top-right{
+    top: 0;
+    left: 100%;
+    cursor: ne-resize;
+}
 #top-right{
-    top: 0;
-    left: 100%;
+    /*margin: 20px 20px 0 0;*/
 }
 
-#right-middle{
+
+.ctrl-wrap-right-middle{
     top: 50%;
     left: 100%;
+    cursor: e-resize;
+}
+#right-middle{
+    margin: 10px 0 10px 0;
 }
 
-#right-bottom{
+.ctrl-wrap-right-bottom{
     top: 100%;
     left: 100%;
+    cursor: se-resize;
+}
+#right-bottom{
+    /*margin: 0 20px 20px 0;*/
 }
 
-#bottom-middle{
+.ctrl-wrap-bottom-middle{
     top: 100%;
     left: 50%;
+    cursor: s-resize;
+}
+#bottom-middle{
+    margin: 0 10px 0 10px;
 }
 
-#left-bottom{
+.ctrl-wrap-left-bottom{
     top: 100%;
     left: 0;
+    cursor: sw-resize;
+}
+#left-bottom{
+    /*margin: 0 0 20px 20px;*/
 }
 
-#left-middle{
+.ctrl-wrap-left-middle{
     top: 50%;
     left: 0;
+    cursor: w-resize;
 }
+#left-middle{
+    margin: 10px 0 10px 0;
+}
+
+#element-wrap{
+    cursor: move;
+}
+
+#input-div{
+    cursor: text;
+}
+

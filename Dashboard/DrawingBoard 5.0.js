@@ -971,6 +971,14 @@ var Drawing = RichBase.extend({
         //    this.magnifierWrap.style.display = "none";
         //}
     },
+    _appendStyle: function (target, options){
+        for(var key in options){
+            if(options.hasOwnProperty(key)){
+                console.log(key);
+                target.style[key] = options[key];
+            }
+        }
+    },
     _magnify: function(xGain, yGain){
         xGain = xGain|| 1;
         yGain = yGain||xGain;
@@ -1033,12 +1041,12 @@ var Drawing = RichBase.extend({
             top = top>=0? top: 0;   //不超过上侧
             top = (top+wrapH) > canvasH? canvasH-wrapH: top;  //不超过右侧
         }
-        this._magnifierWrapStyle({
-            isDisplay: true,
-            top: top,
-            left: left,
-            height: wrapH,
-            width: wrapW
+        this._appendStyle(this.magnifierWrap, {
+            display: "block",
+            top: top+"px",
+            left: left+"px",
+            height: wrapH+"px",
+            width: wrapW+"px"
         });
     },
     _magnifierHandler: function (event){
@@ -1065,10 +1073,10 @@ var Drawing = RichBase.extend({
     _removeMagnifierHandler: function () {
          this.removeHandler(this.canvasWrap, "mousemove", this._magnifierHandler);
          this.removeHandler(this.magnifierWrap, "click", this._magnifierHandler);
-         this._magnifierWrapStyle({
-             isDisplay: false,
-             top: drawingInfo.get("canvasH"),
-             left: drawingInfo.get("canvasW"),
+         this._appendStyle(this.magnifierWrap, {
+             display: "none",
+             top: drawingInfo.get("canvasH")+"px",
+             left: drawingInfo.get("canvasW")+"px",
              height: 0,
              width: 0
          });
@@ -1092,6 +1100,9 @@ var Drawing = RichBase.extend({
         // this.fill = document.querySelector("#fill");
         // this.straw = document.querySelector("#straw");
         // this.magnifier = document.querySelector("#magnifier");
+        //选择框调整
+        this.elementWrap = document.querySelector("#element-wrap");
+
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
         this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
