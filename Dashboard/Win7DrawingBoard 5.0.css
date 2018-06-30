@@ -1242,6 +1242,7 @@ div{
     display: inline-block;
     vertical-align: middle;
     border: 1px dashed #00bfff;
+    padding: 2px;
 }
 
 #move-style-wrap{
@@ -1258,7 +1259,7 @@ div{
     width: 120px;
     min-height: 20px;
     line-height: 20px;
-    padding: 2px;
+    vertical-align: middle;
     background-color: #ffffff;
     font-size: 16px;
 }

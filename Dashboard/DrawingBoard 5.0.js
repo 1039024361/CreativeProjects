@@ -312,7 +312,7 @@ var Drawing = RichBase.extend({
             ],
             "mouseleave":[
                 function(event){
-                    console.log(`up`);
+                    // console.log(`up`);
                     this._displayCursorPos(-1,  -1);
                 }
             ],
@@ -623,13 +623,22 @@ var Drawing = RichBase.extend({
         },
         "magnifierWrap":{
             "click":[],
+        },
+        "elementWrap":{
+            "mousedown":[],
+            "mousemove":[],
+            "mouseup":[],
+            "mouseleave":[],
+            "touchstart":[],
+            "touchmove":[],
+            "touchend":[],
         }
     },
     _ctrlEvent:{
         flag: false,
-        startXY:[0, 0],
-        middleXY:[0,0],
-        endXY:[0, 0]
+        startXY:[null, null],
+        middleXY:[null,null],
+        endXY:[null, null],
     },
     //描点函数
     _draw: function(x, y){
@@ -974,7 +983,7 @@ var Drawing = RichBase.extend({
     _appendStyle: function (target, options){
         for(var key in options){
             if(options.hasOwnProperty(key)){
-                console.log(key);
+                // console.log(key);
                 target.style[key] = options[key];
             }
         }
@@ -1081,6 +1090,93 @@ var Drawing = RichBase.extend({
              width: 0
          });
     },
+    //选择框、输入框方法
+    //重新定位
+    //移动
+    _moveElement: function(event){
+        event = EventUtil.getEvent(event);
+        var target  = EventUtil.getTarget(event);
+        // EventUtil.stopPropagation(event);
+
+        switch (event.type) {
+            case "mousedown":
+            case "touchstart":
+                if (target.id === "element-wrap") {
+                    console.log("mousedown");
+                    console.log(`this.get("X"): ${this.get("X")}`);
+                    console.log(`this.get("Y"): ${this.get("Y")}`);
+                    this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
+                }
+                break;
+            case "mousemove":
+            case "touchmove":
+                EventUtil.preventDefault(event);
+                if (this._ctrlEvent.startXY[0] !== null && this._ctrlEvent.startXY[1] !== null) {
+                    let currentTarget = this.elementWrap;
+                    console.log("mousemove");
+                    console.log(`this.get("X"): ${this.get("X")}`);
+                    console.log(`this.get("Y"): ${this.get("Y")}`);
+
+                    console.log(`currentTarget.style.left: ${parseInt(currentTarget.style.left)}`);
+                    console.log(`currentTarget.style.top: ${parseInt(currentTarget.style.top)}`);
+                    console.log(`this._ctrlEvent.startXY[0]: ${this._ctrlEvent.startXY[0]}`);
+                    console.log(`this._ctrlEvent.startXY[1]: ${this._ctrlEvent.startXY[1]}`);
+                    let width = parseInt(currentTarget.style.width),
+                        height = parseInt(currentTarget.style.height),
+                        x = this.get("X"),
+                        y = this.get("Y"),
+                        left = parseInt(currentTarget.style.left) + x - this._ctrlEvent.startXY[0],
+                        top = parseInt(currentTarget.style.top) + y - this._ctrlEvent.startXY[1],
+                        canvasW = drawingInfo.get("canvasW"),
+                        canvasH = drawingInfo.get("canvasH");
+                    console.log(`top: ${top}`);
+                    console.log(`left: ${left}`);
+                    //超过画布右侧
+                    left = (left + width) > canvasW ? canvasW - width : left;
+                    //超出画布左侧
+                    left = left < 0 ? 0 : left;
+                    //超过画布下侧
+                    top = (top + height) > canvasH ? canvasH - height : top;
+                    //超出画布上侧
+                    top = top < 0 ? 0 : top;
+                    console.log(`top: ${top}`);
+                    console.log(`left: ${left}`);
+                    this._appendStyle(currentTarget, {
+                        top: top + "px",
+                        left: left + "px"
+                    });
+                    this._ctrlEvent.startXY = [x, y];
+                }
+                break;
+            case "mouseup":
+            case "mouseleave":
+            case "touchend":
+                //if (target.id === "element-wrap") {
+                    this._ctrlEvent.startXY = [null, null];
+                    break;
+                //}
+        }
+    },
+    //添加移动事件处理程序
+    _addMoveElementHandler: function(){
+        this.addHandler(this.canvasWrap, "mousedown", this._moveElement);
+        this.addHandler(this.canvasWrap, "touchstart", this._moveElement);
+        this.addHandler(this.canvasWrap, "mouseup", this._moveElement);
+        this.addHandler(this.canvasWrap, "touchmove", this._moveElement);
+        this.addHandler(this.canvasWrap, "mousemove", this._moveElement);
+        this.addHandler(this.canvasWrap, "touchend", this._moveElement);
+        this.addHandler(this.canvasWrap, "mouseleave", this._moveElement);
+    },
+    //
+    _removeMoveElementHandler: function () {
+        this.removeHandler(this.canvasWrap, "mousedown", this._moveElement);
+        this.removeHandler(this.canvasWrap, "mousemove", this._moveElement);
+        this.removeHandler(this.canvasWrap, "mouseup", this._moveElement);
+        this.removeHandler(this.canvasWrap, "touchstart", this._moveElement);
+        this.removeHandler(this.canvasWrap, "touchmove", this._moveElement);
+        this.removeHandler(this.canvasWrap, "touchend", this._moveElement);
+        this.removeHandler(this.canvasWrap, "mouseleave", this._moveElement);
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -1116,7 +1212,9 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.adjustCanvas, this.EVENTS["adjustCanvas"]);    //加入到观察者
         this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
         this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
+        // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
+        this._addMoveElementHandler();  //调试使用
         this.bind();
     },
     bind: function(){
@@ -1175,6 +1273,28 @@ var Drawing = RichBase.extend({
         EventUtil.addHandler(this.magnifierWrap, "click", function (event) {
             self.fire(self.magnifierWrap, "click", event);
         });
+        //选择框、输入框移动事件
+        // EventUtil.addHandler(this.elementWrap, "mousedown", function (event) {
+        //     self.fire(self.elementWrap, "mousedown", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "mousemove", function (event) {
+        //     self.fire(self.elementWrap, "mousemove", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "mouseup", function (event) {
+        //     self.fire(self.elementWrap, "mouseup", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "touchstart", function (event) {
+        //     self.fire(self.elementWrap, "touchstart", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "touchmove", function (event) {
+        //     self.fire(self.elementWrap, "touchmove", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "touchend", function (event) {
+        //     self.fire(self.elementWrap, "touchend", event);
+        // });
+        // EventUtil.addHandler(this.elementWrap, "mouseleave", function (event) {
+        //     self.fire(self.elementWrap, "mouseleave", event);
+        // });
     }
 });
 
@@ -1525,8 +1645,8 @@ var Color = RichBase.extend({
 
 (function(){
     var drawingModule = new Drawing({
-            X: null,
-            Y: null
+            X: null,  //绘图区域X坐标
+            Y: null   //绘图区域Y坐标
         }
         // {
         // behavior: "pencil",
