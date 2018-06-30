@@ -1096,12 +1096,18 @@ var Drawing = RichBase.extend({
     _moveElement: function(event){
         event = EventUtil.getEvent(event);
         var target  = EventUtil.getTarget(event);
-        // EventUtil.stopPropagation(event);
 
         switch (event.type) {
             case "mousedown":
-            case "touchstart":
                 if (target.id === "element-wrap") {
+                    console.log("mousedown");
+                    console.log(`this.get("X"): ${this.get("X")}`);
+                    console.log(`this.get("Y"): ${this.get("Y")}`);
+                    this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
+                }
+                break;
+            case "touchstart":
+                if (target.id === "element-wrap"||target.parentNode.id === "element-wrap") {
                     console.log("mousedown");
                     console.log(`this.get("X"): ${this.get("X")}`);
                     console.log(`this.get("Y"): ${this.get("Y")}`);
@@ -1112,17 +1118,9 @@ var Drawing = RichBase.extend({
             case "touchmove":
                 EventUtil.preventDefault(event);
                 if (this._ctrlEvent.startXY[0] !== null && this._ctrlEvent.startXY[1] !== null) {
-                    let currentTarget = this.elementWrap;
-                    console.log("mousemove");
-                    console.log(`this.get("X"): ${this.get("X")}`);
-                    console.log(`this.get("Y"): ${this.get("Y")}`);
-
-                    console.log(`currentTarget.style.left: ${parseInt(currentTarget.style.left)}`);
-                    console.log(`currentTarget.style.top: ${parseInt(currentTarget.style.top)}`);
-                    console.log(`this._ctrlEvent.startXY[0]: ${this._ctrlEvent.startXY[0]}`);
-                    console.log(`this._ctrlEvent.startXY[1]: ${this._ctrlEvent.startXY[1]}`);
-                    let width = parseInt(currentTarget.style.width),
-                        height = parseInt(currentTarget.style.height),
+                    let currentTarget = this.elementWrap,
+                        width = parseInt( this.inputDiv.style.width),
+                        height = parseInt( this.inputDiv.style.height),
                         x = this.get("X"),
                         y = this.get("Y"),
                         left = parseInt(currentTarget.style.left) + x - this._ctrlEvent.startXY[0],
@@ -1139,8 +1137,6 @@ var Drawing = RichBase.extend({
                     top = (top + height) > canvasH ? canvasH - height : top;
                     //超出画布上侧
                     top = top < 0 ? 0 : top;
-                    console.log(`top: ${top}`);
-                    console.log(`left: ${left}`);
                     this._appendStyle(currentTarget, {
                         top: top + "px",
                         left: left + "px"
@@ -1151,10 +1147,8 @@ var Drawing = RichBase.extend({
             case "mouseup":
             case "mouseleave":
             case "touchend":
-                //if (target.id === "element-wrap") {
                     this._ctrlEvent.startXY = [null, null];
                     break;
-                //}
         }
     },
     //添加移动事件处理程序
@@ -1191,13 +1185,9 @@ var Drawing = RichBase.extend({
         //tool栏
         this.tool = document.querySelector("#tool");
         this.magnifierWrap = document.querySelector("#magnifier-wrap");
-        // this.pencil = document.querySelector("#pencil");
-        // this.erase = document.querySelector("#erase");
-        // this.fill = document.querySelector("#fill");
-        // this.straw = document.querySelector("#straw");
-        // this.magnifier = document.querySelector("#magnifier");
         //选择框调整
         this.elementWrap = document.querySelector("#element-wrap");
+        this.inputDiv = document.querySelector("#input-div");
 
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
@@ -1273,28 +1263,6 @@ var Drawing = RichBase.extend({
         EventUtil.addHandler(this.magnifierWrap, "click", function (event) {
             self.fire(self.magnifierWrap, "click", event);
         });
-        //选择框、输入框移动事件
-        // EventUtil.addHandler(this.elementWrap, "mousedown", function (event) {
-        //     self.fire(self.elementWrap, "mousedown", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "mousemove", function (event) {
-        //     self.fire(self.elementWrap, "mousemove", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "mouseup", function (event) {
-        //     self.fire(self.elementWrap, "mouseup", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "touchstart", function (event) {
-        //     self.fire(self.elementWrap, "touchstart", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "touchmove", function (event) {
-        //     self.fire(self.elementWrap, "touchmove", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "touchend", function (event) {
-        //     self.fire(self.elementWrap, "touchend", event);
-        // });
-        // EventUtil.addHandler(this.elementWrap, "mouseleave", function (event) {
-        //     self.fire(self.elementWrap, "mouseleave", event);
-        // });
     }
 });
 
