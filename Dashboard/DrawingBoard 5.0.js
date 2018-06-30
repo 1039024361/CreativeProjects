@@ -635,10 +635,12 @@ var Drawing = RichBase.extend({
         }
     },
     _ctrlEvent:{
+        target: null,
         flag: false,
         startXY:[null, null],
         middleXY:[null,null],
         endXY:[null, null],
+        startStretchXY:[null, null],
     },
     //描点函数
     _draw: function(x, y){
@@ -981,6 +983,16 @@ var Drawing = RichBase.extend({
         //}
     },
     _appendStyle: function (target, options){
+        if(target.tagName === "CANVAS"){
+            if(options.width != undefined){
+                target.width = parseInt(options.width);
+                delete options.width;
+            }
+            if(options.height != undefined){
+                target.height = parseInt(options.height);
+                delete options.height;
+            }
+        }
         for(var key in options){
             if(options.hasOwnProperty(key)){
                 // console.log(key);
@@ -1100,17 +1112,11 @@ var Drawing = RichBase.extend({
         switch (event.type) {
             case "mousedown":
                 if (target.id === "element-wrap") {
-                    console.log("mousedown");
-                    console.log(`this.get("X"): ${this.get("X")}`);
-                    console.log(`this.get("Y"): ${this.get("Y")}`);
                     this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
                 }
                 break;
             case "touchstart":
                 if (target.id === "element-wrap"||target.parentNode.id === "element-wrap") {
-                    console.log("mousedown");
-                    console.log(`this.get("X"): ${this.get("X")}`);
-                    console.log(`this.get("Y"): ${this.get("Y")}`);
                     this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
                 }
                 break;
@@ -1119,8 +1125,8 @@ var Drawing = RichBase.extend({
                 EventUtil.preventDefault(event);
                 if (this._ctrlEvent.startXY[0] !== null && this._ctrlEvent.startXY[1] !== null) {
                     let currentTarget = this.elementWrap,
-                        width = parseInt( this.inputDiv.style.width),
-                        height = parseInt( this.inputDiv.style.height),
+                        width = parseInt(this.inputDiv.style.width),
+                        height = parseInt(this.inputDiv.style.height),
                         x = this.get("X"),
                         y = this.get("Y"),
                         left = parseInt(currentTarget.style.left) + x - this._ctrlEvent.startXY[0],
@@ -1130,13 +1136,13 @@ var Drawing = RichBase.extend({
                     console.log(`top: ${top}`);
                     console.log(`left: ${left}`);
                     //超过画布右侧
-                    left = (left + width) > canvasW ? canvasW - width : left;
+                    left = (left + width+ 2) > canvasW ? canvasW - width -2: left;  //2个像素的padding
                     //超出画布左侧
-                    left = left < 0 ? 0 : left;
+                    left = left < -2 ? -2 : left;
                     //超过画布下侧
-                    top = (top + height) > canvasH ? canvasH - height : top;
+                    top = (top + height +2) > canvasH ? canvasH - height - 2: top;
                     //超出画布上侧
-                    top = top < 0 ? 0 : top;
+                    top = top < -2 ? -2 : top;
                     this._appendStyle(currentTarget, {
                         top: top + "px",
                         left: left + "px"
@@ -1170,6 +1176,137 @@ var Drawing = RichBase.extend({
         this.removeHandler(this.canvasWrap, "touchmove", this._moveElement);
         this.removeHandler(this.canvasWrap, "touchend", this._moveElement);
         this.removeHandler(this.canvasWrap, "mouseleave", this._moveElement);
+    },
+    //移动
+    _stretchElement: function(event){
+        event = EventUtil.getEvent(event);
+        var eventTarget  = EventUtil.getTarget(event),
+            target = eventTarget.childElementCount? eventTarget.firstElementChild:eventTarget;
+
+        switch (event.type) {
+            case "mousedown":
+            case "touchstart":
+                if (target.id === "top-left"||target.id === "top-middle"||target.id === "top-right"||target.id === "right-middle"||target.id === "right-bottom"||target.id === "bottom-middle"||target.id === "left-bottom"||target.id === "left-middle") {
+                    console.log("mousedown");
+                    console.log(`this.get("X"): ${this.get("X")}`);
+                    console.log(`this.get("Y"): ${this.get("Y")}`);
+                    this._ctrlEvent.startStretchXY = [this.get("X"), this.get("Y")];
+                    this._ctrlEvent.target = target.id;
+                }
+                break;
+            case "mousemove":
+            case "touchmove":
+                EventUtil.preventDefault(event);
+                if (this._ctrlEvent.startStretchXY[0] !== null && this._ctrlEvent.startStretchXY[1] !== null) {
+                    let currentTarget = this.elementWrap,
+                        width = parseInt(this.inputDiv.style.width),
+                        height = parseInt(this.inputDiv.style.height),
+                        x = this.get("X"),
+                        y = this.get("Y"),
+                        diffX = x - this._ctrlEvent.startStretchXY[0],
+                        diffY = y - this._ctrlEvent.startStretchXY[1],
+                        left = parseInt(currentTarget.style.left),
+                        top = parseInt(currentTarget.style.top),
+                        canvasW = drawingInfo.get("canvasW"),
+                        canvasH = drawingInfo.get("canvasH"),
+                        newWidth = null,
+                        newHeight = null,
+                        newTop = null,
+                        newLeft = null;
+
+                    switch (this._ctrlEvent.target){
+                        case "top-left":
+                            newWidth = width - diffX;
+                            newHeight = height - diffY;
+                            newTop = top + diffY;
+                            newLeft =left + diffX;
+                            break;
+                        case "top-middle":
+                            newHeight = height - diffY;
+                            newTop = top + diffY;
+                            break;
+                        case "top-right":
+                            newWidth = width + diffX;
+                            newHeight = height - diffY;
+                            newTop = top + diffY;
+                            break;
+                        case "right-middle":
+                            newWidth = width + diffX;
+                            break;
+                        case "right-bottom":
+                            newWidth = width + diffX;
+                            newHeight = height + diffY;
+                            break;
+                        case "bottom-middle":
+                            newHeight = height + diffY;
+                            break;
+                        case "left-bottom":
+                            newWidth = width - diffX;
+                            newHeight = height + diffY;
+                            newLeft = left + diffX;
+                            break;
+                        case "left-middle":
+                            newWidth = width - diffX;
+                            newLeft = left + diffX;
+                            break;
+                    }
+                    //超过左边界
+                    if(newLeft<0){
+                        newWidth  = width+left;
+                        newLeft = 0;
+                    }
+                    else if(newLeft>width+left-15){  //15为3个小方格宽度
+                        //超过右边
+                        newWidth = 15;
+                        newLeft = width+left-15;
+                    }
+                    //超过上边界
+                    if(newTop<0){
+                        newHeight  = height+top;
+                        newTop = 0;
+                    }
+                    else if(newTop>height+top-15){
+                        //超过右边
+                        newHeight = 15;
+                        newTop = height+top-15;
+                    }
+                    this._appendStyle(this.inputDiv, {
+                        width: newWidth + "px",
+                        height: newHeight + "px"
+                    });
+                    this._appendStyle(currentTarget, {
+                        top: newTop + "px",
+                        left: newLeft + "px",
+                    });
+                    this._ctrlEvent.startStretchXY = [x, y];
+                }
+                break;
+            case "mouseup":
+            case "mouseleave":
+            case "touchend":
+                this._ctrlEvent.startStretchXY = [null, null];
+                break;
+        }
+    },
+    //添加移动事件处理程序
+    _addStretchElementHandler: function(){
+        this.addHandler(this.canvasWrap, "mousedown", this._stretchElement);
+        this.addHandler(this.canvasWrap, "touchstart", this._stretchElement);
+        this.addHandler(this.canvasWrap, "mouseup", this._stretchElement);
+        this.addHandler(this.canvasWrap, "touchmove", this._stretchElement);
+        this.addHandler(this.canvasWrap, "mousemove", this._stretchElement);
+        this.addHandler(this.canvasWrap, "touchend", this._stretchElement);
+        this.addHandler(this.canvasWrap, "mouseleave", this._stretchElement);
+    },
+    //
+    _removeStretchElementHandler: function () {
+        this.removeHandler(this.canvasWrap, "mousedown", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "mousemove", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "mouseup", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "touchstart", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "touchmove", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "touchend", this._stretchElement);
+        this.removeHandler(this.canvasWrap, "mouseleave", this._stretchElement);
     },
     //事件绑定及节流处理
     init: function (config) {
@@ -1205,6 +1342,7 @@ var Drawing = RichBase.extend({
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
         this._addMoveElementHandler();  //调试使用
+        this._addStretchElementHandler(); //调试
         this.bind();
     },
     bind: function(){
