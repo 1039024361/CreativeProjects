@@ -1262,6 +1262,11 @@ div{
     vertical-align: middle;
     background-color: #ffffff;
     font-size: 16px;
+    /*overflow: visible;*/
+    word-break: normal;
+}
+#input-div div{
+    font-size: 16px;
 }
 
 .drag-box{

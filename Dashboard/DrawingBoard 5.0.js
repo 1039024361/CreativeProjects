@@ -607,16 +607,21 @@ var Drawing = RichBase.extend({
                                 this._addMagnifierHandler();
                             }
                         break;
-                        // case "text":
-                        //     console.log("erase");
-                        //     if(!handleTarget.classList.contains("selected")){
-                        //         this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
-                        //         handleTarget.classList.toggle("selected");
-                        //         drawingInfo.set("behavior", "erase");
-                        //         this._removeStrawHandler();
-                        //         this._addDrawLineHandler();
-                        //     }
-                        // break;
+                        case "text":
+                            console.log("text");
+                            if(!handleTarget.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "text";
+                                handleTarget.classList.toggle("selected");
+                                drawingInfo.set("behavior", "textInput");
+                                this._removeStrawHandler();
+                                this._removeDrawLineHandler();
+                                this._removeFillHandler();
+                                this._removeMagnifierHandler();
+                                this._addTextInputHandler();
+                                // this._removeStrawHandler();
+                                // this._addDrawLineHandler();
+                            }
+                        break;
                     }
                 }
             ],
@@ -1200,7 +1205,7 @@ var Drawing = RichBase.extend({
                 if (this._ctrlEvent.startStretchXY[0] !== null && this._ctrlEvent.startStretchXY[1] !== null) {
                     let currentTarget = this.elementWrap,
                         width = parseInt(this.inputDiv.style.width),
-                        height = parseInt(this.inputDiv.style.height),
+                        height = parseInt(this.inputDiv.style["min-height"]),
                         x = this.get("X"),
                         y = this.get("Y"),
                         diffX = x - this._ctrlEvent.startStretchXY[0],
@@ -1272,7 +1277,7 @@ var Drawing = RichBase.extend({
                     }
                     this._appendStyle(this.inputDiv, {
                         width: newWidth + "px",
-                        height: newHeight + "px"
+                        "min-height": newHeight + "px"
                     });
                     this._appendStyle(currentTarget, {
                         top: newTop + "px",
@@ -1308,6 +1313,144 @@ var Drawing = RichBase.extend({
         this.removeHandler(this.canvasWrap, "touchend", this._stretchElement);
         this.removeHandler(this.canvasWrap, "mouseleave", this._stretchElement);
     },
+
+    //将一个字符串拆分成不大于绘图区域宽度的字数组序列
+    _splitTOArray: function (context, string, width){
+        var temp = "",
+            arr = [],
+            chrs = string.split("");
+
+        for(let a = 0; a < chrs.length; a++){
+            if( context.measureText(temp).width < width ){
+
+            }
+            else{
+                arr.push(temp);
+                temp = "";
+            }
+            temp += chrs[a];
+        }
+        arr.push(temp);
+        return arr;
+    },
+
+    //将字符分行，用于canvas书写字符
+    _wordBreak: function(context, string, width){
+        var regEX = /[a-zA-Z0-9]+|\s|[\u4e00-\u9fa5]|\S/g;
+        var array = string.match(regEX),
+            temp = "",
+            tempCopy = "",
+            rowArray = [];
+
+        for(var a = 0; a < array.length; ){
+            tempCopy += array[a];
+            if(context.measureText(tempCopy).width < width ){
+                temp += array[a];
+                a++;
+            }
+            else{
+                rowArray.push(temp);
+                temp = "";
+                if(context.measureText(array[a]).width >width){
+                    array.splice(a, 1, this._splitTOArray(context, array[a], width));
+                }
+            }
+            tempCopy = temp;
+            console.log(array);
+        }
+        rowArray.push(temp);
+        return rowArray;
+    },
+    //绘制多行字符
+    /*options
+    *    context，
+    *    string，
+    *    width，
+    *    height,
+    *    X，
+    *    Y，
+    *    lineHeight,
+    *    fontType,
+    *    fontSize,
+    *    fontWeight,
+    *    color,
+    *    backColor
+    *    textAlign
+    * */
+    _drawText: function(options){
+        var context = options.context,
+            string = options.string,
+            width = options.width,
+            x = options.X,
+            y = options.Y,
+            height = options.lineHeight||20,
+            fontSize = options.fontSize||16,
+            fontWeight = options.fontWeight||"normal",
+            fontFamily = options.fontFamily||"微软雅黑",
+            backColor = options.backColor||"rgba(255, 255, 255, 0)",
+            color = options.color||"rgba(0, 0, 0, 1)",
+            textAlign = options.color||"start";
+
+        if(!string){
+            return null;
+        }
+        context.fillStyle = backColor;
+        context.fillRect(x, y, width, height);
+        context.fillStyle = color;
+        context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+        context.textAlign = textAlign;
+        context.textBaseline = textAlign;
+        var row = this._wordBreak(context, string, width);
+        for(var b = 0; b < row.length; b++){
+            context.fillText(row[b],x,y+(b+1)*height);
+        }
+    },
+    //处理文本输入事件
+    _textInputHandler: function (event) {
+        event = EventUtil.getEvent(event);
+        var target = EventUtil.getTarget(event);
+
+        if(target.id === "canvasBox"){
+            if(drawingInfo.get("behavior") === "textInput"){
+                if(this.elementWrap.style.display === "inline-block"){
+                    this._drawText({
+                        context: this.context,
+                        string: this.inputDiv.textContent,
+                        X: parseInt(this.elementWrap.style.left)+2,
+                        Y: parseInt(this.elementWrap.style.top)+2,
+                        color: drawingInfo.get("color"),
+                        backColor: drawingInfo.get("backgroundColor"),
+                        width: parseInt(this.inputDiv.style.width),
+                        height: parseInt(this.inputDiv.style.height)
+                    });
+                    this._appendStyle(this.elementWrap, {
+                        display: "none",
+                    });
+                    this._removeTextInputHandler();
+                    this._removeStretchElementHandler();
+                    this._removeMoveElementHandler();
+                }
+                else{
+                    this._appendStyle(this.elementWrap, {
+                        display: "inline-block",
+                        top: this.get("Y")+"px",
+                        left: this.get("X")+"px"
+                    });
+                    this.inputDiv.focus();
+                    this._addStretchElementHandler();
+                    this._addMoveElementHandler();
+                }
+            }
+        }
+    },
+    //文本加载事件
+    _addTextInputHandler: function(){
+        this.addHandler(this.canvasWrap, "click", this._textInputHandler);
+    },
+    //删除文本事件
+    _removeTextInputHandler: function(){
+        this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -1341,8 +1484,8 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
-        this._addMoveElementHandler();  //调试使用
-        this._addStretchElementHandler(); //调试
+        // this._addMoveElementHandler();  //调试使用
+        // this._addStretchElementHandler(); //调试
         this.bind();
     },
     bind: function(){
