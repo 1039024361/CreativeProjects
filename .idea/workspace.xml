@@ -6,10 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" afterPath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -60,8 +57,8 @@
       <file leaf-file-name="DrawingBoard 5.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="1411" column="0" selection-start-line="1411" selection-start-column="0" selection-end-line="1411" selection-end-column="0" />
+            <state relative-caret-position="389">
+              <caret line="1420" column="56" selection-start-line="1420" selection-start-column="56" selection-end-line="1420" selection-end-column="56" />
               <folding>
                 <element signature="e#89#584#0" expanded="false" />
                 <element signature="e#625#3290#0" expanded="false" />
@@ -378,15 +375,15 @@
       <workItem from="1529853726594" duration="6683000" />
       <workItem from="1529936127545" duration="27591000" />
       <workItem from="1530321022899" duration="23739000" />
-      <workItem from="1530407988002" duration="14770000" />
+      <workItem from="1530407988002" duration="15471000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="501624000" />
+    <option name="totallyTimeSpent" value="502325000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14383562" sideWeight="0.47772658" order="0" side_tool="false" content_ui="combo" />
@@ -782,8 +779,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="1411" column="0" selection-start-line="1411" selection-start-column="0" selection-end-line="1411" selection-end-column="0" />
+        <state relative-caret-position="389">
+          <caret line="1420" column="56" selection-start-line="1420" selection-start-column="56" selection-end-line="1420" selection-end-column="56" />
           <folding>
             <element signature="e#89#584#0" expanded="false" />
             <element signature="e#625#3290#0" expanded="false" />

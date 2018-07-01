@@ -1416,8 +1416,8 @@ var Drawing = RichBase.extend({
                     this._drawText({
                         context: this.context,
                         string: this.inputDiv.textContent,
-                        X: parseInt(this.elementWrap.style.left)+2,
-                        Y: parseInt(this.elementWrap.style.top)+2,
+                        X: parseInt(this.elementWrap.style.left)+3,
+                        Y: parseInt(this.elementWrap.style.top)-1,
                         color: drawingInfo.get("color"),
                         backColor: drawingInfo.get("backgroundColor"),
                         width: parseInt(this.inputDiv.style.width),
@@ -1426,7 +1426,8 @@ var Drawing = RichBase.extend({
                     this._appendStyle(this.elementWrap, {
                         display: "none",
                     });
-                    this._removeTextInputHandler();
+                    this.inputDiv.innerHTML = "";
+                    // this._removeTextInputHandler();
                     this._removeStretchElementHandler();
                     this._removeMoveElementHandler();
                 }
