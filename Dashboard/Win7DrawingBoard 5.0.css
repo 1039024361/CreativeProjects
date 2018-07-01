@@ -1262,6 +1262,7 @@ div{
     vertical-align: middle;
     background-color: #ffffff;
     font-size: 16px;
+    font-family: "微软雅黑", sans-serif;
     /*overflow: visible;*/
     word-break: normal;
 }

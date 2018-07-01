@@ -1317,11 +1317,13 @@ var Drawing = RichBase.extend({
     //将一个字符串拆分成不大于绘图区域宽度的字数组序列
     _splitTOArray: function (context, string, width){
         var temp = "",
+            tempCopy = "",
             arr = [],
             chrs = string.split("");
 
         for(let a = 0; a < chrs.length; a++){
-            if( context.measureText(temp).width < width ){
+            tempCopy += chrs[a];
+            if( context.measureText(tempCopy).width < width ){
 
             }
             else{
@@ -1329,6 +1331,7 @@ var Drawing = RichBase.extend({
                 temp = "";
             }
             temp += chrs[a];
+            tempCopy = temp;
         }
         arr.push(temp);
         return arr;
@@ -1349,10 +1352,14 @@ var Drawing = RichBase.extend({
                 a++;
             }
             else{
-                rowArray.push(temp);
-                temp = "";
                 if(context.measureText(array[a]).width >width){
-                    array.splice(a, 1, this._splitTOArray(context, array[a], width));
+                    var arg = [a, 1];
+                    Array.prototype.push.apply(arg, this._splitTOArray(context, array[a], width));  //将两数组合并
+                    Array.prototype.splice.apply(array, arg);
+                }
+                else{
+                    rowArray.push(temp);
+                    temp = "";
                 }
             }
             tempCopy = temp;
@@ -1395,7 +1402,7 @@ var Drawing = RichBase.extend({
             return null;
         }
         context.fillStyle = backColor;
-        context.fillRect(x, y, width, height);
+        context.fillRect(x, y+4, width, height);
         context.fillStyle = color;
         context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         context.textAlign = textAlign;
