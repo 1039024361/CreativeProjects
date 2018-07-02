@@ -188,6 +188,7 @@ div{
 /*剪切板,第一栏样式*/
 #cutBox{
     width: 92px;
+    min-width: 92px;
 }
 
 .cut-box-wrap{
@@ -436,6 +437,7 @@ div{
 /*第二栏，图像*/
 #imgBox{
     width: 147px;
+    min-width: 147px;
 }
 
 .selectBox{
@@ -688,6 +690,7 @@ div{
 }
 #shape{
     width: 228px;
+    min-width: 228px;
 }
 
 #shape .right-box-parts .drop {
@@ -808,7 +811,7 @@ div{
 }
 
 .color-1{
-    /*width: 42px;*/
+    width: 42px;
 }
 
 .font-color-wrap{
@@ -895,7 +898,8 @@ div{
 }
 
 #colorbox{
-    width: 364px;
+    width: 364px !important;
+    min-width: 364px;   /*火狐浏览器兼容*/
 }
 
 /*绘图区域*/
@@ -1065,6 +1069,7 @@ div{
 @media  only screen and (max-width: 1065px){
     #shape{
         width: 208px;
+        min-width: 208px;
     }
 
     .shape-wrap-left-img{
@@ -1075,6 +1080,7 @@ div{
 @media  only screen and (max-width: 1045px){
     #shape{
         width: 188px;
+        min-width: 188px;
     }
 
     .shape-wrap-left-img{
@@ -1085,6 +1091,7 @@ div{
 @media  only screen and (max-width: 1025px){
     #shape{
         width: 168px;
+        min-width: 168px;
     }
 
     .shape-wrap-left-img{
@@ -1095,6 +1102,7 @@ div{
 @media  only screen and (max-width: 1008px){
     #cutBox{
         width: 66px;
+        min-width: 66px;
     }
 
     #cutBox .right-box-parts-list span{
@@ -1103,9 +1111,10 @@ div{
 }
 
 /*图像 调整*/
-@media  only screen and (max-width: 972px){
+@media  only screen and (max-width: 974px){
     #imgBox{
         width: 74px;
+        min-width: 74px;
     }
 
     #imgBox .right-box-parts-list .display{

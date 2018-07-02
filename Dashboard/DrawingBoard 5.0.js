@@ -1345,6 +1345,10 @@ var Drawing = RichBase.extend({
             tempCopy = "",
             rowArray = [];
 
+        if(!string){
+            return [];
+        }
+
         for(var a = 0; a < array.length; ){
             tempCopy += array[a];
             if(context.measureText(tempCopy).width < width ){
@@ -1365,8 +1369,52 @@ var Drawing = RichBase.extend({
             tempCopy = temp;
             console.log(array);
         }
-        rowArray.push(temp);
+        if(temp !== ""){
+            rowArray.push(temp);
+        }
         return rowArray;
+    },
+    //提取富文本输入框的文本内容,将分段内容分组，以数组返回
+    _filterText: function f(target){
+        var arr = [],
+            i = null,
+            len = null,
+            nodes = null,
+            tempArr = [];
+        if(!target){
+            return arr;
+        }
+        len = target.childNodes.length;
+        if(len === 0){
+            return arr;
+        }
+        nodes = target.childNodes;
+        for(i = 0; i < len; i++){
+            if(nodes[i].nodeType === 3){
+                arr.push(nodes[i].nodeValue);
+            }
+            else{
+                tempArr = f(nodes[i]);
+                if(tempArr.length !== 0){
+                    arr.push(tempArr.join(""));
+                }
+            }
+        }
+        return arr;
+    },
+    //将每段内容再分行
+    /*
+    * target: 富文本输入框
+    * */
+    _breakLine: function(target, context, width){
+        var arr = this._filterText(target),
+            i = null,
+            len = arr.length,
+            rowArr = [];
+        for(i = 0; i < len; i++){
+            rowArr.concat(this._wordBreak(context, arr[i], width));
+        }
+        return arr;
     },
     //绘制多行字符
     /*options
@@ -1386,7 +1434,7 @@ var Drawing = RichBase.extend({
     * */
     _drawText: function(options){
         var context = options.context,
-            string = options.string,
+            input = options.input,
             width = options.width,
             x = options.X,
             y = options.Y,
@@ -1398,16 +1446,14 @@ var Drawing = RichBase.extend({
             color = options.color||"rgba(0, 0, 0, 1)",
             textAlign = options.color||"start";
 
-        if(!string){
-            return null;
-        }
         context.fillStyle = backColor;
         context.fillRect(x, y+4, width, height);
         context.fillStyle = color;
         context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         context.textAlign = textAlign;
         context.textBaseline = textAlign;
-        var row = this._wordBreak(context, string, width);
+        // var row = this._wordBreak(context, string, width);
+        var row = this._breakLine(input, context, width);
         for(var b = 0; b < row.length; b++){
             context.fillText(row[b],x,y+(b+1)*height);
         }
@@ -1422,7 +1468,7 @@ var Drawing = RichBase.extend({
                 if(this.elementWrap.style.display === "inline-block"){
                     this._drawText({
                         context: this.context,
-                        string: this.inputDiv.textContent,
+                        input: this.inputDiv,
                         X: parseInt(this.elementWrap.style.left)+3,
                         Y: parseInt(this.elementWrap.style.top)-1,
                         color: drawingInfo.get("color"),
@@ -1442,7 +1488,11 @@ var Drawing = RichBase.extend({
                     this._appendStyle(this.elementWrap, {
                         display: "inline-block",
                         top: this.get("Y")+"px",
-                        left: this.get("X")+"px"
+                        left: this.get("X")+"px",
+                    });
+                    this._appendStyle(this.inputDiv, {
+                        color: drawingInfo.get("color"),
+                        backgroundColor: drawingInfo.get("backgroundColor")
                     });
                     this.inputDiv.focus();
                     this._addStretchElementHandler();
