@@ -1333,13 +1333,16 @@ var Drawing = RichBase.extend({
             temp += chrs[a];
             tempCopy = temp;
         }
-        arr.push(temp);
+        if(temp !== ""){
+            arr.push(temp);
+        }
         return arr;
     },
 
     //将字符分行，用于canvas书写字符
     _wordBreak: function(context, string, width){
-        var regEX = /[a-zA-Z0-9]+|\s|[\u4e00-\u9fa5]|\S/g;
+        // var regEX = /[a-zA-Z0-9]+|\s|[\u4e00-\u9fa5]|\S/g;
+        var regEX = /[a-zA-Z0-9]+|\s|[\u4e00-\u9fa5][\·|\%|\!|\-|\——|\、|\:|\：|\;|\；|\"|\“|\”|\‘|\’|\'|\,|\，|\.|\。|\?|\？|\》|\>|\/]*|\S/g;
         var array = string.match(regEX),
             temp = "",
             tempCopy = "",
@@ -1360,6 +1363,7 @@ var Drawing = RichBase.extend({
                     var arg = [a, 1];
                     Array.prototype.push.apply(arg, this._splitTOArray(context, array[a], width));  //将两数组合并
                     Array.prototype.splice.apply(array, arg);
+                    // a += arg.length-2;
                 }
                 else{
                     rowArray.push(temp);
@@ -1412,9 +1416,9 @@ var Drawing = RichBase.extend({
             len = arr.length,
             rowArr = [];
         for(i = 0; i < len; i++){
-            rowArr.concat(this._wordBreak(context, arr[i], width));
+            rowArr = rowArr.concat(this._wordBreak(context, arr[i], width));
         }
-        return arr;
+        return rowArr;
     },
     //绘制多行字符
     /*options
@@ -1492,7 +1496,9 @@ var Drawing = RichBase.extend({
                     });
                     this._appendStyle(this.inputDiv, {
                         color: drawingInfo.get("color"),
-                        backgroundColor: drawingInfo.get("backgroundColor")
+                        backgroundColor: drawingInfo.get("backgroundColor"),
+                        width: "120px",
+                        "min-height": "20px"
                     });
                     this.inputDiv.focus();
                     this._addStretchElementHandler();

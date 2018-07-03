@@ -1273,10 +1273,13 @@ div{
     font-size: 16px;
     font-family: "微软雅黑", sans-serif;
     /*overflow: visible;*/
+    cursor: text;
     word-break: normal;
+    word-wrap: break-word;
 }
 #input-div div{
     font-size: 16px;
+    max-width: 100%;
 }
 
 .drag-box{
@@ -1372,7 +1375,4 @@ div{
     cursor: move;
 }
 
-#input-div{
-    cursor: text;
-}
 
