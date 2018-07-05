@@ -343,8 +343,9 @@
             <div class="ctrl-wrap-bottom"><div class="ctrl-content-bottom"></div></div>
             <div id="magnifier-wrap"></div>
             <div id="element-wrap" style="top: -2px; left: -2px; display: none">
-                <div id="element-decorate"></div>
+                <!--<div id="element-decorate"></div>-->
                 <div id="input-div" contenteditable="true" style="width: 120px; min-height: 20px"></div>
+                <canvas id="editCanvasBox" style="display: none; width: 0; height: 0;"></canvas>
                 <div class="ctrl-wrap-top-left">
                     <div id="top-left" class="drag-box"></div>
                 </div>
@@ -401,7 +402,7 @@
     <!--</div>-->
 <!--</div>-->
 <img id="imgContainer" style="display: none">
-
+<input type="text" id="pasteInput" style="display: none"/>
 <script src="DrawingBoard 5.0.js"></script>
 </body>
 </html>

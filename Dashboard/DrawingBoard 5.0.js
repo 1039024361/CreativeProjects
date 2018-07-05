@@ -578,6 +578,9 @@ var Drawing = RichBase.extend({
         },
         "remove":{
             "handlers":[]
+        },
+        "pasteInput":{
+            "paste":[]
         }
     },
     _ctrlEvent:{
@@ -1458,6 +1461,55 @@ var Drawing = RichBase.extend({
     _removeTextInputHandler: function(){
         this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
     },
+    //实现复制图片
+    _imgReader: function( item ){
+        var blob = item.getAsFile(),
+            reader = new FileReader();
+
+        reader.onload = function( e ){
+            // var img = new Image();
+
+            this.image.src = e.target.result;
+            // document.body.appendChild( img );
+        };
+
+        reader.readAsDataURL( blob );
+    },
+    _imgPasteHandler: function(event){
+        var clipboardData = event.clipboardData,
+            i = 0,
+            items, item, types;
+
+        if( clipboardData ){
+            items = clipboardData.items;
+
+            if( !items ){
+                return;
+            }
+
+            item = items[0];
+            types = clipboardData.types || [];
+
+            for( ; i < types.length; i++ ){
+                if( types[i] === 'Files' ){
+                    item = items[i];
+                    break;
+                }
+            }
+
+            if( item && item.kind === 'file' && item.type.match(/^image\//i) ){
+                this._imgReader( item );
+            }
+        }
+    },
+    //添加粘贴事件
+    _addImgPasteHandler: function(){
+        this.addHandler(this.pasteInput, "paste", this._imgPasteHandler);
+    },
+    //移除粘贴事件
+    _removeImgPasteHandler: function(){
+        this.removeHandler(this.pasteInput, "paste", this._imgPasteHandler);
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -1465,6 +1517,7 @@ var Drawing = RichBase.extend({
         this.context = this.canvasBox.getContext("2d");
         this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
         this.image = document.getElementById("imgContainer");
+        this.pasteInput = document.querySelector("#pasteInput");
         this.adjustCanvas = document.querySelector("#adjust-canvas");
         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
         this.rotateDrop = document.querySelector("#rotate-drop");
@@ -1489,9 +1542,11 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.adjustCanvas, this.EVENTS["adjustCanvas"]);    //加入到观察者
         this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
         this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
+        this.createHandlers(this.pasteInput, this.EVENTS["pasteInput"]);    //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
+        this._addImgPasteHandler();
         this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
@@ -1552,6 +1607,10 @@ var Drawing = RichBase.extend({
         //绑定放大镜事件处理
         EventUtil.addHandler(this.magnifierWrap, "click", function (event) {
             self.fire(self.magnifierWrap, "click", event);
+        });
+        //粘贴截图事件
+        EventUtil.addHandler(this.pasteInput, "paste", function (event) {
+            self.fire(self.pasteInput, "paste", event);
         });
     }
 });
