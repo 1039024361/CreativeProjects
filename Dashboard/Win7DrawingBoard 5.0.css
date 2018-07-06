@@ -1251,7 +1251,7 @@ div{
     display: inline-block;
     vertical-align: middle;
     border: 1px dashed #00bfff;
-    padding: 2px;
+    /*padding: 2px;*/
 }
 
 #move-style-wrap{
@@ -1276,6 +1276,7 @@ div{
     cursor: text;
     word-break: normal;
     word-wrap: break-word;
+    margin: 2px;;
 }
 #input-div div{
     font-size: 16px;
@@ -1373,6 +1374,13 @@ div{
 
 #element-wrap{
     cursor: move;
+}
+
+#editCanvasBox{
+    position: absolute;
+    margin:0;
+    padding: 0;
+    border: none;
 }
 
 

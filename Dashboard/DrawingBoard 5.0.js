@@ -558,6 +558,7 @@ var Drawing = RichBase.extend({
                                 handleTarget.classList.toggle("selected");
                                 drawingInfo.set("behavior", "textInput");
                                 this._handle(this._addTextInputHandler, this._removeTextInputHandler);
+                                this.addHandler(this, "handlers", this._fillText);
                             }
                         break;
                     }
@@ -1410,6 +1411,42 @@ var Drawing = RichBase.extend({
             context.fillText(row[b],x,y+(b+1)*height);
         }
     },
+    //点击书写文本
+    _fillText: function(){
+        if(this.elementWrap.style.display === "inline-block"){
+            this._drawText({
+                context: this.context,
+                input: this.inputDiv,
+                X: parseInt(this.elementWrap.style.left)+3,
+                Y: parseInt(this.elementWrap.style.top)-1,
+                color: drawingInfo.get("color"),
+                backColor: drawingInfo.get("backgroundColor"),
+                width: parseInt(this.inputDiv.style.width),
+                height: parseInt(this.inputDiv.style.height)
+            });
+            this._appendStyle(this.elementWrap, {
+                display: "none",
+            });
+            this.inputDiv.innerHTML = "";
+            // this._removeTextInputHandler();
+            this._removeMoveAndStretchElementHandler();
+        }
+        else{
+            this._appendStyle(this.elementWrap, {
+                display: "inline-block",
+                top: this.get("Y")+"px",
+                left: this.get("X")+"px",
+            });
+            this._appendStyle(this.inputDiv, {
+                color: drawingInfo.get("color"),
+                backgroundColor: drawingInfo.get("backgroundColor"),
+                width: "120px",
+                "min-height": "20px"
+            });
+            this.inputDiv.focus();
+            this._addMoveAndStretchElementHandler();
+        }
+    },
     //处理文本输入事件
     _textInputHandler: function (event) {
         event = EventUtil.getEvent(event);
@@ -1417,39 +1454,7 @@ var Drawing = RichBase.extend({
 
         if(target.id === "canvasBox"){
             if(drawingInfo.get("behavior") === "textInput"){
-                if(this.elementWrap.style.display === "inline-block"){
-                    this._drawText({
-                        context: this.context,
-                        input: this.inputDiv,
-                        X: parseInt(this.elementWrap.style.left)+3,
-                        Y: parseInt(this.elementWrap.style.top)-1,
-                        color: drawingInfo.get("color"),
-                        backColor: drawingInfo.get("backgroundColor"),
-                        width: parseInt(this.inputDiv.style.width),
-                        height: parseInt(this.inputDiv.style.height)
-                    });
-                    this._appendStyle(this.elementWrap, {
-                        display: "none",
-                    });
-                    this.inputDiv.innerHTML = "";
-                    // this._removeTextInputHandler();
-                    this._removeMoveAndStretchElementHandler();
-                }
-                else{
-                    this._appendStyle(this.elementWrap, {
-                        display: "inline-block",
-                        top: this.get("Y")+"px",
-                        left: this.get("X")+"px",
-                    });
-                    this._appendStyle(this.inputDiv, {
-                        color: drawingInfo.get("color"),
-                        backgroundColor: drawingInfo.get("backgroundColor"),
-                        width: "120px",
-                        "min-height": "20px"
-                    });
-                    this.inputDiv.focus();
-                    this._addMoveAndStretchElementHandler();
-                }
+                this._fillText();
             }
         }
     },
@@ -1502,6 +1507,7 @@ var Drawing = RichBase.extend({
             }
         }
     },
+
     //添加粘贴事件
     _addImgPasteHandler: function(){
         this.addHandler(this.pasteInput, "paste", this._imgPasteHandler);
@@ -1528,6 +1534,7 @@ var Drawing = RichBase.extend({
         //选择框调整
         this.elementWrap = document.querySelector("#element-wrap");
         this.inputDiv = document.querySelector("#input-div");
+        this.editCanvasBox = document.querySelector("#editCanvasBox");
 
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
@@ -1535,6 +1542,7 @@ var Drawing = RichBase.extend({
         //背景颜色
         this.foreColor = document.querySelector(".font-color");
         this.colorSetButtons = document.querySelectorAll(".color-1");
+
         //初始化
         this.canvasWrap.style.zIndex = 1;
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
