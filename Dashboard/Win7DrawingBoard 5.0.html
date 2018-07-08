@@ -70,13 +70,13 @@
     <div class="borderDef"></div>
     <div id="imgBox" class="cut-box-wrap">
         <div class="cut-box-wrap-inside">
-            <div class="left-box-2parts">
-                <div class="img-wrap"><div class="selectBox"></div></div>
+            <div class="left-box-2parts" id="selectBoxWrap">
+                <div class="img-wrap" id="imgWrap"><div class="selectBox"></div></div>
                 <div class="word-wrap"><span class="img-down-word fontType span-inline-block">选择</span>
                     <div class="drop">
                         <div class="drop-title"><span class="fontType span-inline-block bold">选择形状</span></div>
                         <div class="drop-wrap">
-                            <div class="drop-list"><div class="recselect"></div><span class="fontType span-inline-block">矩形选择(<span class="underline">R</span>)</span></div>
+                            <div class="drop-list"><div class="recselect selected"></div><span class="fontType span-inline-block">矩形选择(<span class="underline">R</span>)</span></div>
                             <div class="drop-list"><img src="images/circle.gif"/><span class="fontType span-inline-block">自由图形选择(<span class="underline">F</span>)</span></div>
                         </div>
                         <div class="drop-title"><span class="fontType span-inline-block bold">选择选项</span></div>
@@ -343,9 +343,9 @@
             <div class="ctrl-wrap-bottom"><div class="ctrl-content-bottom"></div></div>
             <div id="magnifier-wrap"></div>
             <div id="element-decorate" style="display: none;"></div>
+            <canvas id="editCanvasBox" style="display: none;"></canvas>
             <div id="element-wrap" style="top: -2px; left: -2px; display: none">
-                <div id="input-div" contenteditable="true" style="width: 120px; min-height: 20px"></div>
-                <canvas id="editCanvasBox" style="display: none; width: 0; height: 0;"></canvas>
+                <div id="input-div" contenteditable="true" style="width: 120px; min-height: 20px; display: none"></div>
                 <div class="ctrl-wrap-top-left">
                     <div id="top-left" class="drag-box"></div>
                 </div>

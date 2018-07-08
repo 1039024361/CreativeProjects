@@ -1252,6 +1252,8 @@ div{
     vertical-align: middle;
     border: 1px dashed #00bfff;
     /*padding: 2px;*/
+    z-index: 2;
+    /*background-color: #3c3c3c;*/
 }
 
 #move-style-wrap{
@@ -1381,6 +1383,8 @@ div{
     margin:0;
     padding: 0;
     border: none;
+    z-index: 1;
+    background-color: #00a2e8;
 }
 
 /*拉拽时候的虚线框效果*/

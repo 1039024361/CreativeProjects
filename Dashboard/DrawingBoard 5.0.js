@@ -607,7 +607,34 @@ var Drawing = RichBase.extend({
         },
         "pasteInput":{
             "paste":[]
-        }
+        },
+        //选择栏事件处理程序
+        //工具栏
+        "selectButton":{
+            "click":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event),
+                        handleTarget;
+
+                    handleTarget = target.childElementCount? target:target.parentNode;
+
+                    switch (handleTarget.id)
+                    {
+                        case "imgWrap":
+                            console.log("imgWrap");
+                            if(!handleTarget.classList.contains("selected")){
+                                this.canvasBox.style.cursor = "crosshair";
+                                handleTarget.classList.toggle("selected");
+                                this.selectButton.classList.add("selected");
+                                drawingInfo.set("behavior", "select");
+                                this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
+                            }
+                            break;
+                    }
+                }
+            ],
+        },
     },
     _ctrlEvent:{
         target: null,
@@ -965,7 +992,7 @@ var Drawing = RichBase.extend({
         //}
     },
     _appendStyle: function (target, options){
-        if(target.tagName === "CANVAS"){
+        if(target.tagName.toLowerCase() === "canvas"){
             if(options.width != undefined){
                 target.width = parseInt(options.width);
                 delete options.width;
@@ -1125,6 +1152,12 @@ var Drawing = RichBase.extend({
                     top = (top + height +2) > canvasH ? canvasH - height - 2: top;
                     //超出画布上侧
                     top = top < -2 ? -2 : top;
+                    if(this.editCanvasBox.style.display === "inline-block"){
+                        this._appendStyle(this.editCanvasBox, {
+                            top: top + 1 + "px",
+                            left: left + 1 + "px"
+                        });
+                    }
                     this._appendStyle(currentTarget, {
                         top: top + "px",
                         left: left + "px"
@@ -1463,6 +1496,9 @@ var Drawing = RichBase.extend({
                 this._appendStyle(this.elementWrap, {
                     display: "none",
                 });
+                this._appendStyle(this.inputDiv, {
+                    display: "none",
+                });
                 this.inputDiv.innerHTML = "";
                 // this._removeTextInputHandler();
                 this._removeMoveAndStretchElementHandler();
@@ -1476,6 +1512,7 @@ var Drawing = RichBase.extend({
                     left: this.get("startX")+"px",
                 });
                 this._appendStyle(this.inputDiv, {
+                    display: "inline-block",
                     color: drawingInfo.get("color"),
                     backgroundColor: drawingInfo.get("backgroundColor"),
                     width: width + "px",
@@ -1492,9 +1529,7 @@ var Drawing = RichBase.extend({
         var target = EventUtil.getTarget(event);
 
         if(target.id === "canvasBox"||target.id === "canvasWrap"){
-            if(drawingInfo.get("behavior") === "textInput"){
-                this._fillText();
-            }
+            this._fillText();
         }
     },
     //拉拽时的虚拟框效果
@@ -1535,9 +1570,8 @@ var Drawing = RichBase.extend({
                 break;
         }
     },
-    //文本加载事件
-    _addTextInputHandler: function(){
-        //拖拽效果事件
+    //虚线框效果处理事件
+    _addVirtualBoxHandler: function(){
         this.addHandler(this.canvasWrap, "mousedown", this._virtualBox);
         this.addHandler(this.canvasWrap, "touchstart", this._virtualBox);
         this.addHandler(this.canvasWrap, "mouseup", this._virtualBox);
@@ -1545,12 +1579,8 @@ var Drawing = RichBase.extend({
         this.addHandler(this.canvasWrap, "mousemove", this._virtualBox);
         this.addHandler(this.canvasWrap, "touchend", this._virtualBox);
         this.addHandler(this.canvasWrap, "mouseleave", this._virtualBox);
-
-        this.addHandler(this.canvasWrap, "click", this._textInputHandler);
     },
-    //删除文本事件
-    _removeTextInputHandler: function(){
-        //拖拽效果事件
+    _removeVirtualBoxHandler: function(){
         this.removeHandler(this.canvasWrap, "mousedown", this._virtualBox);
         this.removeHandler(this.canvasWrap, "mousemove", this._virtualBox);
         this.removeHandler(this.canvasWrap, "mouseup", this._virtualBox);
@@ -1558,7 +1588,17 @@ var Drawing = RichBase.extend({
         this.removeHandler(this.canvasWrap, "touchmove", this._virtualBox);
         this.removeHandler(this.canvasWrap, "touchend", this._virtualBox);
         this.removeHandler(this.canvasWrap, "mouseleave", this._virtualBox);
-
+    },
+    //文本加载事件
+    _addTextInputHandler: function(){
+        //拖拽效果事件
+        this._addVirtualBoxHandler();
+        this.addHandler(this.canvasWrap, "click", this._textInputHandler);
+    },
+    //删除文本事件
+    _removeTextInputHandler: function(){
+        //拖拽效果事件
+        this._removeVirtualBoxHandler();
         this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
     },
     //
@@ -1626,8 +1666,95 @@ var Drawing = RichBase.extend({
     _removeImgPasteHandler: function(){
         this.removeHandler(document.body, "paste", this._imgPasteHandler);
     },
+    //将选择框中的内容绘制到当前区域
+    _drawImage: function(options){
+         var top = options.top || 0,
+             left = options.left || 0,
+             width = options.width || 0,
+             height = options.height || 0,
+             imageData = this.editContext.getImageData(0, 0, width, height);
+        this.editContext.clearRect(0, 0, width, height);
+        this.context.putImageData(imageData, left, top);
+    },
+    //将当前区域内容绘制到选择框
+    _getImage: function(options){
+        var top = options.top || 0,
+            left = options.left || 0,
+            width = options.width || 0,
+            height = options.height || 0,
+            imageData = this.context.getImageData(left, top, width, height);
+        this.context.clearRect(left, top, width, height);
+        this.editContext.putImageData(imageData, 0, 0);
+    },
     //选择框
+    _fillImage: function () {
+        var width,height;
+        if(drawingInfo.get("behavior") === "select"){
+            if(this.elementWrap.style.display === "inline-block"){
+                this._drawImage({
+                    left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
+                    top: parseInt(this.editCanvasBox.style.top),
+                    width: this.editCanvasBox.width,
+                    height: this.editCanvasBox.height,
+                });
+                this._appendStyle(this.elementWrap, {
+                    display: "none",
+                });
+                this._appendStyle(this.editCanvasBox, {
+                    display: "none",
+                });
+                // this._removeTextInputHandler();
+                this._removeMoveAndStretchElementHandler();
+            }
+            else{
+                this._appendStyle(this.elementWrap, {
+                    display: "inline-block",
+                    top: this.get("startY")+"px",
+                    left: this.get("startX")+"px",
+                    width: this.get("diffX")+ 2 +"px",
+                    height: this.get("diffY")+ 2 +"px"
 
+                });
+                this._appendStyle(this.editCanvasBox, {
+                    display: "inline-block",
+                    top: this.get("startY")+ 1 +"px",
+                    left: this.get("startX")+1 + "px",
+                    width: this.get("diffX"),
+                    height: this.get("diffY")
+                });
+                this._getImage({
+                    left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
+                    top: parseInt(this.editCanvasBox.style.top),
+                    width: this.editCanvasBox.width,
+                    height: this.editCanvasBox.height,
+                });
+                this._addMoveAndStretchElementHandler();
+            }
+        }
+    },
+    //处理文本输入事件
+    _drawImageHandler: function (event) {
+        event = EventUtil.getEvent(event);
+        var target = EventUtil.getTarget(event);
+
+        if(target.id === "canvasBox"||target.id === "canvasWrap"){
+            this._fillImage();
+        }
+    },
+    //image事件
+    _addDrawImageHandler: function(){
+        //拖拽效果事件
+        this._addVirtualBoxHandler();
+        this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
+    },
+    //image事件
+    _removeDrawImageHandler: function(){
+        //拖拽效果事件
+        this.imgWrap.classList.remove("selected");
+        this.selectButton.classList.remove("selected");
+        this._removeVirtualBoxHandler();
+        this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+    },
     //复制操作
     //target：选取中的canvas
     _copy: function(target){
@@ -1670,6 +1797,8 @@ var Drawing = RichBase.extend({
         this.editCanvasBox = document.querySelector("#editCanvasBox");
         this.editContext = this.editCanvasBox.getContext("2d");
         this.elemenDecorate = document.querySelector("#element-decorate");
+        this.selectButton = document.querySelector("#selectBoxWrap");
+        this.imgWrap = document.querySelector("#imgWrap");
 
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
@@ -1686,6 +1815,7 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.rotateDrop, this.EVENTS["rotateDrop"]);    //加入到观察者
         this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
         this.createHandlers(document.body, this.EVENTS["pasteInput"]);    //加入到观察者
+        this.createHandlers(this.selectButton, this.EVENTS["selectButton"]);    //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
@@ -1754,6 +1884,11 @@ var Drawing = RichBase.extend({
         //粘贴截图事件
         EventUtil.addHandler(document.body, "paste", function (event) {
             self.fire(document.body, "paste", event);
+        });
+        //选择栏
+        //吸管事件
+        EventUtil.addHandler(this.selectButton, "click", function (event) {
+            self.fire(self.selectButton, "click", event);
         });
     }
 });
