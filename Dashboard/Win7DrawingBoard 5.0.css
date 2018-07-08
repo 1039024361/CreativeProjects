@@ -1383,4 +1383,13 @@ div{
     border: none;
 }
 
+/*拉拽时候的虚线框效果*/
+#element-decorate{
+    position: absolute;
+    top: 0;
+    height: 0;
+    border: 1px dashed #3c3c3c;
+    /*z-index: 5;*/
+}
+
 
