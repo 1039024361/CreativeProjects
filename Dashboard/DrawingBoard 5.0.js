@@ -799,6 +799,8 @@ var Drawing = RichBase.extend({
     },
     //删除画线事件
     _removeDrawLineHandler: function(){
+        this.pencil.classList.remove("selected");
+        this.erase.classList.remove("selected");
         this.removeHandler(this.canvasWrap, "mousedown", this._beginDrawLine);
         this.removeHandler(this.canvasWrap, "mousemove", this._drawingLine);
         this.removeHandler(this.canvasWrap, "mouseup", this._endDrawLine);
@@ -825,6 +827,7 @@ var Drawing = RichBase.extend({
         this.addHandler(this.canvasWrap, "click", this._strawHandler);
      },
     _removeStrawHandler: function(){
+        this.straw.classList.remove("selected");
         this.removeHandler(this.canvasWrap, "click", this._strawHandler);
     },
     //注入填充区域算法
@@ -1101,6 +1104,7 @@ var Drawing = RichBase.extend({
     },
     //
     _removeMagnifierHandler: function () {
+         this.fill.classList.remove("selected");
          this.removeHandler(this.canvasWrap, "mousemove", this._magnifierHandler);
          this.removeHandler(this.magnifierWrap, "click", this._magnifierHandler);
          this._appendStyle(this.magnifierWrap, {
@@ -1622,24 +1626,50 @@ var Drawing = RichBase.extend({
             reader = new FileReader();
 
         reader.onload = function( e ){
-            // var img = new Image();
 
-            this.image.src = e.target.result;
-            // document.body.appendChild( img );
-        };
+            src = e.target.result;
+        }.bind(this);
 
-        reader.readAsDataURL( blob );
+        //get image src
+        var getImageSrc = new Promise(function (resolve, reject){
+            reader.onload = function(e){
+                resolve(e.target.result);
+                reader.onload = null;
+            };
+            reader.readAsDataURL(blob);
+        });
+        //image on load
+        function loadImage (src){
+            var that = this;
+            return new Promise(function (resolve, reject){
+                this.image.onload = function(e){
+                    resolve();
+                    that.image.onload = null;
+                };
+            });
+        }
+        getImageSrc.then(loadImage).then(function(){
+            var canvasW = null,
+                canvasH = null;
+            canvasW = (canvasW>this.image.width)? canvasW: this.image.width;
+            canvasH = (canvasH>this.image.height)? canvasH: this.image.height;
+            this._resizeCanvasBox(this.canvasBox, canvasW, canvasH);
+            this._getImg({    //将image图片读取到editCanvasBox
+                width: this.image.width,
+                height: this.image.height,
+            });
+        });
+
     },
-    _imgPasteHandler: function(event){
-        var clipboardData = event.clipboardData,
-            i = 0,
+    //判断是否存在剪贴板数据，并将剪贴板图片粘贴值img标签
+    _clipboardDataHandle: function(clipboardData){
+        var i = 0,
             items, item, types;
-
-        if( clipboardData ){
+        if(clipboardData){
             items = clipboardData.items;
 
-            if( !items ){
-                return;
+            if(!items){
+                return false;
             }
 
             item = items[0];
@@ -1654,17 +1684,31 @@ var Drawing = RichBase.extend({
 
             if( item && item.kind === 'file' && item.type.match(/^image\//i) ){
                 this._imgReader( item );
+                return true;
             }
+            return false;
         }
+    },
+    _imgPasteHandler: function(event){
+        var clipboardData = event.clipboardData,
+            canvasW = drawingInfo.get("canvasW"),
+            canvasH = drawingInfo.get("canvasH");
+
+        this._fillImage();
+        if(this._clipboardDataHandle(clipboardData)){
+
+        }
+
+
     },
 
     //添加粘贴事件
     _addImgPasteHandler: function(){
-        this.addHandler(document.body, "paste", this._imgPasteHandler);
+        this.addHandler(document, "paste", this._imgPasteHandler);
     },
     //移除粘贴事件
     _removeImgPasteHandler: function(){
-        this.removeHandler(document.body, "paste", this._imgPasteHandler);
+        this.removeHandler(document, "paste", this._imgPasteHandler);
     },
     //将选择框中的内容绘制到当前区域
     _drawImage: function(options){
@@ -1684,26 +1728,102 @@ var Drawing = RichBase.extend({
             height = options.height || 0,
             imageData = this.context.getImageData(left, top, width, height);
         this.context.clearRect(left, top, width, height);
+        this.editContext.clearRect(0, 0, width, height);
         this.editContext.putImageData(imageData, 0, 0);
     },
+    //将img标签的图片数据绘制到editCanvas
+    _getImg: function(options){
+        var top = options.top || 0,
+            left = options.left || 0,
+            width = options.width || 0,
+            height = options.height || 0,
+            image = options.image || this.image,
+            target = options.target || this.editCanvasBox;
+        this._resizeCanvasBox(target, width, height);
+        this.editContext.clearRect(0, 0, width, height);
+        this.editContext.drawImage(image, 0, 0);
+    },
     //选择框
-    _fillImage: function () {
+    //显示选择框
+    _displaySelectBox: function(toDisplay){
+        if(toDisplay){
+            this._appendStyle(this.elementWrap, {
+                display: "inline-block",
+                top: this.get("startY")+"px",
+                left: this.get("startX")+"px",
+                width: this.get("diffX")+ 2 +"px",
+                height: this.get("diffY")+ 2 +"px"
+            });
+            this._appendStyle(this.editCanvasBox, {
+                display: "inline-block",
+                top: this.get("startY")+ 1 +"px",
+                left: this.get("startX")+1 + "px",
+                width: this.get("diffX"),
+                height: this.get("diffY")
+            });
+        }
+        else{
+            this._appendStyle(this.elementWrap, {display: "none"});
+            this._appendStyle(this.editCanvasBox, {display: "none"});
+        }
+    },
+    //按钮样式
+    _buttonStyle: function(toHighlight){
+            if(toHighlight){
+                this.cut.classList.remove("unused");
+                this.copy.classList.remove("unused");
+                this.clip.classList.remove("unused");
+            }
+            else{
+                this.cut.classList.add("unused");
+                this.copy.classList.add("unused");
+                this.clip.classList.add("unused");
+            }
+        },
+    //处理事件
+    _addOrRemoveHandler: function (toAdd) {
+        if(toAdd){
+            this._addCutHandler();
+            this._addCutButtonHandler();
+            this._addCopyHandler();
+            this._addCopyButtonHandler();
+            this._addMoveAndStretchElementHandler();
+        }
+        else{
+            this._removeCopyButtonHandler();
+            this._removeCopyHandler();
+            this._removeCutButtonHandler();
+            this._removeCutHandler();
+            this._removeMoveAndStretchElementHandler();
+        }
+    },
+    //notFill： 为了模拟剪切事件不填充的效果
+    _fillImage: function (notFill) {
         var width,height;
         if(drawingInfo.get("behavior") === "select"){
             if(this.elementWrap.style.display === "inline-block"){
-                this._drawImage({
-                    left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
-                    top: parseInt(this.editCanvasBox.style.top),
-                    width: this.editCanvasBox.width,
-                    height: this.editCanvasBox.height,
-                });
+                if(!notFill){
+                    this._drawImage({
+                        left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
+                        top: parseInt(this.editCanvasBox.style.top),
+                        width: this.editCanvasBox.width,
+                        height: this.editCanvasBox.height,
+                    });
+                }
                 this._appendStyle(this.elementWrap, {
                     display: "none",
                 });
                 this._appendStyle(this.editCanvasBox, {
                     display: "none",
                 });
+                this.cut.classList.add("unused");
+                this.copy.classList.add("unused");
+                this.clip.classList.add("unused");
                 // this._removeTextInputHandler();
+                this._removeCopyButtonHandler();
+                this._removeCopyHandler();
+                this._removeCutButtonHandler();
+                this._removeCutHandler();
                 this._removeMoveAndStretchElementHandler();
             }
             else{
@@ -1713,7 +1833,6 @@ var Drawing = RichBase.extend({
                     left: this.get("startX")+"px",
                     width: this.get("diffX")+ 2 +"px",
                     height: this.get("diffY")+ 2 +"px"
-
                 });
                 this._appendStyle(this.editCanvasBox, {
                     display: "inline-block",
@@ -1728,6 +1847,13 @@ var Drawing = RichBase.extend({
                     width: this.editCanvasBox.width,
                     height: this.editCanvasBox.height,
                 });
+                this.cut.classList.remove("unused");
+                this.copy.classList.remove("unused");
+                this.clip.classList.remove("unused");
+                this._addCutHandler();
+                this._addCutButtonHandler();
+                this._addCopyHandler();
+                this._addCopyButtonHandler();
                 this._addMoveAndStretchElementHandler();
             }
         }
@@ -1755,26 +1881,122 @@ var Drawing = RichBase.extend({
         this._removeVirtualBoxHandler();
         this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
     },
-    //复制操作
-    //target：选取中的canvas
+    //复制/剪切操作
+    //target：选取中的canvas,这个复制事件不会吧图片插入系统剪贴板，只会清空系统剪贴板，并把数据保留在本地
     _copy: function(target){
         //图片加载后，执行复制操作
-        EventUtil.addHandler(this.image, "load", function(event){
-            if (document.selection) {
-                var range = document.body.createTextRange();
-                range.moveToElementText(document.getElementById('selectable'));
-                range.select();
-            } else if (window.getSelection) {
-                var selection = window.getSelection();
-                var range = document.createRange();
-                range.selectNode(document.getElementById('selectable'));
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-            document.execCommand('Copy');
-        });
-        this.image.src = target.toDataURL("image/png");
+        // EventUtil.addHandler(this.image, "load", function(event){
+            // var range = null;
+            // var node = document.querySelector("#selectable");
+            // if (document.selection) {
+            //     range = document.body.createTextRange();
+            //     range.moveToElementText(node);
+            //     range.select();
+            // } else if (window.getSelection) {
+            //     var selection = window.getSelection();
+            //     range = document.createRange();
+            //     range.selectNode(node);
+            //     selection.removeAllRanges();
+            //     selection.addRange(range);
+            // }
+            // try{
+            //     if(document.execCommand('Copy')){
+            //         console.log("复制成功");
+            //     }
+            //     else{
+            //         console.log("复制失败");
+            //     }
+            //
+            // }
+            // catch(err){
+            //     console.log("不支持document.execCommand方法，无法复制");
+            // }
+            // this._fillImage();
+        // });
+        // this.image.src = target.toDataURL("image/png");
+        var copyImageData = {};
+        if(target.display === "inline-block"){
+            copyImageData.imageData = target.getImageData(0, 0, target.width, target.height);
+            copyImageData.width = target.width;
+            copyImageData.height = target.height;
+            this.set("copyImageData", copyImageData);
+        }
     },
+    //点击复制按键事件，这个事件直接会通过document.execCommand触发，主要是为了在复制事件中清空系统剪贴板
+    _copyButtonHandler: function(event){
+        try{
+            document.execCommand('Copy');
+        }
+        catch(err){
+            console.log("不支持document.execCommand方法，无法复制,可通过Ctrl+C复制");
+        }
+    },
+    _addCopyButtonHandler: function(){
+        EventUtil.addHandler(this.copy, "click", this._copyButtonHandler);
+    },
+    _removeCopyButtonHandler: function(){
+        EventUtil.removeHandler(this.copy, "click", this._copyButtonHandler);
+    },
+    //处理复制事件的事件处理程序
+    _copyHandler: function(event){
+        event = EventUtil.getEvent(event);
+        event.preventDefault();
+        EventUtil.setClipboardText(event, "");   //清空系统剪贴板，后续判断系统剪贴板存在图片数据的话，可知，系统剪贴板数据为最新复制
+        this._copy(this.editCanvasBox);
+    },
+    _addCopyHandler: function(){
+        EventUtil.addHandler(document, "copy", (this._copyHandler).bind(this));
+    },
+    _removeCopyHandler: function(){
+        EventUtil.removeHandler(document, "copy", (this._copyHandler).bind(this));
+    },
+    _cut: function(target){
+        this._copy(target);
+        this._fillImage(true);  //不填充
+    },
+    //点击复制按键事件，这个事件直接会通过document.execCommand触发，主要是为了在复制事件中清空系统剪贴板
+    _cutButtonHandler: function(event){
+        try{
+            document.execCommand('Cut');
+        }
+        catch(err){
+            console.log("不支持document.execCommand方法，无法复制,可通过Ctrl+C复制");
+        }
+    },
+    _addCutButtonHandler: function(){
+        EventUtil.addHandler(this.cut, "click", this._cutButtonHandler);
+    },
+    _removeCutButtonHandler: function(){
+        EventUtil.removeHandler(this.cut, "click", this._cutButtonHandler);
+    },
+    //处理复制事件的事件处理程序
+    _cutHandler: function(event){
+        event = EventUtil.getEvent(event);
+        event.preventDefault();
+        EventUtil.setClipboardText(event, "");   //清空系统剪贴板，后续判断系统剪贴板存在图片数据的话，可知，系统剪贴板数据为最新复制
+        this._cut(this.editCanvasBox);
+    },
+    _addCutHandler: function(){
+        EventUtil.addHandler(document, "cut", (this._cutHandler).bind(this));
+    },
+    _removeCutHandler: function(){
+        EventUtil.removeHandler(document, "cut", (this._cutHandler).bind(this));
+    },
+    // _copyHandler: function(){
+    //     this._copy(this.editCanvasBox);
+    //     EventUtil.removeHandler(this.copy, "click" ,this._copyHandler);
+    // },
+    // //只有添加，没有删除，因为会自动删除
+    // _addCopyHandler: function(){
+    //     EventUtil.addHandler(this.copy, "click", (this._copyHandler).bind(this));
+    // },
+    // _cutHandler: function(){
+    //     this._cut(this.editCanvasBox);
+    //     EventUtil.removeHandler(this.cut, "click" ,this._cutHandler);
+    // },
+    // _addCutHandler: function(){
+    //     EventUtil.addHandler(this.cut, "click",(this._cutHandler).bind(this));
+    // },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -1791,6 +2013,12 @@ var Drawing = RichBase.extend({
         //tool栏
         this.tool = document.querySelector("#tool");
         this.magnifierWrap = document.querySelector("#magnifier-wrap");
+        this.pencil = document.querySelector("#pencil");
+        this.fill = document.querySelector("#fill");
+        this.text = document.querySelector("#text");
+        this.erase = document.querySelector("#erase");
+        this.straw = document.querySelector("#straw");
+        this.magnifier = document.querySelector("#magnifier");
         //选择框调整
         this.elementWrap = document.querySelector("#element-wrap");
         this.inputDiv = document.querySelector("#input-div");
@@ -1799,10 +2027,12 @@ var Drawing = RichBase.extend({
         this.elemenDecorate = document.querySelector("#element-decorate");
         this.selectButton = document.querySelector("#selectBoxWrap");
         this.imgWrap = document.querySelector("#imgWrap");
-
+        //剪切、复制、裁剪
+        this.cut = document.querySelector("#cut");
+        this.copy = document.querySelector("#copy");
+        this.clip = document.querySelector("#clip");
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
-        this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
         //背景颜色
         this.foreColor = document.querySelector(".font-color");
         this.colorSetButtons = document.querySelectorAll(".color-1");
@@ -1816,6 +2046,7 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.magnifierWrap, this.EVENTS["magnifierWrap"]);    //加入到观察者
         this.createHandlers(document.body, this.EVENTS["pasteInput"]);    //加入到观察者
         this.createHandlers(this.selectButton, this.EVENTS["selectButton"]);    //加入到观察者
+        this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
@@ -2246,7 +2477,8 @@ var Color = RichBase.extend({
             startY: null,
             diffX: null,
             diffY: null,
-            clicking: false
+            clicking: false,
+            copyImageData: null
         }
         // {
         // behavior: "pencil",

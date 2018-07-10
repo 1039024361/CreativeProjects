@@ -1384,7 +1384,7 @@ div{
     padding: 0;
     border: none;
     z-index: 1;
-    background-color: #00a2e8;
+    /*background-color: #00a2e8;*/
 }
 
 /*拉拽时候的虚线框效果*/
@@ -1394,6 +1394,12 @@ div{
     height: 0;
     border: 1px dashed #3c3c3c;
     /*z-index: 5;*/
+}
+
+/*不可使用功能*/
+.unused{
+    -webkit-filter: opacity(60%);
+    filter: opacity(60%);
 }
 
 
