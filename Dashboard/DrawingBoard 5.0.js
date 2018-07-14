@@ -46,17 +46,22 @@ var RichBase = Base.extend({
 
         return this;
     },
+    //注意，不允许同一个都想之间相互动态删除handler
     fire: function(target, type){
         var that = this;
         if(!target.handlers&&!target.handlers[type]){
             return;
         }
+        console.log(type);
         var i = null,
             len = target.handlers[type].length,
             arg = Array.prototype.slice.call(arguments, 2)||[];    //每个handler函数传入参数的方式
         if( target.handlers[type] instanceof Array){
             var handlers = target.handlers[type];
+            // console.log(handlers);
             for(i=0; i<len; i++){
+                // console.log(i);
+                // console.log(handlers[i]);
                 handlers[i].apply(this, arg);
             }
         }
@@ -125,7 +130,8 @@ var drawingInfo = new Base({
     backgroundColor: "#FFFFFF",
     canvasW: 800,
     canvasH: 600,
-    gain: 1   //图形放大系数
+    gain: 1,   //图形放大系数
+    imageStretch: false,
 });
 
 //创建一个获取canvasBox坐标的对象
@@ -223,6 +229,14 @@ var Drawing = RichBase.extend({
                             console.log(this.image);
                             // document.body.appendChild(image);
                             var imageDropHandle = function() {
+                                // var virtualBoxWidth = parseInt(this.virtualWrap.width)+10,
+                                //     virtualBoxHeight = parseInt(this.virtualWrap.height)+10;
+                                // virtualBoxWidth = (virtualBoxWidth>this.image.width)? virtualBoxWidth:this.image.width;
+                                // virtualBoxHeight = (virtualBoxHeight>this.image.height)? virtualBoxHeight:this.image.height;
+                                // this._appendStyle(this.virtualWrap, {
+                                //     width: virtualBoxWidth,
+                                //     height: virtualBoxHeight
+                                // });
                                 this._resizeCanvasBox(this.canvasBox, this.image.width, this.image.height);
                                 this.context.drawImage(this.image, 0, 0);
                                 // this.image.onload = null;
@@ -265,7 +279,7 @@ var Drawing = RichBase.extend({
                     event.preventDefault();
                     this.set("X", this._xConvert(event.clientX));
                     this.set("Y", this._yConvert(event.clientY));
-                    if(this.get("clicking") !== null){
+                    if(this.get("clicking") === true){
                         this.set("diffX", this._xConvert(event.clientX)-this.get("startX"));
                         this.set("diffY", this._yConvert(event.clientY)-this.get("startY"));
                     }
@@ -299,7 +313,7 @@ var Drawing = RichBase.extend({
                     event.preventDefault();   //阻止滚动
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
-                    if(this.get("clicking") !== null){
+                    if(this.get("clicking") === true){
                         this.set("diffX", this._xConvert(event.touches[0].clientX)-this.get("startX"));
                         this.set("diffY", this._yConvert(event.touches[0].clientY)-this.get("startY"));
                     }
@@ -526,7 +540,11 @@ var Drawing = RichBase.extend({
                     handleTarget = target.childElementCount? target:target.parentNode;
 
                     for(i=0; i<len; i++){
-                        this.toolImgWrap[i].classList.contains("selected")? this.toolImgWrap[i].classList.remove("selected"):"";
+                        if(this.toolImgWrap[i].classList.contains("selected")){
+                            if(handleTarget.id !== drawingInfo.get("behavior")){
+                                this.toolImgWrap[i].classList.remove("selected")
+                            }
+                        }
                     }
 
                     switch (handleTarget.id)
@@ -536,8 +554,8 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "pencil");
                                 this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
+                                drawingInfo.set("behavior", "pencil");
                             }
                         break;
                         case "erase":
@@ -545,8 +563,8 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "erase");
                                 this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
+                                drawingInfo.set("behavior", "erase");
                             }
                         break;
                         case "fill":
@@ -554,8 +572,8 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.canvasBox.style.cursor = "url(images/fill.gif) 0 20, auto";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "fill");
                                 this._handle(this._addFillHandler, this._removeFillHandler);
+                                drawingInfo.set("behavior", "fill");
                             }
                         break;
                         case "straw":
@@ -563,8 +581,8 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.canvasBox.style.cursor = "url(images/straw.gif) 0 20, auto";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "straw");
                                 this._handle(this._addStrawHandler, this._removeStrawHandler);
+                                drawingInfo.set("behavior", "straw");
                             }
                         break;
                         case "magnifier":
@@ -572,8 +590,8 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.magnifierWrap.style.cursor = "url(images/magnifier.gif) 0 20, auto";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "magnifier");
                                 this._handle(this._addMagnifierHandler, this._removeMagnifierHandler);
+                                drawingInfo.set("behavior", "magnifier");
                             }
                         break;
                         case "text":
@@ -581,9 +599,9 @@ var Drawing = RichBase.extend({
                             if(!handleTarget.classList.contains("selected")){
                                 this.canvasBox.style.cursor = "text";
                                 handleTarget.classList.toggle("selected");
-                                drawingInfo.set("behavior", "textInput");
                                 this._handle(this._addTextInputHandler, this._removeTextInputHandler);
-                                this.addHandler(this, "handlers", this._fillText);
+                                // this.addHandler(this, "handlers", this._fillText);
+                                drawingInfo.set("behavior", "text");
                             }
                         break;
                     }
@@ -627,13 +645,16 @@ var Drawing = RichBase.extend({
                                 this.canvasBox.style.cursor = "crosshair";
                                 handleTarget.classList.toggle("selected");
                                 this.selectButton.classList.add("selected");
-                                drawingInfo.set("behavior", "select");
                                 this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
+                                drawingInfo.set("behavior", "select");
                             }
                             break;
                     }
                 }
             ],
+        },
+        "document":{
+            "paste":[]
         },
     },
     _ctrlEvent:{
@@ -648,8 +669,12 @@ var Drawing = RichBase.extend({
     _handle: function(newHandler, newRemoveHandler){
         this.fire(this, "handlers");            //执行之前保存的remove的handler
         this.removeHandler(this, "handlers");   //清空handler数组
-        this.addHandler(this, "handlers", newRemoveHandler);   //添加新的事件处理
-        newHandler.apply(this);
+        if(newRemoveHandler){
+            this.addHandler(this, "handlers", newRemoveHandler);   //添加新的事件处理
+        }
+        if(newHandler){
+            newHandler.apply(this);
+        }
     },
     //描点函数
     _draw: function(x, y){
@@ -661,6 +686,9 @@ var Drawing = RichBase.extend({
     _resizeCanvasBox: function(target, width, height){
         //先保存图像信息
         var ctx = target.getContext("2d");
+        if(!(target.width&&target.height)){
+            return null;
+        }
         var imgData = ctx.getImageData(0, 0, target.width, target.height);
         if(!target){
             return null;
@@ -668,8 +696,10 @@ var Drawing = RichBase.extend({
         if(typeof width === "number"&&typeof height === "number"){
             target.width = width;
             target.height = height;
-            drawingInfo.set("canvasW", width);
-            drawingInfo.set("canvasH", height);
+            if(target.id === "canvasBox"){
+                drawingInfo.set("canvasW", width);
+                drawingInfo.set("canvasH", height);
+            }
             this._displaySize(width, height);
         }
         ctx.putImageData(imgData, 0, 0);   //还原图像
@@ -1126,11 +1156,13 @@ var Drawing = RichBase.extend({
             case "mousedown":
                 if (target.id === "element-wrap") {
                     this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
+                    // this._removeVirtualBoxHandler();
                 }
                 break;
             case "touchstart":
                 if (target.id === "element-wrap"||target.parentNode.id === "element-wrap") {
                     this._ctrlEvent.startXY = [this.get("X"), this.get("Y")];
+                    // this._removeVirtualBoxHandler();
                 }
                 break;
             case "mousemove":
@@ -1173,6 +1205,7 @@ var Drawing = RichBase.extend({
             case "mouseleave":
             case "touchend":
                     this._ctrlEvent.startXY = [null, null];
+                    // this._addVirtualBoxHandler();
                     break;
         }
     },
@@ -1191,6 +1224,8 @@ var Drawing = RichBase.extend({
                     console.log(`this.get("Y"): ${this.get("Y")}`);
                     this._ctrlEvent.startStretchXY = [this.get("X"), this.get("Y")];
                     this._ctrlEvent.target = target.id;
+                    this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+                    // this._removeVirtualBoxHandler();       //注意这里无法使用，不能动态删除同一个对象的handler
                 }
                 break;
             case "mousemove":
@@ -1198,8 +1233,8 @@ var Drawing = RichBase.extend({
                 EventUtil.preventDefault(event);
                 if (this._ctrlEvent.startStretchXY[0] !== null && this._ctrlEvent.startStretchXY[1] !== null) {
                     let currentTarget = this.elementWrap,
-                        width = parseInt(this.inputDiv.style.width),
-                        height = parseInt(this.inputDiv.style["min-height"]),
+                        width = null,
+                        height = null,
                         x = this.get("X"),
                         y = this.get("Y"),
                         diffX = x - this._ctrlEvent.startStretchXY[0],
@@ -1208,11 +1243,23 @@ var Drawing = RichBase.extend({
                         top = parseInt(currentTarget.style.top),
                         canvasW = drawingInfo.get("canvasW"),
                         canvasH = drawingInfo.get("canvasH"),
-                        newWidth = null,
-                        newHeight = null,
-                        newTop = null,
-                        newLeft = null;
+                        newTop = top,
+                        newLeft = left,
+                        margin = 0;
 
+                    if(this.editCanvasBox.style.display !== "none"){
+                        width = parseInt(this.elementWrap.style.width) - 2;   //editCanva宽度
+                        height = parseInt(this.elementWrap.style["min-height"]) - 2;
+                    }
+                    else{
+                        width = parseInt(this.inputDiv.style.width);
+                        height = parseInt(this.inputDiv.style["min-height"]);
+                    }
+
+                    let newWidth = width,
+                        newHeight = height;
+
+                    console.log(`1：${newWidth}, ${newHeight}`);
                     switch (this._ctrlEvent.target){
                         case "top-left":
                             newWidth = width - diffX;
@@ -1249,6 +1296,7 @@ var Drawing = RichBase.extend({
                             newLeft = left + diffX;
                             break;
                     }
+                    console.log(`2：${newWidth}, ${newHeight}`);
                     //超过左边界
                     if(newLeft<0){
                         newWidth  = width+left;
@@ -1269,12 +1317,15 @@ var Drawing = RichBase.extend({
                         newHeight = 15;
                         newTop = height+top-15;
                     }
+                    console.log(`3：${newWidth}, ${newHeight}`);
                     if(this.editCanvasBox.style.display !== "none"){
+                        margin = 0;
                         var canvasWidth = parseInt(this.editCanvasBox.width),
                             canvasHeight = parseInt(this.editCanvasBox.height);
-                        this._imageStretch(this.editCanvasBox, newWidth, newHeight, newWidth/canvasWidth, newHeight/canvasHeight);
+                        this._imageStretch(this.editCanvasBox, newWidth, newHeight);
                     }
                     if(this.inputDiv.style.display !== "none"){
+                        margin = 4;
                         this._appendStyle(this.inputDiv, {
                             width: newWidth + "px",
                             "min-height": newHeight + "px"
@@ -1283,6 +1334,8 @@ var Drawing = RichBase.extend({
                     this._appendStyle(currentTarget, {
                         top: newTop + "px",
                         left: newLeft + "px",
+                        width: newWidth + margin + 2 +"px",
+                        "min-height": newHeight + 2 + margin + "px"
                     });
                     this._ctrlEvent.startStretchXY = [x, y];
                 }
@@ -1291,6 +1344,12 @@ var Drawing = RichBase.extend({
             case "mouseleave":
             case "touchend":
                 this._ctrlEvent.startStretchXY = [null, null];
+                var recover =  function (){
+                    this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
+                    EventUtil.removeHandler(this.canvasWrap, "click", recover);
+                }.bind(this);
+                EventUtil.addHandler(this.canvasWrap, "click", recover);
+                // this._addVirtualBoxHandler(); //注意这里无法使用，不能动态删除同一个对象的handler
                 break;
         }
     },
@@ -1484,9 +1543,8 @@ var Drawing = RichBase.extend({
     //点击书写文本
     _fillText: function(){
         var width,height;
-        if(drawingInfo.get("behavior") === "textInput"){
+        if(drawingInfo.get("behavior") === "text"){
             if(this.elementWrap.style.display === "inline-block"){
-
                 this._drawText({
                     context: this.context,
                     input: this.inputDiv,
@@ -1514,6 +1572,8 @@ var Drawing = RichBase.extend({
                     display: "inline-block",
                     top: this.get("startY")+"px",
                     left: this.get("startX")+"px",
+                    width: width + 6 + "px",
+                    "min-height": height + 6 +"px"
                 });
                 this._appendStyle(this.inputDiv, {
                     display: "inline-block",
@@ -1524,6 +1584,8 @@ var Drawing = RichBase.extend({
                 });
                 this.inputDiv.focus();
                 this._addMoveAndStretchElementHandler();
+                this.addHandler(this, "handlers", this._fillText);   //添加新的事件处理
+                // this._handle(null, this._filterText);
             }
         }
     },
@@ -1544,20 +1606,39 @@ var Drawing = RichBase.extend({
         switch (event.type) {
             case "mousedown":
             case "touchstart":
-                this._appendStyle(this.elemenDecorate, {
-                    display: "inline-block",
-                    top: this.get("Y")+"px",  //减去实线宽度
-                    left: this.get("X")+"px",
-                });
+                // if(this.elementWrap.style.display === "inline-block"){
+                //     this._appendStyle(this.elemenDecorate, {
+                //         display: "none",
+                //         // top: this.elementWrap.style.top,  //减去实线宽度
+                //         // left: this.elementWrap.style.left,
+                //     });
+                // }
+                // else{
+                    this._appendStyle(this.elemenDecorate, {
+                        display: "inline-block",
+                        top: this.get("Y")+"px",  //减去实线宽度
+                        left: this.get("X")+"px",
+                    });
+                // }
                 break;
             case "mousemove":
             case "touchmove":
+                // if(this.elementWrap.style.display === "inline-block"){
+                //     if(this.get("clicking")){
+                //         this._appendStyle(this.elemenDecorate, {
+                //             width: parseInt(this.elementWrap.style.width) + this.get("diffX") + 2 + "px",
+                //             height: parseInt(this.elementWrap.style.height) + this.get("diffY") + 2 + "px",
+                //         });
+                //     }
+                // }
+                // else{
                 if(this.get("clicking")){
                     this._appendStyle(this.elemenDecorate, {
                         width: this.get("diffX") + 2 + "px",
                         height: this.get("diffY") + 2 + "px",
                     });
                 }
+                // }
                 break;
             case "mouseup":
             case "mouseleave":
@@ -1606,29 +1687,35 @@ var Drawing = RichBase.extend({
         this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
     },
     //
-    _imageStretch: function(target, width, height, scaleX, scaleY){
-
-        var imageStretch = function(){
-            var ctx = target.getContext("2d");
+    _imageStretch: function(target, width, height){
+        var ctx = target.getContext("2d");
+        if(!drawingInfo.get("imageStretch")){
+            var imageStretch = function(){
+                this._resizeCanvasBox(target, width, height);
+                ctx.clearRect(0, 0, target.width, target.height);
+                ctx.scale(width/this.image.width, height/this.image.height);
+                ctx.drawImage(this.image, 0, 0);
+                ctx.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
+                EventUtil.removeHandler(this.image, "load", imageStretch);
+                console.log("_imageStretch");
+            }.bind(this);
+            EventUtil.addHandler(this.image, "load", imageStretch);
+            this.image.src = target.toDataURL("image/png");
+            drawingInfo.set("imageStretch", true);
+        }
+        else{
             this._resizeCanvasBox(target, width, height);
             ctx.clearRect(0, 0, target.width, target.height);
-            ctx.scale(scaleX, scaleY);
+            ctx.scale(width/this.image.width, height/this.image.height);
             ctx.drawImage(this.image, 0, 0);
             ctx.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
-            EventUtil.removeHandler(this.image, "load", imageStretch);
-        }.bind(this);
-        EventUtil.addHandler(this.image, "load", imageStretch);
-        this.image.src = target.toDataURL("image/png");
+        }
+
     },
     //实现复制图片
     _imgReader: function( item ){
         var blob = item.getAsFile(),
             reader = new FileReader();
-
-        reader.onload = function( e ){
-
-            src = e.target.result;
-        }.bind(this);
 
         //get image src
         var getImageSrc = new Promise(function (resolve, reject){
@@ -1642,23 +1729,36 @@ var Drawing = RichBase.extend({
         function loadImage (src){
             var that = this;
             return new Promise(function (resolve, reject){
-                this.image.onload = function(e){
+                that.image.onload = function(e){
                     resolve();
                     that.image.onload = null;
                 };
+                that.image.src = src;
             });
         }
-        getImageSrc.then(loadImage).then(function(){
-            var canvasW = null,
-                canvasH = null;
+        getImageSrc.then(loadImage.bind(this)).then(function(){
+            var canvasW = drawingInfo.get("canvasW"),
+                canvasH = drawingInfo.get("canvasH");
             canvasW = (canvasW>this.image.width)? canvasW: this.image.width;
             canvasH = (canvasH>this.image.height)? canvasH: this.image.height;
             this._resizeCanvasBox(this.canvasBox, canvasW, canvasH);
+            //显示选择框
+            this._showSelectObj(true);
+            this._appendStyle(this.elementWrap, {
+                top: "-1px",
+                left: "-1px",
+                width: this.image.width + 2 + "px",
+                "min-height": this.image.height + 2 + "px",
+            });
+            this._appendStyle(this.editCanvasBox, {
+                top: "0px",
+                left: "0px",
+            });
             this._getImg({    //将image图片读取到editCanvasBox
                 width: this.image.width,
                 height: this.image.height,
             });
-        });
+        }.bind(this));
 
     },
     //判断是否存在剪贴板数据，并将剪贴板图片粘贴值img标签
@@ -1683,7 +1783,7 @@ var Drawing = RichBase.extend({
             }
 
             if( item && item.kind === 'file' && item.type.match(/^image\//i) ){
-                this._imgReader( item );
+                this._imgReader(item);
                 return true;
             }
             return false;
@@ -1694,14 +1794,41 @@ var Drawing = RichBase.extend({
             canvasW = drawingInfo.get("canvasW"),
             canvasH = drawingInfo.get("canvasH");
 
-        this._fillImage();
+        this._showSelectObj(true);
         if(this._clipboardDataHandle(clipboardData)){
-
         }
+        else{
+            if(this.get("copyImageData") === null){
+                return null;
+            }
+            if(this.elementWrap.style.display === "inline-block"){
 
+            }
 
+            var imageWidth = this.get("copyImageData").width,
+                imageHeight = this.get("copyImageData").height;
+            canvasW = (canvasW>imageWidth)? canvasW: imageWidth;
+            canvasH = (canvasH>imageHeight)? canvasH: imageHeight;
+            this._showSelectObj(true);
+            this._appendStyle(this.elementWrap, {
+                top: "-1px",
+                left: "-1px",
+            });
+            this._appendStyle(this.editCanvasBox, {
+                top: "0px",
+                left: "0px",
+            });
+            this._resizeCanvasBox(this.canvasBox, canvasW, canvasH);
+            this._resizeCanvasBox(this.editCanvasBox, imageWidth, imageHeight);
+            this.editContext.putImageData(this.get("copyImageData").imageData, 0 , 0);
+        }
+        this.addHandler(this, "handlers", this._fillImage);   //添加新的事件处理
+        var handle = function(){
+            this._renderCanvas();
+            this.removeHandler(this.canvasWrap, "click", handle);
+        }.bind(this);
+        this.addHandler(this.canvasWrap, "click", handle);
     },
-
     //添加粘贴事件
     _addImgPasteHandler: function(){
         this.addHandler(document, "paste", this._imgPasteHandler);
@@ -1710,13 +1837,31 @@ var Drawing = RichBase.extend({
     _removeImgPasteHandler: function(){
         this.removeHandler(document, "paste", this._imgPasteHandler);
     },
+    //点击复制按键事件，这个事件直接会通过document.execCommand触发，主要是为了在复制事件中清空系统剪贴板
+    _pasteButtonHandler: function(event){
+        try{
+            document.execCommand('paste');
+        }
+        catch(err){
+            console.log("不支持document.execCommand方法，无法复制,可通过Ctrl+V粘贴");
+        }
+    },
+    _addPasteButtonHandler: function(){
+        EventUtil.addHandler(this.paste, "click", this._pasteButtonHandler);
+    },
+    _removePasteButtonHandler: function(){
+        EventUtil.removeHandler(this.paste, "click", this._pasteButtonHandler);
+    },
     //将选择框中的内容绘制到当前区域
     _drawImage: function(options){
          var top = options.top || 0,
              left = options.left || 0,
              width = options.width || 0,
-             height = options.height || 0,
-             imageData = this.editContext.getImageData(0, 0, width, height);
+             height = options.height || 0;
+        if(!(width&&height)){
+            return null;
+        }
+        var imageData = this.editContext.getImageData(0, 0, width, height);
         this.editContext.clearRect(0, 0, width, height);
         this.context.putImageData(imageData, left, top);
     },
@@ -1725,7 +1870,12 @@ var Drawing = RichBase.extend({
         var top = options.top || 0,
             left = options.left || 0,
             width = options.width || 0,
-            height = options.height || 0,
+            height = options.height || 0;
+
+            if(width === 0 || height === 0){
+                return null;
+            }
+
             imageData = this.context.getImageData(left, top, width, height);
         this.context.clearRect(left, top, width, height);
         this.editContext.clearRect(0, 0, width, height);
@@ -1752,7 +1902,7 @@ var Drawing = RichBase.extend({
                 top: this.get("startY")+"px",
                 left: this.get("startX")+"px",
                 width: this.get("diffX")+ 2 +"px",
-                height: this.get("diffY")+ 2 +"px"
+                "min-height": this.get("diffY")+ 2 +"px"
             });
             this._appendStyle(this.editCanvasBox, {
                 display: "inline-block",
@@ -1797,6 +1947,21 @@ var Drawing = RichBase.extend({
             this._removeMoveAndStretchElementHandler();
         }
     },
+    _showSelectObj: function(toShow){
+        this._displaySelectBox(toShow);
+        this._buttonStyle(toShow);
+        this._addOrRemoveHandler(toShow);
+    },
+    _renderCanvas: function(){
+        this._drawImage({
+            left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
+            top: parseInt(this.editCanvasBox.style.top),
+            width: this.editCanvasBox.width,
+            height: this.editCanvasBox.height,
+        });
+        this._showSelectObj(false);
+        drawingInfo.set("imageStretch", false);
+    },
     //notFill： 为了模拟剪切事件不填充的效果
     _fillImage: function (notFill) {
         var width,height;
@@ -1810,51 +1975,56 @@ var Drawing = RichBase.extend({
                         height: this.editCanvasBox.height,
                     });
                 }
-                this._appendStyle(this.elementWrap, {
-                    display: "none",
-                });
-                this._appendStyle(this.editCanvasBox, {
-                    display: "none",
-                });
-                this.cut.classList.add("unused");
-                this.copy.classList.add("unused");
-                this.clip.classList.add("unused");
-                // this._removeTextInputHandler();
-                this._removeCopyButtonHandler();
-                this._removeCopyHandler();
-                this._removeCutButtonHandler();
-                this._removeCutHandler();
-                this._removeMoveAndStretchElementHandler();
+                // this._appendStyle(this.elementWrap, {
+                //     display: "none",
+                // });
+                // this._appendStyle(this.editCanvasBox, {
+                //     display: "none",
+                // });
+                // this.cut.classList.add("unused");
+                // this.copy.classList.add("unused");
+                // this.clip.classList.add("unused");
+                // // this._removeTextInputHandler();
+                // this._removeCopyButtonHandler();
+                // this._removeCopyHandler();
+                // this._removeCutButtonHandler();
+                // this._removeCutHandler();
+                // this._removeMoveAndStretchElementHandler();
+                this._showSelectObj(false);
+
+                drawingInfo.set("imageStretch", false);
             }
             else{
-                this._appendStyle(this.elementWrap, {
-                    display: "inline-block",
-                    top: this.get("startY")+"px",
-                    left: this.get("startX")+"px",
-                    width: this.get("diffX")+ 2 +"px",
-                    height: this.get("diffY")+ 2 +"px"
-                });
-                this._appendStyle(this.editCanvasBox, {
-                    display: "inline-block",
-                    top: this.get("startY")+ 1 +"px",
-                    left: this.get("startX")+1 + "px",
-                    width: this.get("diffX"),
-                    height: this.get("diffY")
-                });
+                // this._appendStyle(this.elementWrap, {
+                //     display: "inline-block",
+                //     top: this.get("startY")+"px",
+                //     left: this.get("startX")+"px",
+                //     width: this.get("diffX")+ 2 +"px",
+                //     height: this.get("diffY")+ 2 +"px"
+                // });
+                // this._appendStyle(this.editCanvasBox, {
+                //     display: "inline-block",
+                //     top: this.get("startY")+ 1 +"px",
+                //     left: this.get("startX")+1 + "px",
+                //     width: this.get("diffX"),
+                //     height: this.get("diffY")
+                // });
+                this._showSelectObj(true);
                 this._getImage({
                     left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
                     top: parseInt(this.editCanvasBox.style.top),
                     width: this.editCanvasBox.width,
                     height: this.editCanvasBox.height,
                 });
-                this.cut.classList.remove("unused");
-                this.copy.classList.remove("unused");
-                this.clip.classList.remove("unused");
-                this._addCutHandler();
-                this._addCutButtonHandler();
-                this._addCopyHandler();
-                this._addCopyButtonHandler();
-                this._addMoveAndStretchElementHandler();
+                this.addHandler(this, "handlers", this._fillImage);   //添加新的事件处理
+                // this.cut.classList.remove("unused");
+                // this.copy.classList.remove("unused");
+                // this.clip.classList.remove("unused");
+                // this._addCutHandler();
+                // this._addCutButtonHandler();
+                // this._addCopyHandler();
+                // this._addCopyButtonHandler();
+                // this._addMoveAndStretchElementHandler();
             }
         }
     },
@@ -1884,6 +2054,7 @@ var Drawing = RichBase.extend({
     //复制/剪切操作
     //target：选取中的canvas,这个复制事件不会吧图片插入系统剪贴板，只会清空系统剪贴板，并把数据保留在本地
     _copy: function(target){
+        var context = target.getContext("2d");
         //图片加载后，执行复制操作
         // EventUtil.addHandler(this.image, "load", function(event){
             // var range = null;
@@ -1915,8 +2086,8 @@ var Drawing = RichBase.extend({
         // });
         // this.image.src = target.toDataURL("image/png");
         var copyImageData = {};
-        if(target.display === "inline-block"){
-            copyImageData.imageData = target.getImageData(0, 0, target.width, target.height);
+        if(target.style.display === "inline-block"){
+            copyImageData.imageData = context.getImageData(0, 0, target.width, target.height);
             copyImageData.width = target.width;
             copyImageData.height = target.height;
             this.set("copyImageData", copyImageData);
@@ -2004,12 +2175,13 @@ var Drawing = RichBase.extend({
         this.context = this.canvasBox.getContext("2d");
         this.bottomFonts = document.getElementsByClassName("bottom-font");   //坐标显示
         this.image = document.getElementById("imgContainer");
-        this.selectable = document.querySelector("#selectable");
+        // this.selectable = document.querySelector("#selectable");
         this.pasteInput = document.querySelector("#pasteInput");
         this.adjustCanvas = document.querySelector("#adjust-canvas");
         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
         this.rotateDrop = document.querySelector("#rotate-drop");
         this.canvasWrap = document.querySelector("#canvas-wrap");
+        this.virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
         //tool栏
         this.tool = document.querySelector("#tool");
         this.magnifierWrap = document.querySelector("#magnifier-wrap");
@@ -2030,6 +2202,7 @@ var Drawing = RichBase.extend({
         //剪切、复制、裁剪
         this.cut = document.querySelector("#cut");
         this.copy = document.querySelector("#copy");
+        this.paste = document.querySelector("#paste");
         this.clip = document.querySelector("#clip");
         this.toolImgWrap = document.querySelectorAll(".tool-wrap-img");
         this.canvasWrap = document.getElementsByClassName("canvas-wrap")[0];
@@ -2047,10 +2220,12 @@ var Drawing = RichBase.extend({
         this.createHandlers(document.body, this.EVENTS["pasteInput"]);    //加入到观察者
         this.createHandlers(this.selectButton, this.EVENTS["selectButton"]);    //加入到观察者
         this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
+        this.createHandlers(document, this.EVENTS["document"]);               //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         this._addDrawLineHandler();   //默认为绘制线条
         this._addImgPasteHandler();
+        this._addPasteButtonHandler();
         this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
@@ -2058,6 +2233,11 @@ var Drawing = RichBase.extend({
     },
     bind: function(){
         var self = this;
+        //粘贴事件等
+        EventUtil.addHandler(document, "paste", function (event) {
+            self.fire(document, "paste", event);
+        });
+
         EventUtil.addHandler(this.canvasWrap, "mousedown", function (event) {
             self.fire(self.canvasWrap, "mousedown", event);
         });
@@ -2113,9 +2293,9 @@ var Drawing = RichBase.extend({
             self.fire(self.magnifierWrap, "click", event);
         });
         //粘贴截图事件
-        EventUtil.addHandler(document.body, "paste", function (event) {
-            self.fire(document.body, "paste", event);
-        });
+        // EventUtil.addHandler(document.body, "paste", function (event) {
+        //     self.fire(document.body, "paste", event);
+        // });
         //选择栏
         //吸管事件
         EventUtil.addHandler(this.selectButton, "click", function (event) {
