@@ -125,6 +125,7 @@ var RichBase = Base.extend({
 //创建一个保存配置信息的对象
 var drawingInfo = new Base({
     behavior: "pencil",
+    description: "",   //描述behavior行为
     lineWeight: 1,
     color: "#000000",
     backgroundColor: "#FFFFFF",
@@ -642,9 +643,6 @@ var Drawing = RichBase.extend({
                         case "imgWrap":
                             console.log("imgWrap");
                             if(!handleTarget.classList.contains("selected")){
-                                this.canvasBox.style.cursor = "crosshair";
-                                handleTarget.classList.toggle("selected");
-                                this.selectButton.classList.add("selected");
                                 this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
                                 drawingInfo.set("behavior", "select");
                             }
@@ -654,7 +652,24 @@ var Drawing = RichBase.extend({
             ],
         },
         "document":{
+            "copy":[],
             "paste":[]
+        },
+        //复制按键
+        "copy":{
+            "click":[]
+        },
+        //剪切按钮
+        "cut":{
+            "click":[]
+        },
+        //粘贴按钮
+        "paste":{
+            "click":[]
+        },
+        //裁剪按钮
+        "clip":{
+            "click":[]
         },
     },
     _ctrlEvent:{
@@ -829,8 +844,12 @@ var Drawing = RichBase.extend({
     },
     //删除画线事件
     _removeDrawLineHandler: function(){
-        this.pencil.classList.remove("selected");
-        this.erase.classList.remove("selected");
+        if(drawingInfo.get("behavior") === "pencil"){
+            this.pencil.classList.remove("selected");
+        }
+        else{
+            this.erase.classList.remove("selected");
+        }
         this.removeHandler(this.canvasWrap, "mousedown", this._beginDrawLine);
         this.removeHandler(this.canvasWrap, "mousemove", this._drawingLine);
         this.removeHandler(this.canvasWrap, "mouseup", this._endDrawLine);
@@ -1001,6 +1020,7 @@ var Drawing = RichBase.extend({
         this.addHandler(this.canvasWrap, "mousedown", this._fillHandler);
     },
     _removeFillHandler: function(){
+        this.fill.classList.remove("selected");
         this.removeHandler(this.canvasWrap, "mousedown", this._fillHandler);
     },
     //放大镜
@@ -1134,7 +1154,7 @@ var Drawing = RichBase.extend({
     },
     //
     _removeMagnifierHandler: function () {
-         this.fill.classList.remove("selected");
+         this.magnifier.classList.remove("selected");
          this.removeHandler(this.canvasWrap, "mousemove", this._magnifierHandler);
          this.removeHandler(this.magnifierWrap, "click", this._magnifierHandler);
          this._appendStyle(this.magnifierWrap, {
@@ -1682,6 +1702,7 @@ var Drawing = RichBase.extend({
     },
     //删除文本事件
     _removeTextInputHandler: function(){
+        this.text.classList.remove("selected");
         //拖拽效果事件
         this._removeVirtualBoxHandler();
         this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
@@ -1790,6 +1811,7 @@ var Drawing = RichBase.extend({
         }
     },
     _imgPasteHandler: function(event){
+        event = EventUtil.getEvent(event);
         var clipboardData = event.clipboardData,
             canvasW = drawingInfo.get("canvasW"),
             canvasH = drawingInfo.get("canvasH");
@@ -1809,7 +1831,7 @@ var Drawing = RichBase.extend({
                 imageHeight = this.get("copyImageData").height;
             canvasW = (canvasW>imageWidth)? canvasW: imageWidth;
             canvasH = (canvasH>imageHeight)? canvasH: imageHeight;
-            this._showSelectObj(true);
+            // this._showSelectObj(true);
             this._appendStyle(this.elementWrap, {
                 top: "-1px",
                 left: "-1px",
@@ -1822,12 +1844,13 @@ var Drawing = RichBase.extend({
             this._resizeCanvasBox(this.editCanvasBox, imageWidth, imageHeight);
             this.editContext.putImageData(this.get("copyImageData").imageData, 0 , 0);
         }
-        this.addHandler(this, "handlers", this._fillImage);   //添加新的事件处理
-        var handle = function(){
-            this._renderCanvas();
-            this.removeHandler(this.canvasWrap, "click", handle);
-        }.bind(this);
-        this.addHandler(this.canvasWrap, "click", handle);
+        // this.addHandler(this, "handlers", this._renderCanvas);   //添加新的事件处理
+        // var handle = function(){
+        //     this._renderCanvas();
+        //     this.removeHandler(this.canvasWrap, "click", handle);
+        // }.bind(this);
+        // this.addHandler(this.canvasWrap, "click", handle);
+        this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
     },
     //添加粘贴事件
     _addImgPasteHandler: function(){
@@ -1837,20 +1860,35 @@ var Drawing = RichBase.extend({
     _removeImgPasteHandler: function(){
         this.removeHandler(document, "paste", this._imgPasteHandler);
     },
+    //模拟粘贴事件处理程序
+    _copyPasteHandler: function(event){
+        if(drawingInfo.get("description") === "paste"){
+            this._imgPasteHandler(event);
+            drawingInfo.set("description", "");
+        }
+    },
+    _addCopyPasteHandler: function(){
+        this.addHandler(document, "copy", this._copyPasteHandler);
+    },
+    _removeCopyPasteHandler: function(){
+        this.removeHandler(document, "copy", this._copyPasteHandler);
+    },
     //点击复制按键事件，这个事件直接会通过document.execCommand触发，主要是为了在复制事件中清空系统剪贴板
     _pasteButtonHandler: function(event){
         try{
-            document.execCommand('paste');
+            drawingInfo.set("description", "paste");
+            document.execCommand('copy');   //因为chrome无法执行paste指令，故通过copy事件，以便js程序访问剪贴板
         }
         catch(err){
             console.log("不支持document.execCommand方法，无法复制,可通过Ctrl+V粘贴");
         }
+        // this._imgPasteHandler();
     },
     _addPasteButtonHandler: function(){
-        EventUtil.addHandler(this.paste, "click", this._pasteButtonHandler);
+        this.addHandler(this.paste, "click", this._pasteButtonHandler);
     },
     _removePasteButtonHandler: function(){
-        EventUtil.removeHandler(this.paste, "click", this._pasteButtonHandler);
+        this.removeHandler(this.paste, "click", this._pasteButtonHandler);
     },
     //将选择框中的内容绘制到当前区域
     _drawImage: function(options){
@@ -1862,8 +1900,8 @@ var Drawing = RichBase.extend({
             return null;
         }
         var imageData = this.editContext.getImageData(0, 0, width, height);
-        this.editContext.clearRect(0, 0, width, height);
         this.context.putImageData(imageData, left, top);
+        // this.editContext.clearRect(0, 0, width, height);
     },
     //将当前区域内容绘制到选择框
     _getImage: function(options){
@@ -1938,6 +1976,7 @@ var Drawing = RichBase.extend({
             this._addCopyHandler();
             this._addCopyButtonHandler();
             this._addMoveAndStretchElementHandler();
+            this._addClipButtonHandler();
         }
         else{
             this._removeCopyButtonHandler();
@@ -1945,6 +1984,7 @@ var Drawing = RichBase.extend({
             this._removeCutButtonHandler();
             this._removeCutHandler();
             this._removeMoveAndStretchElementHandler();
+            this._removeClipButtonHandler();
         }
     },
     _showSelectObj: function(toShow){
@@ -2016,7 +2056,7 @@ var Drawing = RichBase.extend({
                     width: this.editCanvasBox.width,
                     height: this.editCanvasBox.height,
                 });
-                this.addHandler(this, "handlers", this._fillImage);   //添加新的事件处理
+                // this.addHandler(this, "handlers", this._fillImage);   //添加新的事件处理
                 // this.cut.classList.remove("unused");
                 // this.copy.classList.remove("unused");
                 // this.clip.classList.remove("unused");
@@ -2039,12 +2079,16 @@ var Drawing = RichBase.extend({
     },
     //image事件
     _addDrawImageHandler: function(){
+        this.canvasBox.style.cursor = "crosshair";
+        // handleTarget.classList.toggle("selected");
+        this.selectButton.classList.add("selected");
         //拖拽效果事件
         this._addVirtualBoxHandler();
         this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
     },
     //image事件
     _removeDrawImageHandler: function(){
+        this.selectButton.classList.remove("selected");
         //拖拽效果事件
         this.imgWrap.classList.remove("selected");
         this.selectButton.classList.remove("selected");
@@ -2096,6 +2140,7 @@ var Drawing = RichBase.extend({
     //点击复制按键事件，这个事件直接会通过document.execCommand触发，主要是为了在复制事件中清空系统剪贴板
     _copyButtonHandler: function(event){
         try{
+            drawingInfo.set("description", "copy");
             document.execCommand('Copy');
         }
         catch(err){
@@ -2103,23 +2148,26 @@ var Drawing = RichBase.extend({
         }
     },
     _addCopyButtonHandler: function(){
-        EventUtil.addHandler(this.copy, "click", this._copyButtonHandler);
+        this.addHandler(this.copy, "click", this._copyButtonHandler);
     },
     _removeCopyButtonHandler: function(){
-        EventUtil.removeHandler(this.copy, "click", this._copyButtonHandler);
+        this.removeHandler(this.copy, "click", this._copyButtonHandler);
     },
     //处理复制事件的事件处理程序
     _copyHandler: function(event){
-        event = EventUtil.getEvent(event);
-        event.preventDefault();
-        EventUtil.setClipboardText(event, "");   //清空系统剪贴板，后续判断系统剪贴板存在图片数据的话，可知，系统剪贴板数据为最新复制
-        this._copy(this.editCanvasBox);
+        if(drawingInfo.get("description") !== "paste"){
+            event = EventUtil.getEvent(event);
+            event.preventDefault();
+            EventUtil.setClipboardText(event, "");   //清空系统剪贴板，后续判断系统剪贴板存在图片数据的话，可知，系统剪贴板数据为最新复制
+            this._copy(this.editCanvasBox);
+            drawingInfo.set("description", "");
+        }
     },
     _addCopyHandler: function(){
-        EventUtil.addHandler(document, "copy", (this._copyHandler).bind(this));
+        this.addHandler(document, "copy", this._copyHandler);
     },
     _removeCopyHandler: function(){
-        EventUtil.removeHandler(document, "copy", (this._copyHandler).bind(this));
+        this.removeHandler(document, "copy", this._copyHandler);
     },
     _cut: function(target){
         this._copy(target);
@@ -2135,10 +2183,10 @@ var Drawing = RichBase.extend({
         }
     },
     _addCutButtonHandler: function(){
-        EventUtil.addHandler(this.cut, "click", this._cutButtonHandler);
+        this.addHandler(this.cut, "click", this._cutButtonHandler);
     },
     _removeCutButtonHandler: function(){
-        EventUtil.removeHandler(this.cut, "click", this._cutButtonHandler);
+        this.removeHandler(this.cut, "click", this._cutButtonHandler);
     },
     //处理复制事件的事件处理程序
     _cutHandler: function(event){
@@ -2148,10 +2196,34 @@ var Drawing = RichBase.extend({
         this._cut(this.editCanvasBox);
     },
     _addCutHandler: function(){
-        EventUtil.addHandler(document, "cut", (this._cutHandler).bind(this));
+        this.addHandler(document, "cut", this._cutHandler);
     },
     _removeCutHandler: function(){
-        EventUtil.removeHandler(document, "cut", (this._cutHandler).bind(this));
+        this.removeHandler(document, "cut", this._cutHandler);
+    },
+    _clip: function(target){
+        var context = target.getContext("2d");
+        if(target.style.display === "inline-block"){
+            this._appendStyle(this.elementWrap, {
+                top: "-1px",
+                left: "-1px",
+            });
+            this._appendStyle(target, {
+                top: "0px",
+                left: "0px",
+            });
+            this._resizeCanvasBox(this.canvasBox, target.width, target.height);
+            this._fillImage();
+        }
+    },
+    _clipButtonHandle: function(){
+        this._clip(this.editCanvasBox);
+    },
+    _addClipButtonHandler: function(){
+        this.addHandler(this.clip, "click", this._clipButtonHandle);
+    },
+    _removeClipButtonHandler: function(){
+        this.removeHandler(this.clip, "click", this._clipButtonHandle);
     },
     // _copyHandler: function(){
     //     this._copy(this.editCanvasBox);
@@ -2221,11 +2293,18 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.selectButton, this.EVENTS["selectButton"]);    //加入到观察者
         this.createHandlers(this.tool, this.EVENTS["tool"]);               //加入到观察者
         this.createHandlers(document, this.EVENTS["document"]);               //加入到观察者
+        this.createHandlers(this.copy, this.EVENTS["copy"]);               //加入到观察者
+        this.createHandlers(this.cut, this.EVENTS["cut"]);               //加入到观察者
+        this.createHandlers(this.paste, this.EVENTS["paste"]);               //加入到观察者
+        this.createHandlers(this.clip, this.EVENTS["clip"]);               //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
-        this._addDrawLineHandler();   //默认为绘制线条
+        // this._addDrawLineHandler();   //默认为绘制线条
+        this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
+        drawingInfo.set("behavior", "pencil");
         this._addImgPasteHandler();
         this._addPasteButtonHandler();
+        this._addCopyPasteHandler();
         this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
@@ -2233,11 +2312,34 @@ var Drawing = RichBase.extend({
     },
     bind: function(){
         var self = this;
+        //复制事件等
+        EventUtil.addHandler(document, "copy", function (event) {
+            self.fire(document, "copy", event);
+        });
+        //剪切事件等
+        EventUtil.addHandler(document, "cut", function (event) {
+            self.fire(document, "cut", event);
+        });
         //粘贴事件等
         EventUtil.addHandler(document, "paste", function (event) {
             self.fire(document, "paste", event);
         });
-
+        //复制按钮
+        EventUtil.addHandler(this.copy, "click", function (event) {
+            self.fire(self.copy, "click", event);
+        });
+        //粘贴按钮
+        EventUtil.addHandler(this.paste, "click", function (event) {
+            self.fire(self.paste, "click", event);
+        });
+        //剪切按钮
+        EventUtil.addHandler(this.cut, "click", function (event) {
+            self.fire(self.cut, "click", event);
+        });
+        //裁剪按钮
+        EventUtil.addHandler(this.clip, "click", function (event) {
+            self.fire(self.clip, "click", event);
+        });
         EventUtil.addHandler(this.canvasWrap, "mousedown", function (event) {
             self.fire(self.canvasWrap, "mousedown", event);
         });

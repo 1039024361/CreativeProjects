@@ -588,15 +588,22 @@ div{
     display: flex;
     flex-flow: row nowrap;
     /*width: 158px;*/
+    width: 157px;
+    height: 60px;
+    z-index: auto;
 }
 
 .shape-wrap-left-img{
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 142px;
     height: 60px;
     display: flex;
     flex-flow: row wrap;
-    overflow: hidden;
+    overflow: visible;
     background-color: #f3f7fc;
+    z-index: -1;
 }
 
 .shape-wrap-left:hover .shape-wrap-left-img{
@@ -622,6 +629,9 @@ div{
 
 /*滚动条样式*/
 .scroll{
+    position: absolute;
+    top: 0;
+    right: 0;
     /*display: flex;*/
     flex-flow: column nowrap;
     width: 15px;
@@ -1071,9 +1081,12 @@ div{
         width: 208px;
         min-width: 208px;
     }
-
+    .shape-wrap-left{
+        width: 138px;
+    }
     .shape-wrap-left-img{
         width: 123px;
+        height: 80px;
     }
 }
 
@@ -1082,9 +1095,12 @@ div{
         width: 188px;
         min-width: 188px;
     }
-
+    .shape-wrap-left{
+        width: 118px;
+    }
     .shape-wrap-left-img{
         width: 103px;
+        height: 100px;
     }
 }
 
@@ -1093,9 +1109,12 @@ div{
         width: 168px;
         min-width: 168px;
     }
-
+    .shape-wrap-left{
+        width: 98px;
+    }
     .shape-wrap-left-img{
         width: 83px;
+        height: 120px;
     }
 }
 
@@ -1384,7 +1403,7 @@ div{
     padding: 0;
     border: none;
     z-index: 1;
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
 }
 
 /*拉拽时候的虚线框效果*/
