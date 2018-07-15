@@ -590,20 +590,23 @@ div{
     /*width: 158px;*/
     width: 157px;
     height: 60px;
-    z-index: auto;
+    overflow: hidden;
+    /*z-index: auto;*/
 }
 
 .shape-wrap-left-img{
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 142px;
-    height: 60px;
+    height: 80px;
     display: flex;
     flex-flow: row wrap;
-    overflow: visible;
+    overflow: hidden;
     background-color: #f3f7fc;
-    z-index: -1;
+    /*z-index: -1;*/
+    transition:top 1s;
+    -webkit-transition:top 1s; /* Safari */
 }
 
 .shape-wrap-left:hover .shape-wrap-left-img{
@@ -629,9 +632,9 @@ div{
 
 /*滚动条样式*/
 .scroll{
-    position: absolute;
-    top: 0;
-    right: 0;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
     /*display: flex;*/
     flex-flow: column nowrap;
     width: 15px;
