@@ -671,6 +671,10 @@ var Drawing = RichBase.extend({
         "clip":{
             "click":[]
         },
+        //形状栏箭头按钮
+        "scroll":{
+            "click":[]
+        },
     },
     _ctrlEvent:{
         target: null,
@@ -2228,6 +2232,7 @@ var Drawing = RichBase.extend({
     //形状栏向上或者向下事件
     _arrowEvent: function(event){
         event = EventUtil.getEvent(event);
+        EventUtil.stopPropagation(event);
         var target = EventUtil.getTarget(event),
             wrapDivWidth = this.wrapDiv.offsetWidth,
             wrapDivHeight = this.wrapDiv.offsetHeight,
@@ -2240,22 +2245,49 @@ var Drawing = RichBase.extend({
             }
         }
         if(target.id === "arrow-up"||target.parentNode.id === "arrow-up"){
-            move(-20);
-        }
-        else if(target.id === "arrow-down"||target.parentNode.id === "arrow-down"){
             move(20);
         }
-        else if(target.id === "arrow-drop"||target.parentNode.id === "arrow-drop"){
-            this._appendStyle(this.wrapDiv, {
-                top: 0,
-                overflow: "visible",
-                "overflow-y": "scroll",
-                width: wrapDivWidth + 16 + "px",
-            });
-            var handle = function(){
-                
-            };
+        else if(target.id === "arrow-down"||target.parentNode.id === "arrow-down"){
+            move(-20);
         }
+        else if(target.id === "arrow-drop"||target.parentNode.id === "arrow-drop"||target.parentNode.parentNode.id === "arrow-drop"){
+            this.wrapLeft.classList.add("shape-wrap-left-abs");
+            this.wrapDiv.classList.add("shape-wrap-left-img-abs");
+            this.wrapDiv.classList.remove("animate");
+            this._appendStyle(this.wrapDiv, {
+                // position: "absolute",
+                top: 0,
+                // width: wrapDivWidth + 16 + "px",
+                // // overflow: "visible",
+                // height: wrapDivHeight + "px",
+                //
+                // "overflow-y": "scroll",
+            });
+            var handle = function(event){
+                event = EventUtil.getEvent(event);
+                var target = EventUtil.getTarget(event);
+                if(target.id !== "arrow-drop" && target.parentNode.id !== "arrow-drop"&& target.parentNode.parentNode.id !== "arrow-drop"){
+                    that._appendStyle(that.wrapDiv, {
+                        // position: "relative",
+                        top: 0,
+                        // width: wrapDivWidth + "px",
+                        // // overflow: "visible",
+                        // overflow: "hidden",
+                    });
+                    that.wrapDiv.classList.add("animate");
+                    that.wrapLeft.classList.remove("shape-wrap-left-abs");
+                    that.wrapDiv.classList.remove("shape-wrap-left-img-abs");
+                }
+                EventUtil.removeHandler(document.body, "click" , handle);
+            };
+            EventUtil.addHandler(document.body, "click" , handle);
+        }
+    },
+    _addArrowEventHandle: function(){
+        this.addHandler(this.scroll, "click", this._arrowEvent);
+    },
+    _removeArrowEventHandle: function(){
+        this.removeHandler(this.scroll, "click", this._arrowEvent);
     },
     //事件绑定及节流处理
     init: function (config) {
@@ -2299,10 +2331,12 @@ var Drawing = RichBase.extend({
         this.foreColor = document.querySelector(".font-color");
         this.colorSetButtons = document.querySelectorAll(".color-1");
         //形状框箭头
+        this.scroll = document.querySelector(".scroll");
         this.arrowUp = document.querySelector("#arrow-up");
         this.arrowDown = document.querySelector("#arrow-down");
         this.arrowDrop = document.querySelector("#arrow-drop");
         this.wrapDiv = document.querySelector(".shape-wrap-left-img");
+        this.wrapLeft = document.querySelector(".shape-wrap-left");
         //初始化
         this.canvasBox.style.zIndex = 1;
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
@@ -2321,6 +2355,7 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.arrowUp, this.EVENTS["arrowUp"]);               //加入到观察者
         this.createHandlers(this.arrowDown, this.EVENTS["arrowDown"]);               //加入到观察者
         this.createHandlers(this.arrowDrop, this.EVENTS["arrowDrop"]);               //加入到观察者
+        this.createHandlers(this.scroll, this.EVENTS["scroll"]);               //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         // this._addDrawLineHandler();   //默认为绘制线条
@@ -2329,25 +2364,29 @@ var Drawing = RichBase.extend({
         this._addImgPasteHandler();
         this._addPasteButtonHandler();
         this._addCopyPasteHandler();
-        this.addHandler(this, "handlers", this._removeDrawLineHandler);
+        this._addArrowEventHandle();
+        // this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
         this.bind();
     },
     bind: function(){
         var self = this;
-        //形状向上箭头
-        EventUtil.addHandler(this.arrowUp, "click", function (event) {
-            self.fire(this.arrowUp, "click", event);
+        EventUtil.addHandler(this.scroll, "click", function (event) {
+            self.fire(self.scroll, "click", event);
         });
-        //形状向下箭头
-        EventUtil.addHandler(this.arrowDown, "click", function (event) {
-            self.fire(this.arrowDown, "click", event);
-        });
-        //形状向上箭头
-        EventUtil.addHandler(this.arrowDrop, "click", function (event) {
-            self.fire(this.arrowDrop, "click", event);
-        });
+        // //形状向上箭头
+        // EventUtil.addHandler(this.arrowUp, "click", function (event) {
+        //     self.fire(self.arrowUp, "click", event);
+        // });
+        // //形状向下箭头
+        // EventUtil.addHandler(this.arrowDown, "click", function (event) {
+        //     self.fire(self.arrowDown, "click", event);
+        // });
+        // //形状向上箭头
+        // EventUtil.addHandler(this.arrowDrop, "click", function (event) {
+        //     self.fire(self.arrowDrop, "click", event);
+        // });
         //复制事件等
         EventUtil.addHandler(document, "copy", function (event) {
             self.fire(document, "copy", event);
