@@ -2243,6 +2243,18 @@ var Drawing = RichBase.extend({
             if(top + diffTop >= 60-wrapDivHeight && top + diffTop <= 0){
                 that.wrapDiv.style.top = top + diffTop + "px";
             }
+            if(top + diffTop <= 60-wrapDivHeight){
+                that.arrowDown.classList.add("unused");
+            }
+            else{
+                that.arrowDown.classList.remove("unused");
+            }
+            if(top + diffTop >= 0){
+                that.arrowUp.classList.add("unused");
+            }
+            else {
+                that.arrowUp.classList.remove("unused");
+            }
         }
         if(target.id === "arrow-up"||target.parentNode.id === "arrow-up"){
             move(20);
