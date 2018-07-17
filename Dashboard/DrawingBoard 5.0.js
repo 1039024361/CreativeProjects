@@ -126,7 +126,7 @@ var RichBase = Base.extend({
 var drawingInfo = new Base({
     behavior: "pencil",
     description: "",   //描述behavior行为
-    lineWeight: 1,
+    lineWeight: 1,     //线比例
     color: "#000000",
     backgroundColor: "#FFFFFF",
     canvasW: 800,
@@ -2300,6 +2300,50 @@ var Drawing = RichBase.extend({
     },
     _removeArrowEventHandle: function(){
         this.removeHandler(this.scroll, "click", this._arrowEvent);
+    },
+    //形状绘图事件
+    //将绘图用到的点保存在一个数组，创建一个绘制特定图形的方法
+    //target: 要绘制图形的canvas， 这里应为editCanvas
+    //dataArr： 绘制椭圆用的点，即elementWrap上的点，从上中，右中，下中，左中一次存入数组
+    _getEllipsePara: function(target, dataArr){
+        var ctx = target.getContext("2d"),
+            lineWeight = drawingInfo.get("line-weight"),
+            diff = Math.round(lineWeight*0.5),   //椭圆线上边沿距elementWrap线下边界的距离
+            eleWrapTop = parseInt(this.elementWrap.style.top),
+            eleWrapLeft = parseInt(this.elementWrap.style.left),
+            eleWrapWidth = parseInt(this.elementWrap.style.width),
+            eleWrapHeight = parseInt(this.elementWrap.style.height),
+            editCanvasTop = eleWrapTop + 1 - diff,
+            editCanvasLeft = eleWrapLeft + 1 - diff,
+            radiusX = Math.round((eleWrapWidth + lineWeight)*0.5),  //四舍五入防止空间不够
+            radiusY = Math.round((eleWrapHeight + lineWeight)*0.5),
+            editCanvasWidth = radiusX*2,
+            editCanvasHeight = radiusY*2,
+            x = editCanvasTop + radiusX,
+            y = editCanvasLeft + radiusY;
+            this._appendStyle(this.elementWrap, {
+                top: eleWrapTop + "px",
+                left: eleWrapLeft + "px",
+                width: eleWrapWidth + "px",
+                height: eleWrapHeight + "px"
+            });
+            this._appendStyle(target, {
+                top: editCanvasTop + "px",
+                left: eleWrapLeft + "px",
+                width: eleWrapWidth,
+                height: eleWrapHeight
+            });
+            ctx.clearRect(0, 0, target.width, target.height);
+            ctx.moveTo(x + radiusX, y);
+            ctx.lineWidth = lineWeight;
+            ctx.strokeStyle = drawingInfo.get("color");
+            if(ctx.ellipse){
+                ctx.ellipse(x, y, radiusX, radiusY, 0, 0, 2*Math.PI, false);
+                ctx.fill();
+            }
+            else{
+                alert("浏览器canvas绘制椭圆");
+            }
     },
     //事件绑定及节流处理
     init: function (config) {
