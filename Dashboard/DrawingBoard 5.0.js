@@ -675,6 +675,29 @@ var Drawing = RichBase.extend({
         "scroll":{
             "click":[]
         },
+        "wrapDiv":{
+            "click":[
+                function(event){
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event),
+                        handleTarget;
+
+                    handleTarget = target.childElementCount? target:target.parentNode;
+
+                    switch (handleTarget.id)
+                    {
+                        case "ellipse":
+                            console.log("ellipse");
+                            if(!handleTarget.classList.contains("selected")){
+                                this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
+                                drawingInfo.set("behavior", "shape");
+                                drawingInfo.set("description", "ellipse");
+                            }
+                            break;
+                    }
+                }
+            ]
+        },
     },
     _ctrlEvent:{
         target: null,
@@ -1347,6 +1370,7 @@ var Drawing = RichBase.extend({
                         var canvasWidth = parseInt(this.editCanvasBox.width),
                             canvasHeight = parseInt(this.editCanvasBox.height);
                         this._imageStretch(this.editCanvasBox, newWidth, newHeight);
+                        this._drawDiffShapes();
                     }
                     if(this.inputDiv.style.display !== "none"){
                         margin = 4;
@@ -2305,38 +2329,20 @@ var Drawing = RichBase.extend({
     //将绘图用到的点保存在一个数组，创建一个绘制特定图形的方法
     //target: 要绘制图形的canvas， 这里应为editCanvas
     //dataArr： 绘制椭圆用的点，即elementWrap上的点，从上中，右中，下中，左中一次存入数组
-    _getEllipsePara: function(target, dataArr){
-        var ctx = target.getContext("2d"),
-            lineWeight = drawingInfo.get("line-weight"),
-            diff = Math.round(lineWeight*0.5),   //椭圆线上边沿距elementWrap线下边界的距离
-            eleWrapTop = parseInt(this.elementWrap.style.top),
-            eleWrapLeft = parseInt(this.elementWrap.style.left),
-            eleWrapWidth = parseInt(this.elementWrap.style.width),
-            eleWrapHeight = parseInt(this.elementWrap.style.height),
-            editCanvasTop = eleWrapTop + 1 - diff,
-            editCanvasLeft = eleWrapLeft + 1 - diff,
-            radiusX = Math.round((eleWrapWidth + lineWeight)*0.5),  //四舍五入防止空间不够
-            radiusY = Math.round((eleWrapHeight + lineWeight)*0.5),
-            editCanvasWidth = radiusX*2,
-            editCanvasHeight = radiusY*2,
-            x = editCanvasTop + radiusX,
-            y = editCanvasLeft + radiusY;
-            this._appendStyle(this.elementWrap, {
-                top: eleWrapTop + "px",
-                left: eleWrapLeft + "px",
-                width: eleWrapWidth + "px",
-                height: eleWrapHeight + "px"
-            });
-            this._appendStyle(target, {
-                top: editCanvasTop + "px",
-                left: eleWrapLeft + "px",
-                width: eleWrapWidth,
-                height: eleWrapHeight
-            });
-            ctx.clearRect(0, 0, target.width, target.height);
+    _getEllipsePara: function(dataObj){
+        var ctx = this.editContext,
+            lineWeight = dataObj.lineWeight || 1,
+            eleWrapWidth = dataObj.eleWrapWidth,
+            eleWrapHeight = dataObj.eleWrapHeight,
+            editCanvasTop = dataObj.editCanvasTop,
+            editCanvasLeft = dataObj.editCanvasLeft,
+            radiusX = (eleWrapWidth + lineWeight)*0.5,
+            radiusY = (eleWrapHeight + lineWeight)*0.5,
+            x = editCanvasTop + radiusX + lineWeight*0.5,
+            y = editCanvasLeft + radiusY + lineWeight*0.5;
+
             ctx.moveTo(x + radiusX, y);
-            ctx.lineWidth = lineWeight;
-            ctx.strokeStyle = drawingInfo.get("color");
+
             if(ctx.ellipse){
                 ctx.ellipse(x, y, radiusX, radiusY, 0, 0, 2*Math.PI, false);
                 ctx.fill();
@@ -2345,6 +2351,128 @@ var Drawing = RichBase.extend({
                 alert("浏览器canvas绘制椭圆");
             }
     },
+    _shapeDraw: function(shapeFunc, options){
+        var lineWeight = drawingInfo.get("line-weight"),
+            diff = lineWeight*0.5,   //椭圆线上边沿距elementWrap线下边界的距离
+            dataObj = {
+                lineWeight: lineWeight,
+                eleWrapTop: options.top,
+                eleWrapLeft: options.left,
+                eleWrapWidth: options.width,
+                eleWrapHeight: options.height,
+                editCanvasTop: options.top + 1 - diff,   //1为wrap线宽
+                editCanvasLeft: options.left + 1 - diff,
+                editCanvasWidth: options.width + lineWeight + 1,
+                editCanvasHeight: options.height + lineWeight + 1,
+            };
+            // this._appendStyle(this.elementWrap, {
+            //     top: options.top,
+            //     left: options.left,
+            //     width: options.width,
+            //     height: options.height
+            // });
+            this._appendStyle(this.editCanvasBox, {
+                top: dataObj.editCanvasTop,
+                left: dataObj.editCanvasLeft,
+                width: dataObj.editCanvasWidth,
+                height: dataObj.editCanvasHeight
+            });
+            this.editContext.clearRect(0, 0, this.editCanvasBox.width, this.editCanvasBox.height);
+            this.editContext.lineWidth = lineWeight;
+            this.editContext.strokeStyle = drawingInfo.get("color");
+            shapeFunc.call(this, dataObj);
+    },
+    //显示选择框
+    _displayDrawingSelectBox: function(toDisplay){
+        if(toDisplay){
+            this._appendStyle(this.elementWrap, {
+                display: "inline-block",
+                top: this.get("startY")+"px",
+                left: this.get("startX")+"px",
+                width: this.get("diffX")+ 2 +"px",
+                "min-height": this.get("diffY")+ 2 +"px"
+            });
+            this._drawDiffShapes();
+        }
+        else{
+            this._appendStyle(this.elementWrap, {display: "none"});
+            this._appendStyle(this.editCanvasBox, {display: "none"});
+        }
+    },
+    _showDrawingSelectObj: function(toShow){
+        this._displayDrawingSelectBox(toShow);
+        this._addOrRemoveDrawingHandler(toShow);
+    },
+    _drawDiffShapes: function(){
+        var behavior = drawingInfo.get("behavior"),
+            description = drawingInfo.get("description"),
+            options = {
+                top: parseInt(this.elementWrap.style.top),
+                left: parseInt(this.elementWrap.style.left),
+                width: parseInt(this.elementWrap.style.width),
+                height: parseInt(this.elementWrap.style.height),
+            };
+        if(behavior === "shape"){
+            switch (description)
+            {
+                case "ellipse":
+                    this._shapeDraw(this._getEllipsePara, options);
+                    break;
+            }
+        }
+    },
+    _addOrRemoveDrawingHandler: function (toAdd) {
+        if(toAdd){
+            this._addMoveAndStretchElementHandler();
+        }
+        else{
+            this._removeMoveAndStretchElementHandler();
+        }
+    },
+    //
+    _fillDrawing: function () {
+        if(drawingInfo.get("behavior") === "shape"){
+            if(this.elementWrap.style.display === "inline-block"){
+                this._drawImage({
+                    left: parseInt(this.editCanvasBox.style.left),    //注意，后续可能将editCanvas改成绝对定位
+                    top: parseInt(this.editCanvasBox.style.top),
+                    width: this.editCanvasBox.width,
+                    height: this.editCanvasBox.height,
+                });
+                this._showDrawingSelectObj(false);
+            }
+            else{
+                this._showDrawingSelectObj(true);
+            }
+        }
+    },
+    //取消选择 selected
+
+
+
+    
+    //处理文本输入事件
+    _drawShapeHandler: function (event) {
+        eventShape = EventUtil.getEvent(event);
+        var target = EventUtil.getTarget(event);
+
+        if(target.id === "canvasBox"||target.id === "canvasWrap"){
+            this._fillDrawing();
+        }
+    },
+    //
+    _addDrawShapeHandler: function(){
+        this.canvasBox.style.cursor = "crosshair";
+        // handleTarget.classList.toggle("selected");
+        //拖拽效果事件
+        this.addHandler(this.canvasWrap, "click", this._drawShapeHandler);
+    },
+    //
+    _removeShapeImageHandler: function(){
+        this.removeHandler(this.canvasWrap, "click", this._drawShapeHandler);
+    },
+
+
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -2393,6 +2521,7 @@ var Drawing = RichBase.extend({
         this.arrowDrop = document.querySelector("#arrow-drop");
         this.wrapDiv = document.querySelector(".shape-wrap-left-img");
         this.wrapLeft = document.querySelector(".shape-wrap-left");
+
         //初始化
         this.canvasBox.style.zIndex = 1;
         this.createHandlers(this.canvasBox, this.EVENTS["canvasBox"]);    //加入到观察者
@@ -2411,6 +2540,7 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.arrowUp, this.EVENTS["arrowUp"]);               //加入到观察者
         this.createHandlers(this.arrowDown, this.EVENTS["arrowDown"]);               //加入到观察者
         this.createHandlers(this.arrowDrop, this.EVENTS["arrowDrop"]);               //加入到观察者
+        this.createHandlers(this.wrapDiv, this.EVENTS["wrapDiv"]);               //加入到观察者
         this.createHandlers(this.scroll, this.EVENTS["scroll"]);               //加入到观察者
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
@@ -2428,6 +2558,10 @@ var Drawing = RichBase.extend({
     },
     bind: function(){
         var self = this;
+        //形状按钮
+        EventUtil.addHandler(this.wrapDiv, "click", function (event) {
+            self.fire(self.wrapDiv, "click", event);
+        });
         EventUtil.addHandler(this.scroll, "click", function (event) {
             self.fire(self.scroll, "click", event);
         });

@@ -37,7 +37,7 @@ div{
     border-top-right-radius: 5px;
     border: 1px solid #3056FF;
     background: linear-gradient(to bottom, rgba(49, 116, 255, 0.3), rgba(49, 116, 255, 0.9) 50%, rgb(48, 86, 255) 50%, rgba(49, 116, 255, 0.3) 100%); /* 标准的语法 */;
-    z-index: 2;
+    z-index: 12;
 }
 
 .top-menu-drop img{
@@ -72,7 +72,7 @@ div{
     text-align: left;
     /*padding: 1px;*/
     background-color: #FFFFFF;
-    z-index: 1;
+    z-index: 10;
     font-size: 0;
 }
 
