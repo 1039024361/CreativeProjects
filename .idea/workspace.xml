@@ -7,8 +7,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" afterPath="$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" afterPath="$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,11 +32,12 @@
       <file leaf-file-name="Win7DrawingBoard 5.0.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="162" column="63" selection-start-line="162" selection-start-column="56" selection-end-line="162" selection-end-column="63" />
+            <state relative-caret-position="221">
+              <caret line="46" column="14" selection-start-line="46" selection-start-column="14" selection-end-line="46" selection-end-column="14" />
               <folding>
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#div#4;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#canvas#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#5;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -64,16 +63,14 @@
       <file leaf-file-name="DrawingBoard 5.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="2452" column="4" selection-start-line="2452" selection-start-column="4" selection-end-line="2452" selection-end-column="4" />
+            <state relative-caret-position="360">
+              <caret line="2387" column="50" selection-start-line="2387" selection-start-column="50" selection-end-line="2387" selection-end-column="50" />
               <folding>
                 <element signature="e#89#584#0" expanded="false" />
                 <element signature="e#3836#3858#0" expanded="false" />
-                <element signature="e#38668#41689#0" expanded="false" />
-                <element signature="e#83576#83616#0" expanded="false" />
-                <element signature="e#86281#86295#0" expanded="false" />
-                <marker date="1531873550000" expanded="true" signature="94987:96378" ph="{...}" />
-                <marker date="1531873550000" expanded="true" signature="97168:97804" ph="{...}" />
+                <element signature="e#38740#41761#0" expanded="false" />
+                <element signature="e#83690#83730#0" expanded="false" />
+                <element signature="e#86395#86409#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -395,12 +392,12 @@
       <workItem from="1531552568342" duration="20626000" />
       <workItem from="1531581475183" duration="586000" />
       <workItem from="1531619369031" duration="20489000" />
-      <workItem from="1531698507173" duration="23723000" />
+      <workItem from="1531698507173" duration="27621000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="671041000" />
+    <option name="totallyTimeSpent" value="674939000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -769,21 +766,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="162" column="63" selection-start-line="162" selection-start-column="56" selection-end-line="162" selection-end-column="63" />
+        <state relative-caret-position="221">
+          <caret line="46" column="14" selection-start-line="46" selection-start-column="14" selection-end-line="46" selection-end-column="14" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#div#4;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#canvas#1;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#5;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -795,18 +785,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="2452" column="4" selection-start-line="2452" selection-start-column="4" selection-end-line="2452" selection-end-column="4" />
+        <state relative-caret-position="360">
+          <caret line="2387" column="50" selection-start-line="2387" selection-start-column="50" selection-end-line="2387" selection-end-column="50" />
           <folding>
             <element signature="e#89#584#0" expanded="false" />
             <element signature="e#3836#3858#0" expanded="false" />
-            <element signature="e#38668#41689#0" expanded="false" />
-            <element signature="e#83576#83616#0" expanded="false" />
-            <element signature="e#86281#86295#0" expanded="false" />
-            <marker date="1531873550000" expanded="true" signature="94987:96378" ph="{...}" />
-            <marker date="1531873550000" expanded="true" signature="97168:97804" ph="{...}" />
+            <element signature="e#38740#41761#0" expanded="false" />
+            <element signature="e#83690#83730#0" expanded="false" />
+            <element signature="e#86395#86409#0" expanded="false" />
           </folding>
         </state>
       </provider>
