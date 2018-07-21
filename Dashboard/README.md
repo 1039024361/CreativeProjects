@@ -22,6 +22,7 @@ Win7DrawingBoard 3.0实现功能：
 拖放依照图片之后，再重新拖放图片，拉伸调整canvas大小会有问题
 调整canvas到比较小的程度情况下，有点问题
 图片拖拽释放区域限定
+***复制的图片在pencil状态下无法填充
 
 //下面方案一次性实现图片倾斜有问题：
 var imageIncline = function(){
@@ -56,3 +57,4 @@ var imageIncline = function(){
 
 
 * 注意beginPath， closePath的使用，否者stroke会重绘所以线型
+

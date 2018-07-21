@@ -708,6 +708,15 @@ var Drawing = RichBase.extend({
                                 handleTarget.classList.add("selected");
                             }
                             break;
+                        case "circle-rectangle":
+                            console.log("circle-rectangle");
+                            if(!handleTarget.classList.contains("selected")){
+                                this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
+                                drawingInfo.set("behavior", "shape");
+                                drawingInfo.set("description", "circle-rectangle");
+                                handleTarget.classList.add("selected");
+                            }
+                            break;
                     }
                 }
             ]
@@ -1936,7 +1945,6 @@ var Drawing = RichBase.extend({
     _copyPasteHandler: function(event){
         if(drawingInfo.get("description") === "paste"){
             this._imgPasteHandler(event);
-            drawingInfo.set("description", "");
         }
     },
     _addCopyPasteHandler: function(){
@@ -2078,7 +2086,7 @@ var Drawing = RichBase.extend({
     //notFill： 为了模拟剪切事件不填充的效果
     _fillImage: function (notFill) {
         var width,height;
-        if(drawingInfo.get("behavior") === "select"){
+        if(drawingInfo.get("behavior") === "select"||drawingInfo.get("behavior") === "paste"){
             if(this.elementWrap.style.display === "inline-block"){
                 if(!notFill){
                     this._drawImage({
@@ -2106,6 +2114,7 @@ var Drawing = RichBase.extend({
                 this._showSelectObj(false);
 
                 drawingInfo.set("imageStretch", false);
+                drawingInfo.set("description", "");
             }
             else{
                 // this._appendStyle(this.elementWrap, {
@@ -2374,22 +2383,34 @@ var Drawing = RichBase.extend({
     //将绘图用到的点保存在一个数组，创建一个绘制特定图形的方法
     //target: 要绘制图形的canvas， 这里应为editCanvas
     //dataArr： 绘制椭圆用的点，即elementWrap上的点，从上中，右中，下中，左中一次存入数组
-    // _ellipse: function(target, width, height){
-    //     var ctx = target.getContext("2d"),
-    //         //假设elementWrap长宽都为1，定义绘图参数
-    //         //注意，这个坐标并不是editCanvas的x坐标，而是以elementWrap： (0,0)对应(top+0.5， left+0.5）构成的坐标系
-    //         coordinate = {
-    //             x: 0.5,
-    //             y: 0.5,
-    //             radiusX: 0.5,
-    //             radiusY: 0.5
-    //         },
-    //         //x方向的放大系数
-    //         xGain = (width - 1)>0? width - 1:1,
-    //         yGain = (height - 1)>0? height - 1:1;
-    //
+    //将模板坐标转换为editCanwas坐标
+    // _toCanvasXY: function(coordinate){
+    //     var lineWeight = drawingInfo.get("lineWeight");
     //
     // },
+    //模板坐标
+    _ellipse: function(width, height){
+        var lineWeight = drawingInfo.get("lineWeight");
+            //假设elementWrap长宽都为1，定义绘图参数
+            //注意，这个坐标并不是editCanvas的x坐标，而是以elementWrap： (0,0)对应(top+0.5， left+0.5）构成的坐标系
+        var  coordinate = {
+                x: 0.5,
+                y: 0.5,
+                radiusX: 0.5,
+                radiusY: 0.5
+            },
+            //x方向的放大系数
+            xGain = (width - 1)>0? width - 1:1,
+            yGain = (height - 1)>0? height - 1:1;
+        coordinate.x = coordinate.x * xGain;
+        coordinate.radiusX = coordinate.radiusX * xGain;
+        coordinate.y = coordinate.y * yGain;
+        coordinate.radiusY = coordinate.radiusY * yGain;
+        //转换为editCanwas坐标
+        coordinate.x = coordinate.x + 0.5*lineWeight;
+        coordinate.y = coordinate.y + 0.5*lineWeight;
+        return coordinate;
+    },
     _drawEllipse: function(target, options){
         var ctx = target.getContext("2d"),
             lineWeight = options.lineWeight || drawingInfo.get("lineWeight"),
@@ -2409,6 +2430,29 @@ var Drawing = RichBase.extend({
         }
     },
     //矩形
+    //模板坐标
+    _rectangle: function(width, height){
+        var lineWeight = drawingInfo.get("lineWeight");
+        //假设elementWrap长宽都为1，定义绘图参数
+        //注意，这个坐标并不是editCanvas的x坐标，而是以elementWrap： (0,0)对应(top+0.5， left+0.5）构成的坐标系
+        var  coordinate = {
+                x: 0,
+                y: 0,
+                width: 1,
+                height: 1
+            },
+            //x方向的放大系数
+            xGain = (width - 1)>0? width - 1:1,
+            yGain = (height - 1)>0? height - 1:1;
+        coordinate.x = coordinate.x * xGain;
+        coordinate.width = coordinate.width * xGain;
+        coordinate.y = coordinate.y * yGain;
+        coordinate.height = coordinate.height * yGain;
+        //转换为editCanwas坐标
+        coordinate.x = coordinate.x + 0.5*lineWeight;
+        coordinate.y = coordinate.y + 0.5*lineWeight;
+        return coordinate;
+    },
     _drawRectangle: function(target, options){
         var ctx = target.getContext("2d"),
             lineWeight = options.lineWeight || drawingInfo.get("lineWeight"),
@@ -2420,13 +2464,49 @@ var Drawing = RichBase.extend({
         ctx.moveTo(x, y);
         ctx.rect(x, y, width, height);
     },
-    _shapeDraw: function(target, shapeFunc, options, notClear){
+    //圆角矩形
+    _circleRectangle: function(width, height){
+        var lineWeight = drawingInfo.get("lineWeight");
+        //假设elementWrap长宽都为1，定义绘图参数
+        //注意，这个坐标并不是editCanvas的x坐标，而是以elementWrap： (0,0)对应(top+0.5， left+0.5）构成的坐标系
+        var  coordinate = {
+                x: 0,
+                y: 0,
+                width: 1,
+                height: 1,
+                radius: 0.1
+            },
+            //x方向的放大系数，并转换为editCanwas坐标
+            xGain = (width - 1)>0? width - 1:1,
+            yGain = (height - 1)>0? height - 1:1;
+        coordinate.x = 0.5*lineWeight;
+        coordinate.y = 0.5*lineWeight;
+        coordinate.width = coordinate.width * xGain;
+        coordinate.height = coordinate.height * yGain;
+        coordinate.radius = coordinate.width>coordinate.height? coordinate.radius * yGain + 0.5*lineWeight:coordinate.radius * xGain + 0.5*lineWeight;
+        return coordinate;
+    },
+    _drawCircleRectangle: function(target, options){
+        var ctx = target.getContext("2d"),
+            x = options.x,
+            y = options.y,
+            width = options.width,
+            height = options.height,
+            radius = options.radius;
+            ctx.moveTo(x+radius, y);
+            ctx.lineTo(x+width-radius, y);
+            ctx.arc(x+width-radius, y+radius, radius, -Math.PI*0.5, 0, false);
+            ctx.lineTo(x+width, y+height-radius);
+            ctx.arc(x+width-radius, y+height-radius, radius, 0, Math.PI*0.5, false);
+            ctx.lineTo(x+radius, y+height);
+            ctx.arc(x+radius, y+height-radius, radius, Math.PI*0.5, Math.PI, false);
+            ctx.lineTo(x, y+radius);
+            ctx.arc(x+radius, y+radius, radius, Math.PI, 1.5*Math.PI, false);
+    },
+    _shapeDraw: function(target, shapeFunc, options){
         var editContext = target.getContext("2d");
-        if(!notClear){
-            editContext.clearRect(0, 0, options.editCanvasWidth, options.editCanvasHeight);
-        }
         editContext.beginPath();
-        editContext.lineWidth = options.lineWeight || drawingInfo.get("lineWeight");
+        editContext.lineWidth = drawingInfo.get("lineWeight");
         editContext.strokeStyle = drawingInfo.get("color");
         shapeFunc.call(this, target, options);
         editContext.closePath();
@@ -2464,40 +2544,29 @@ var Drawing = RichBase.extend({
             left = parseInt(this.elementWrap.style.left),
             width = parseInt(this.elementWrap.style.width),
             height = parseInt(this.elementWrap.style["min-height"]),
-            options = {
-                top: top,
-                left: left,
-                width: width,
-                height: height,
-                lineWeight: lineWeight,
-                editCanvasTop: top + 0.5 - diff,
-                editCanvasLeft: left + 0.5 - diff,
-                editCanvasWidth: width + 2*lineWeight + 1,
-                editCanvasHeight: height + 2*lineWeight + 1
-            };
-        if(behavior === "shape"){
-            this._appendStyle(this.editCanvasBox, {
+            editCanvasStyle = {
                 display: "inline-block",
-                top: options.editCanvasTop  + "px",
-                left: options.editCanvasLeft  + "px",
-                width: options.editCanvasWidth,
-                height: options.editCanvasHeight
-            });
+                top: top + 0.5 - diff  + "px",
+                left: left + 0.5 - diff  + "px",
+                width: width + 2*lineWeight + 1,
+                height: height + 2*lineWeight + 1
+            },
+            coordinate;
+        if(behavior === "shape"){
+            this._appendStyle(this.editCanvasBox, editCanvasStyle);
             switch (description)
             {
                 case "ellipse":
-                    options.radiusX = (options.width -1)*0.5;
-                    options.radiusY = (options.height- 1)*0.5;
-                    options.x = options.radiusX + options.lineWeight*0.5;
-                    options.y = options.radiusY + options.lineWeight*0.5;
-                    this._shapeDraw(this.editCanvasBox, this._drawEllipse, options);
+                    coordinate = this._ellipse(width, height);
+                    this._shapeDraw(this.editCanvasBox, this._drawEllipse, coordinate);
                     break;
                 case "rectangle":
-                    options.x = diff;
-                    options.y = diff;
-                    options.width = width ;
-                    options.height = height ;
-                    this._shapeDraw(this.editCanvasBox, this._drawRectangle, options);
+                    coordinate = this._rectangle(width, height);
+                    this._shapeDraw(this.editCanvasBox, this._drawRectangle, coordinate);
+                    break;
+                case "circle-rectangle":
+                    coordinate = this._circleRectangle(width, height);
+                    this._shapeDraw(this.editCanvasBox, this._drawCircleRectangle, coordinate);
                     break;
             }
         }
@@ -2511,23 +2580,29 @@ var Drawing = RichBase.extend({
             top = parseInt(this.elementWrap.style.top),
             left = parseInt(this.elementWrap.style.left),
             width = parseInt(this.elementWrap.style.width),
-            height = parseInt(this.elementWrap.style["min-height"]);
-
+            height = parseInt(this.elementWrap.style["min-height"]),
+            coordinate;
 
         if(behavior === "shape"){
             switch (description)
             {
                 case "ellipse":
-                    var radiusX =  (width -1)*0.5,
-                        radiusY =  (height -1)*0.5,
-                        x = left +  0.5- diff + radiusX + lineWeight*0.5,
-                        y = top + 0.5 - diff + radiusY + lineWeight*0.5;
-                    this._shapeDraw(target, this._drawEllipse, {radiusX: radiusX, radiusY: radiusY, x: x, y: y}, true);
+                    coordinate = this._ellipse(width, height);
+                    coordinate.x = coordinate.x + left + 0.5 - diff;   //转化为canvas坐标
+                    coordinate.y = coordinate.y + top + 0.5 - diff;
+                    this._shapeDraw(target, this._drawEllipse, coordinate, true);
                     break;
                 case "rectangle":
-                    var xRect = left + 0.5,
-                        yRect = top + 0.5;
-                    this._shapeDraw(target, this._drawRectangle, {x: xRect, y: yRect, width: width, height: height}, true);
+                    coordinate = this._rectangle(width, height);
+                    coordinate.x = coordinate.x + left + 0.5 - diff;   //转化为canvas坐标
+                    coordinate.y = coordinate.y + top + 0.5 - diff;
+                    this._shapeDraw(target, this._drawRectangle, coordinate, true);
+                    break;
+                case "circle-rectangle":
+                    coordinate = this._circleRectangle(width, height);
+                    coordinate.x = coordinate.x + left + 0.5 - diff;   //转化为canvas坐标
+                    coordinate.y = coordinate.y + top + 0.5 - diff;
+                    this._shapeDraw(target, this._drawCircleRectangle, coordinate, true);
                     break;
             }
         }

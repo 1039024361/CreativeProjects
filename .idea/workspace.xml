@@ -34,8 +34,8 @@
       <file leaf-file-name="Win7DrawingBoard 5.0.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="325" column="76" selection-start-line="325" selection-start-column="76" selection-end-line="325" selection-end-column="76" />
+            <state relative-caret-position="326">
+              <caret line="164" column="63" selection-start-line="164" selection-start-column="56" selection-end-line="164" selection-end-column="72" />
               <folding>
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
@@ -64,14 +64,14 @@
       <file leaf-file-name="DrawingBoard 5.0.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="1674" column="47" selection-start-line="1674" selection-start-column="47" selection-end-line="1674" selection-end-column="47" />
+            <state relative-caret-position="528">
+              <caret line="2599" column="26" selection-start-line="2599" selection-start-column="26" selection-end-line="2599" selection-end-column="26" />
               <folding>
                 <element signature="e#89#584#0" expanded="false" />
                 <element signature="e#4035#4057#0" expanded="false" />
-                <element signature="e#39500#42521#0" expanded="false" />
-                <element signature="e#85878#85918#0" expanded="false" />
-                <element signature="e#88583#88597#0" expanded="false" />
+                <element signature="e#40082#43103#0" expanded="false" />
+                <element signature="e#86505#86545#0" expanded="false" />
+                <element signature="e#89210#89224#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -115,8 +115,8 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dashboard/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="36" column="48" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
+            <state relative-caret-position="288">
+              <caret line="23" column="10" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
               <folding />
             </state>
           </provider>
@@ -376,12 +376,12 @@
       <workItem from="1531581475183" duration="586000" />
       <workItem from="1531619369031" duration="20489000" />
       <workItem from="1531698507173" duration="39806000" />
-      <workItem from="1532139320789" duration="8178000" />
+      <workItem from="1532139320789" duration="18046000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="695302000" />
+    <option name="totallyTimeSpent" value="705170000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -742,14 +742,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dashboard/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="36" column="48" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -758,10 +750,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Dashboard/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="23" column="10" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/Win7DrawingBoard 5.0.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="325" column="76" selection-start-line="325" selection-start-column="76" selection-end-line="325" selection-end-column="76" />
+        <state relative-caret-position="326">
+          <caret line="164" column="63" selection-start-line="164" selection-start-column="56" selection-end-line="164" selection-end-column="72" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
@@ -778,14 +778,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Dashboard/DrawingBoard 5.0.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="1674" column="47" selection-start-line="1674" selection-start-column="47" selection-end-line="1674" selection-end-column="47" />
+        <state relative-caret-position="528">
+          <caret line="2599" column="26" selection-start-line="2599" selection-start-column="26" selection-end-line="2599" selection-end-column="26" />
           <folding>
             <element signature="e#89#584#0" expanded="false" />
             <element signature="e#4035#4057#0" expanded="false" />
-            <element signature="e#39500#42521#0" expanded="false" />
-            <element signature="e#85878#85918#0" expanded="false" />
-            <element signature="e#88583#88597#0" expanded="false" />
+            <element signature="e#40082#43103#0" expanded="false" />
+            <element signature="e#86505#86545#0" expanded="false" />
+            <element signature="e#89210#89224#0" expanded="false" />
           </folding>
         </state>
       </provider>
