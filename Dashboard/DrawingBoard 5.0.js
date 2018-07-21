@@ -1603,6 +1603,33 @@ var Drawing = RichBase.extend({
             context.fillText(row[b],x,y+(b+1)*height);
         }
     },
+    _strokeText: function(){
+        var width,height;
+        if(drawingInfo.get("behavior") === "text"){
+            if(this.elementWrap.style.display === "inline-block"){
+                this._drawText({
+                    context: this.context,
+                    input: this.inputDiv,
+                    X: parseInt(this.elementWrap.style.left)+3,
+                    Y: parseInt(this.elementWrap.style.top)-1,
+                    color: drawingInfo.get("color"),
+                    backColor: drawingInfo.get("backgroundColor"),
+                    width: parseInt(this.inputDiv.style.width),
+                    height: parseInt(this.inputDiv.style.height)
+                });
+                this._appendStyle(this.elementWrap, {
+                    display: "none",
+                });
+                this._appendStyle(this.inputDiv, {
+                    display: "none",
+                });
+                this.inputDiv.innerHTML = "";
+                // this._removeTextInputHandler();
+                this._removeMoveAndStretchElementHandler();
+                this._displaySelectSize(0, 0);
+            }
+        }
+    },
     //点击书写文本
     _fillText: function(){
         var width,height;
@@ -1649,7 +1676,7 @@ var Drawing = RichBase.extend({
                 });
                 this.inputDiv.focus();
                 this._addMoveAndStretchElementHandler();
-                this.addHandler(this, "handlers", this._fillText);   //添加新的事件处理
+                this.addHandler(this, "handlers", this._strokeText);   //添加新的事件处理
                 // this._handle(null, this._filterText);
             }
         }
@@ -2347,6 +2374,22 @@ var Drawing = RichBase.extend({
     //将绘图用到的点保存在一个数组，创建一个绘制特定图形的方法
     //target: 要绘制图形的canvas， 这里应为editCanvas
     //dataArr： 绘制椭圆用的点，即elementWrap上的点，从上中，右中，下中，左中一次存入数组
+    // _ellipse: function(target, width, height){
+    //     var ctx = target.getContext("2d"),
+    //         //假设elementWrap长宽都为1，定义绘图参数
+    //         //注意，这个坐标并不是editCanvas的x坐标，而是以elementWrap： (0,0)对应(top+0.5， left+0.5）构成的坐标系
+    //         coordinate = {
+    //             x: 0.5,
+    //             y: 0.5,
+    //             radiusX: 0.5,
+    //             radiusY: 0.5
+    //         },
+    //         //x方向的放大系数
+    //         xGain = (width - 1)>0? width - 1:1,
+    //         yGain = (height - 1)>0? height - 1:1;
+    //
+    //
+    // },
     _drawEllipse: function(target, options){
         var ctx = target.getContext("2d"),
             lineWeight = options.lineWeight || drawingInfo.get("lineWeight"),
@@ -2371,8 +2414,8 @@ var Drawing = RichBase.extend({
             lineWeight = options.lineWeight || drawingInfo.get("lineWeight"),
             x = options.x || lineWeight,
             y = options.y || lineWeight,
-            width = options.width,
-            height = options.height;
+            width = options.width - 1,
+            height = options.height -1;
 
         ctx.moveTo(x, y);
         ctx.rect(x, y, width, height);
@@ -2382,9 +2425,11 @@ var Drawing = RichBase.extend({
         if(!notClear){
             editContext.clearRect(0, 0, options.editCanvasWidth, options.editCanvasHeight);
         }
-        editContext.lineWidth = options.lineWeight;
+        editContext.beginPath();
+        editContext.lineWidth = options.lineWeight || drawingInfo.get("lineWeight");
         editContext.strokeStyle = drawingInfo.get("color");
         shapeFunc.call(this, target, options);
+        editContext.closePath();
         editContext.stroke();
     },
     //显示选择框
@@ -2425,24 +2470,24 @@ var Drawing = RichBase.extend({
                 width: width,
                 height: height,
                 lineWeight: lineWeight,
-                editCanvasTop: top - diff,
-                editCanvasLeft: left - diff,
+                editCanvasTop: top + 0.5 - diff,
+                editCanvasLeft: left + 0.5 - diff,
                 editCanvasWidth: width + 2*lineWeight + 1,
                 editCanvasHeight: height + 2*lineWeight + 1
             };
         if(behavior === "shape"){
             this._appendStyle(this.editCanvasBox, {
                 display: "inline-block",
-                top: options.editCanvasTop -1 + "px",
-                left: options.editCanvasLeft -1 + "px",
+                top: options.editCanvasTop  + "px",
+                left: options.editCanvasLeft  + "px",
                 width: options.editCanvasWidth,
                 height: options.editCanvasHeight
             });
             switch (description)
             {
                 case "ellipse":
-                    options.radiusX = (options.width + options.lineWeight)*0.5;
-                    options.radiusY = (options.height + options.lineWeight)*0.5;
+                    options.radiusX = (options.width -1)*0.5;
+                    options.radiusY = (options.height- 1)*0.5;
                     options.x = options.radiusX + options.lineWeight*0.5;
                     options.y = options.radiusY + options.lineWeight*0.5;
                     this._shapeDraw(this.editCanvasBox, this._drawEllipse, options);
@@ -2450,8 +2495,8 @@ var Drawing = RichBase.extend({
                 case "rectangle":
                     options.x = diff;
                     options.y = diff;
-                    options.width = width;
-                    options.height = height;
+                    options.width = width ;
+                    options.height = height ;
                     this._shapeDraw(this.editCanvasBox, this._drawRectangle, options);
                     break;
             }
@@ -2473,15 +2518,15 @@ var Drawing = RichBase.extend({
             switch (description)
             {
                 case "ellipse":
-                    var radiusX =  (width + lineWeight)*0.5,
-                        radiusY =  (height + lineWeight)*0.5,
-                        x = left - diff + radiusX + lineWeight*0.5,
-                        y = top - diff + radiusY + lineWeight*0.5;
+                    var radiusX =  (width -1)*0.5,
+                        radiusY =  (height -1)*0.5,
+                        x = left +  0.5- diff + radiusX + lineWeight*0.5,
+                        y = top + 0.5 - diff + radiusY + lineWeight*0.5;
                     this._shapeDraw(target, this._drawEllipse, {radiusX: radiusX, radiusY: radiusY, x: x, y: y}, true);
                     break;
                 case "rectangle":
-                    var xRect = left - diff,
-                        yRect = top - diff;
+                    var xRect = left + 0.5,
+                        yRect = top + 0.5;
                     this._shapeDraw(target, this._drawRectangle, {x: xRect, y: yRect, width: width, height: height}, true);
                     break;
             }

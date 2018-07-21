@@ -53,3 +53,6 @@ var imageIncline = function(){
                 }.bind(this);
                 EventUtil.addHandler(this.image, "load", imageIncline);
                 this.image.src = this.canvasBox.toDataURL("image/png");
+
+
+* 注意beginPath， closePath的使用，否者stroke会重绘所以线型
