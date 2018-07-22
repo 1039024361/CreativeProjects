@@ -20,7 +20,7 @@ div{
     background-color: #dfe9f5;
     padding-top: 1px;
     z-index: 0;
-    position: relative;
+    /*position: relative;*/
 }
 .top-menu-drop{
     position: relative;
