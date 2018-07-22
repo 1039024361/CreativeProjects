@@ -1,1 +1,0 @@
-Projects created (or edited) by Xing.
