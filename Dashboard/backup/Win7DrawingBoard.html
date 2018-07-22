@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画图</title>
+    <link rel="icon" href="images/paint.ico">
+    <link rel="stylesheet" href="Win7DrawingBoard.css">
+</head>
+<body>
+<div id="menu">
+    <!--剪贴板-->
+    <div id="cutBox">
+        <div id="cutBox-up">
+            <div id="cutBox-up-left">
+                <div class="img-wrap"><img src="images/paste1.gif" height="31" width="27"/></div>
+                <div class="parse-wrap"><span class="parse fontType">粘贴</span>
+                    <div class="drop">
+                        <div class="drop-parse"><img src="images/drop-parse.gif"/><span class="fontType">粘贴(<span class="underline">P</span>)</span></div>
+                        <div class="drop-source"><img src="images/drop-source.gif"/><span class="fontType">粘贴来源(<span class="underline">F</span>)</span></div>
+                    </div>
+                </div>
+            </div>
+            <div id="cutBox-up-right">
+                <div class="cutBox-up-right-cut"><img src="images/cut1.gif" height="18" width="17"/><span class="fontType cut">剪切</span></div>
+                <br>
+                <div class="cutBox-up-right-copy"><img src="images/copy.gif" height="18" width="17"/><span class="fontType copy">复制</span></div>
+            </div>
+        </div>
+        <div id="cutBox-down" class="fontType title">剪贴板</div>
+    </div>
+    <div class="borderDef"></div>
+</div>
+</body>
+</html>

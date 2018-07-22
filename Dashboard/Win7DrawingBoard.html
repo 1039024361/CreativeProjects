@@ -5,30 +5,408 @@
     <title>画图</title>
     <link rel="icon" href="images/paint.ico">
     <link rel="stylesheet" href="Win7DrawingBoard.css">
+    <script src="EventUtil.js"></script>
+    <script src="client.js"></script>
+    <script src="InheritanceAndObserver.js"></script>
 </head>
-<body>
+<body style="user-select:none;">   /*禁止双击被选中*/
+<div id="top-menu">
+    <div class="top-menu-drop">
+        <div class="top-menu-drop-wrap">
+            <img src="images/top-menu-drop.png" height="11" width="14"/>
+            <div class="top-menu-drop-arrow"></div>
+        </div>
+        <div class="top-menu-drop-down">
+            <div class="top-menu-drop-down-top">
+            </div>
+            <div class="top-menu-drop-down-left">
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/1.gif" height="28" width="23"/></div><span class="fontType span-inline-block">新建(<span class="underline">N</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/2.gif" height="31" width="26"/></div><span class="fontType span-inline-block">打开(<span class="underline">O</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/3.gif" height="24" width="24"/></div><span class="fontType span-inline-block">保存(<span class="underline">S</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/4.gif" height="27" width="27"/></div><span class="fontType span-inline-block">另存为(<span class="underline">A</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/5.gif" height="26" width="33"/></div><span class="fontType span-inline-block">打印(<span class="underline">P</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/6.gif" height="24" width="32"/></div><span class="fontType span-inline-block">从扫描仪或照相机(<span class="underline">M</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/7.gif" height="20" width="31"/></div><span class="fontType span-inline-block">在电子邮件中发送(<span class="underline">D</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/8.gif" height="29" width="32"/></div><span class="fontType span-inline-block">设置为桌面背景(<span class="underline">B</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/9.gif" height="29" width="28"/></div><span class="fontType span-inline-block">属性(<span class="underline">E</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/10.gif" height="28" width="28"/></div><span class="fontType span-inline-block">关于画图(<span class="underline">T</span>)</span></div>
+                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/11.gif" height="30" width="27"/></div><span class="fontType span-inline-block">退出(<span class="underline">X</span>)</span></div>
+
+            </div>
+            <div class="top-menu-drop-down-right">
+                <div class="top-menu-recent-title"><span class="fontType span-inline-block bold">最近的图片</span></div>
+                <span class="fontType span-inline-block">1&#160;&#160;费德勒.jpg</span>
+                <span class="fontType span-inline-block">2&#160;&#160;纳达尔.jpg</span>
+            </div>
+            <div class="top-menu-drop-down-bottom">
+
+            </div>
+        </div>
+    </div>
+    <div id="redo-undo">
+        <div id="undo" class="invalid"><img src="images/undo.gif" height="15" width="13"/></div>
+        <div id="redo" class="invalid" ><img src="images/redo.gif" height="15" width="13"/></div>
+    </div>
+</div>
 <div id="menu">
     <!--剪贴板-->
-    <div id="cutBox">
-        <div id="cutBox-up">
-            <div id="cutBox-up-left">
-                <div class="img-wrap"><img src="images/paste1.gif" height="31" width="27"/></div>
-                <div class="parse-wrap"><span class="parse fontType">粘贴</span>
+    <div id="cutBox" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts">
+                <div class="img-wrap" id="paste"><img src="images/paste1.gif" height="31" width="27" class="img-wrap-img"/></div>
+                <div class="word-wrap"><span class="img-down-word fontType span-inline-block">粘贴</span>
                     <div class="drop">
-                        <div class="drop-parse"><img src="images/drop-parse.gif"/><span class="fontType">粘贴(<span class="underline">P</span>)</span></div>
-                        <div class="drop-source"><img src="images/drop-source.gif"/><span class="fontType">粘贴来源(<span class="underline">F</span>)</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/drop-parse.gif"/><span class="fontType span-inline-block">粘贴(<span class="underline">P</span>)</span></div>
+                            <div class="drop-list"><img src="images/drop-source.gif"/><span class="fontType span-inline-block">粘贴来源(<span class="underline">F</span>)</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div id="cutBox-up-right">
-                <div class="cutBox-up-right-cut"><img src="images/cut1.gif" height="18" width="17"/><span class="fontType cut">剪切</span></div>
+            <div class="right-box-parts">
+                <div class="right-box-parts-list unused" id="cut"><img src="images/cut1.gif" height="18" width="17" id="image-cut"/><span class="fontType span-inline-block" id="word-cut">剪切</span></div>
                 <br>
-                <div class="cutBox-up-right-copy"><img src="images/copy.gif" height="18" width="17"/><span class="fontType copy">复制</span></div>
+                <div class="right-box-parts-list unused" id="copy"><img src="images/copy.gif" height="18" width="17" id="image-copy"/><span class="fontType span-inline-block" id="word-copy">复制</span></div>
             </div>
         </div>
-        <div id="cutBox-down" class="fontType title">剪贴板</div>
+        <div class="fontType title">剪贴板</div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="imgBox" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts" id="selectBoxWrap">
+                <div class="img-wrap" id="imgWrap"><div class="selectBox"></div></div>
+                <div class="word-wrap"><span class="img-down-word fontType span-inline-block">选择</span>
+                    <div class="drop">
+                        <div class="drop-title"><span class="fontType span-inline-block bold">选择形状</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><div class="recselect selected"></div><span class="fontType span-inline-block">矩形选择(<span class="underline">R</span>)</span></div>
+                            <div class="drop-list"><img src="images/circle.gif"/><span class="fontType span-inline-block">自由图形选择(<span class="underline">F</span>)</span></div>
+                        </div>
+                        <div class="drop-title"><span class="fontType span-inline-block bold">选择选项</span></div>
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/selectall.gif"/><span class="fontType span-inline-block">全选(<span class="underline">A</span>)</span></div>
+                            <div class="drop-list"><img src="images/oppselect.gif"/><span class="fontType span-inline-block">反向选择(<span class="underline">I</span>)</span></div>
+                            <div class="drop-list"><img src="images/delect.gif"/><span class="fontType span-inline-block">删除(<span class="underline">D</span>)</span></div>
+                            <div class="drop-list"><div class="recopicity"></div><span class="fontType span-inline-block">透明选择(<span class="underline">T</span>)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-box-parts">
+                <div class="right-box-parts-list unused" id="clip"><img src="images/tailor.gif" height="18" width="17"/><span class="fontType span-inline-block display">裁剪</span></div>
+                <br>
+                <div class="right-box-parts-list" id="adjust-canvas"><img src="images/resize.gif" height="18" width="17"/><span class="fontType span-inline-block display">重新调整大小</span></div>
+                <br>
+                <div class="right-box-parts-list rotate"><img src="images/rotate.gif" height="18" width="17"/><span class="fontType span-inline-block display">旋转</span>
+                    <div class="drop">
+                        <div class="drop-wrap" id="rotate-drop">
+                            <div class="drop-list" id="right-90"><img src="images/r90.gif"/><span class="fontType span-inline-block">向右旋转 90 度(<span class="underline">R</span>)</span></div>
+                            <div class="drop-list" id="left-90"><img src="images/l90.gif"/><span class="fontType span-inline-block">向左旋转 90 度(<span class="underline">L</span>)</span></div>
+                            <div class="drop-list" id="rotate-180"><img src="images/180.gif"/><span class="fontType span-inline-block">旋转 180 度(<span class="underline">T</span>)</span></div>
+                            <div class="drop-list" id="flip-vertical"><img src="images/hr.gif"/><span class="fontType span-inline-block">垂直翻转(<span class="underline">V</span>)</span></div>
+                            <div class="drop-list" id="flip-horizontal"><img src="images/vr.gif"/><span class="fontType span-inline-block">水平翻转(<span class="underline">H</span>)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fontType title">图像</div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="tool" class="cut-box-wrap">
+        <div class="tool-wrap cut-box-wrap-inside">
+            <div class="tool-wrap-first">
+                <div class="tool-wrap-img selected" id="pencil"><img src="images/pen.gif" height="15" width="15"/></div>
+                <div class="tool-wrap-img middle" id="fill"><img src="images/fill.gif" height="16" width="16"/></div>
+                <div class="tool-wrap-img" id="text"><img src="images/text.gif" height="14" width="15"/></div>
+            </div>
+            <br>
+            <div class="tool-wrap-first">
+                <div class="tool-wrap-img" id="erase"><img src="images/erase.gif" height="14" width="16"/></div>
+                <div class="tool-wrap-img middle" id="straw"><img src="images/straw.gif" height="15" width="15"/></div>
+                <div class="tool-wrap-img" id="magnifier"><img src="images/magnifier.gif" height="16" width="14"/></div>
+            </div>
+        </div>
+        <div class="fontType title">工具</div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="brush" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts">
+                <div class="img-wrap"><img src="images/brush.png" height="32" width="32" class="img-wrap-img"/></div>
+                <div class="word-wrap"><span class="img-down-word fontType span-inline-block">刷子</span>
+                    <div class="drop">
+                        <div class="brush-drop-wrap">
+                            <div class="brush-drop-wrap-img">
+                                <img src="images/brush1.png"/>
+                                <img src="images/brush2.png"/>
+                                <img src="images/brush3.png"/>
+                                <img src="images/brush4.png"/>
+                                <img src="images/brush5.png"/>
+                                <img src="images/brush6.png"/>
+                                <img src="images/brush7.png"/>
+                                <img src="images/brush8.png"/>
+                                <img src="images/brush9.png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fontType title"></div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="shape" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="shape-wrap">
+                <div class="shape-wrap-left">
+                    <div class="shape-wrap-left-img animate" id="shape-buttons">
+                        <div class="shape-img-wrap unused" id="line"><img src="images/shape/shape1.gif" height="14" width="16"/></div>
+                        <div class="shape-img-wrap unused" id="curve"><img src="images/shape/shape2.gif" height="13" width="16"/></div>
+                        <div class="shape-img-wrap" id="ellipse"><img src="images/shape/shape3.gif" height="14" width="16"/></div>
+                        <div class="shape-img-wrap" id="rectangle"><img src="images/shape/shape4.gif" height="13" width="15"/></div>
+                        <div class="shape-img-wrap" id="circle-rectangle"><img src="images/shape/shape5.gif" height="13" width="16"/></div>
+                        <div class="shape-img-wrap  unused" id="polygon"><img src="images/shape/shape6.gif" height="13" width="16"/></div>
+                        <div class="shape-img-wrap" id="triangle"><img src="images/shape/shape7.gif" height="14" width="16"/></div>
+                        <div class="shape-img-wrap" id="right-triangle"><img src="images/shape/shape8.gif" height="17" width="16"/></div>
+                        <div class="shape-img-wrap" id="quadrangle" title="菱形"><img src="images/shape/shape9.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="pentagon" title="五边形"><img src="images/shape/shape10.gif" height="17" width="16"/></div>
+                        <div class="shape-img-wrap" id="hexagon" title="六边形"><img src="images/shape/shape11.gif" height="17" width="15"/></div>
+                        <div class="shape-img-wrap" id="shape-arrow-right" title="向右的箭头"><img src="images/shape/shape12.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="shape-arrow-left"  title="向左的箭头"><img src="images/shape/shape13.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="shape-arrow-up" title="向上的箭头"><img src="images/shape/shape14.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="shape-arrow-down" title="向下的箭头"><img src="images/shape/shape15.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="four-star" title="四角星形"><img src="images/shape/shape16.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="five-star" title="五角星形"><img src="images/shape/shape17.gif" height="16" width="15"/></div>
+                        <div class="shape-img-wrap" id="six-star" title="六角星形"><img src="images/shape/shape18.gif" height="17" width="15"/></div>
+                        <div class="shape-img-wrap unused" title="圆角矩形标注-未开发"><img src="images/shape/shape19.gif" height="15" width="16"/></div>
+                        <div class="shape-img-wrap unused" title="椭圆形插图编号-未开发"><img src="images/shape/shape20.gif" height="15" width="16"/></div>
+                        <div class="shape-img-wrap unused" title="云形插图编号-未开发"><img src="images/shape/shape21.gif" height="15" width="16"/></div>
+                        <div class="shape-img-wrap" id="heart" title="心形"><img src="images/shape/shape22.gif" height="15" width="16"/></div>
+                        <div class="shape-img-wrap unused" title="闪电形-未开发"><img src="images/shape/shape23.gif" height="16" width="16"/></div>
+                    </div>
+                    <div class="scroll">
+                        <div id="arrow-up" class="scroll-up scroll-unit unused"><div class="scroll-arrow arrow-up"></div></div>
+                        <div id="arrow-down" class="scroll-middle scroll-unit"><div class="scroll-arrow arrow-down"></div></div>
+                        <div id="arrow-drop" class="scroll-down scroll-unit"><div class="scroll-arrow arrow-drop"><div class="arrow-drop-line"></div><div class="arrow-drop-arrow"></div></div></div>
+                    </div>
+                </div>
+                <div class="shape-wrap-right">
+
+                </div>
+            </div>
+            <div class="right-box-parts">
+                <div class="right-box-parts-list rotate"><img src="images/outline.gif" height="14" width="16"/><span class="fontType span-inline-block">轮廓</span>
+                    <div class="drop">
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/shape/outlinf1.gif" height="16" width="16"/><span class="fontType span-inline-block">无轮廓线</span></div>
+                            <div class="drop-list"><img src="images/shape/outline2.gif" height="16" width="16"/><span class="fontType span-inline-block">纯色</span></div>
+                            <div class="drop-list"><img src="images/shape/outline3.gif" height="16" width="16"/><span class="fontType span-inline-block">蜡笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline4.gif" height="16" width="16"/><span class="fontType span-inline-block">记号笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline5.gif" height="16" width="16"/><span class="fontType span-inline-block">油画颜料</span></div>
+                            <div class="drop-list"><img src="images/shape/outline6.gif" height="16" width="16"/><span class="fontType span-inline-block">普通铅笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline7.gif" height="16" width="16"/><span class="fontType span-inline-block">水彩</span></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="right-box-parts-list rotate"><span class="fontType span-inline-block"><img src="images/fill2.gif" height="16" width="16"/>填充</span>
+                    <div class="drop">
+                        <div class="drop-wrap">
+                            <div class="drop-list"><img src="images/shape/outlinf1.gif" height="16" width="16"/><span class="fontType span-inline-block">无轮廓线</span></div>
+                            <div class="drop-list"><img src="images/shape/outline2.gif" height="16" width="16"/><span class="fontType span-inline-block">纯色</span></div>
+                            <div class="drop-list"><img src="images/shape/outline3.gif" height="16" width="16"/><span class="fontType span-inline-block">蜡笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline4.gif" height="16" width="16"/><span class="fontType span-inline-block">记号笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline5.gif" height="16" width="16"/><span class="fontType span-inline-block">油画颜料</span></div>
+                            <div class="drop-list"><img src="images/shape/outline6.gif" height="16" width="16"/><span class="fontType span-inline-block">普通铅笔</span></div>
+                            <div class="drop-list"><img src="images/shape/outline7.gif" height="16" width="16"/><span class="fontType span-inline-block">水彩</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fontType title">形状</div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="line-weight" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts" id="line-weight-wrap">
+                <div class="line-weight-img-wrap">
+                    <div class="line-weight-div line-style">
+                        <div class="line-1 px1"></div>
+                        <div class="line-1 px2"></div>
+                        <div class="line-1 px4"></div>
+                        <div class="line-1 px6"></div>
+                    </div>
+                </div>
+                <br>
+                <div class="line-weight-word-wrap"><span class="fontType span-inline-block small-line-height">粗</span><br>
+                    <span class="fontType span-inline-block small-line-height">细</span>
+                    <div class="line-arrow-down"></div>
+                    <div class="drop">
+                        <div class="brush-drop-wrap">
+                            <div class="brush-drop-wrap-img" id="drop-line-weight">
+                                <div class="drop-line-wrap selected" id="1px"> <div class="line-1 px1"></div></div>
+                                <div class="drop-line-wrap" id="2px"> <div class="line-1 px2"></div></div>
+                                <div class="drop-line-wrap" id="3px"> <div class="line-1 px3"></div></div>
+                                <div class="drop-line-wrap" id="4px"> <div class="line-1 px4"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fontType title"></div>
+    </div>
+    <div class="borderDef"></div>
+    <div id="colorbox" class="cut-box-wrap">
+        <div class="cut-box-wrap-inside">
+            <div class="left-box-2parts color-1 selected">
+                <div class="line-weight-img-wrap">
+                    <div class="font-color-wrap">
+                        <div class="font-color"></div>
+                    </div>
+                </div>
+                <br>
+                <div class="line-weight-word-wrap"><span class="fontType span-inline-block small-line-height">颜</span><br>
+                    <span class="fontType span-inline-block small-line-height">色 1</span>
+                </div>
+            </div>
+            <div class="left-box-2parts color-1">
+                <div class="line-weight-img-wrap">
+                    <div class="background-color-wrap">
+                        <div class="background-color"></div>
+                    </div>
+                </div>
+                <br>
+                <div class="line-weight-word-wrap"><span class="fontType span-inline-block small-line-height">颜</span><br>
+                    <span class="fontType span-inline-block small-line-height">色 2</span>
+                </div>
+            </div>
+            <div class="color-box-container">
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #000000;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #757575;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #880015;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #ed1c24;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #ff7f27;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #fff200;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #22b14c;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #00a2e8;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #3f48cc;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #a349a4;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #ffffff;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #c3c3c3;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #b97a57;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #ffaec9;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #ffc90e;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #efe4b0;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #b5e61d;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #99d9ea;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #7092be;"></div></div>
+                <div class="color-box-wrap line-highlight"><div class="color-box" style="background: #c8bfe7;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dee8f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dde7f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dee8f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dde7f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dee8f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dde7f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dee8f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dde7f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dee8f5;"></div></div>
+                <div class="color-box-wrap"><div class="color-box" style="background: #dde7f5;"></div></div>
+            </div>
+            <div class="left-box-2parts edit-color">
+                <div class="line-weight-img-wrap">
+                    <img src="images/selectcolor.gif" height="30" width="30"/>
+                </div>
+                <br>
+                <div class="line-weight-word-wrap"><span class="fontType span-inline-block small-line-height">编辑颜色</span>
+                    <input type="color" id="colorInput">
+                </div>
+            </div>
+            <!--<div class="left-box-2parts  edit-color">-->
+            <!--<div class="line-weight-img-wrap">-->
+            <!--<img src="images/selectcolor.gif" height="30" width="30"/>-->
+            <!--</div>-->
+            <!--<br>-->
+            <!--<div class="line-weight-word-wrap"><span class="fontType span-inline-block small-line-height">编辑颜色</span>-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="fontType title">颜色</div>
     </div>
     <div class="borderDef"></div>
 </div>
+<div id="draw-area">
+    <div class="virtual-wrap">
+        <div class="canvas-wrap" id="canvasWrap">
+            <canvas width="800" height="600" id="canvasBox"></canvas>
+            <div class="ctrl-wrap-right"><div class="ctrl-content-right"></div></div>
+            <div class="ctrl-wrap-corner"><div class="ctrl-content-corner"></div></div>
+            <div class="ctrl-wrap-bottom"><div class="ctrl-content-bottom"></div></div>
+            <div id="magnifier-wrap"></div>
+            <div id="element-decorate" style="display: none;"></div>
+            <canvas id="editCanvasBox" style="display: none;"></canvas>
+            <div id="element-wrap" style="top: -2px; left: -2px; display: none; width: 126px; min-height: 26px;">
+                <div id="input-div" contenteditable="true" style="width: 120px; min-height: 20px; display: none"></div>
+                <div class="ctrl-wrap-top-left">
+                    <div id="top-left" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-top-middle">
+                    <div id="top-middle" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-top-right">
+                    <div id="top-right" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-right-middle">
+                    <div id="right-middle" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-right-bottom">
+                    <div id="right-bottom" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-bottom-middle">
+                    <div id="bottom-middle" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-left-bottom">
+                    <div id="left-bottom" class="drag-box"></div>
+                </div>
+                <div class="ctrl-wrap-left-middle">
+                    <div id="left-middle" class="drag-box"></div>
+                </div>
+            </div>
+            <div id="move-style-wrap"></div>
+        </div>
+    </div>
+</div>
+<div id="bottom-area">
+    <div class="position-info"><img src="images/position.gif" height="11" width="11"/><span class="bottom-font">250,170像素</span></div>
+    <div class="position-info"><img src="images/new-area-pos.gif" height="12" width="13"/><span class="bottom-font">250 × 170像素</span></div>
+    <div class="position-info"><img src="images/area-pos.gif" height="12" width="13"/><span class="bottom-font">250 × 170像素</span></div>
+    <div class="ratio">
+        <span class="bottom-font">100%</span>
+        <div class="bottom-circle"><div class="minus"></div></div>
+        <div class="bottom-ruler"><div class="bottom-ruler-label"><div class="bottom-ruler-label-triangle"></div></div></div>
+        <div class="bottom-circle">
+            <div class="minus"><div class="plus"></div></div>
+        </div>
+    </div>
+</div>
+<!--<div id="reminder">-->
+<!--<div id="reminder-info">-->
+<!--<p>已经实现功能如下：<br>-->
+<!--1.单击最上一栏，自动隐藏菜单栏；<br>-->
+<!--2.工具栏铅笔工具及擦除工具；<br>-->
+<!--3.设置线型粗细；<br>-->
+<!--4.设置前景色、背景色；<br>-->
+<!--5.桌面系统拉拽画布边框可调整画布大小；<br>-->
+<!--6.动态显示鼠标在画布中的位置，动态显示画布大小；<br>-->
+<!--7.增加拖拽图片到绘图区域功能</p>-->
+<!--<button id="get-reminder">知道了</button>-->
+<!--</div>-->
+<!--</div>-->
+<img id="imgContainer" style="display: none">
+<input type="text" id="pasteInput" style="display: none"/>
+<script src="DrawingBoard.js"></script>
 </body>
 </html>
