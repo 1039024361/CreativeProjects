@@ -184,8 +184,8 @@ div{
     line-height: 23px;
     text-align: center;
     border: 1px solid transparent;
-    -webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
-    filter: grayscale(100%);
+    /*-webkit-filter: grayscale(100%); !* Chrome, Safari, Opera *!*/
+    /*filter: grayscale(100%);*/
 }
 
 #undo img, #redo img{

@@ -137,6 +137,10 @@ var drawingInfo = new Base({
     canvasH: 600,
     gain: 1,   //图形放大系数
     imageStretch: false,
+    reDoUnDo: {
+        buffer: [],
+        index: -1,
+    }
 });
 
 //创建一个获取canvasBox坐标的对象
@@ -838,6 +842,34 @@ var Drawing = RichBase.extend({
                 }
             ]
         },
+        "redoUndo":{
+            "click":[
+                function(event) {
+                    event = EventUtil.getEvent(event);
+                    var target = EventUtil.getTarget(event),
+                        handleTarget;
+
+                    handleTarget = target.childElementCount ? target : target.parentNode;
+
+                    switch (handleTarget.id) {
+                        case "undo":
+                            console.log("undo");
+                            this.fire(this.undo, "handlers");
+                            break;
+                        case "redo":
+                            console.log("redo");
+                            this.fire(this.redo, "handlers");
+                            break;
+                    }
+                }
+            ]
+        },
+        "redo":{
+            "handlers":[]
+        },
+        "undo":{
+            "handlers":[]
+        },
     },
     _ctrlEvent:{
         target: null,
@@ -984,7 +1016,10 @@ var Drawing = RichBase.extend({
         }
     },
     _endDrawLine: function(event){
-        this._ctrlEvent.flag = false;
+        if(this._ctrlEvent.flag === true){
+            this._ctrlEvent.flag = false;
+            this._saveDrawingToBuffer();
+        }
     },
     //触摸设备
     _beginDrawLineT: function(event){
@@ -3237,14 +3272,33 @@ var Drawing = RichBase.extend({
     //撤销，重做事件
     //保存当前绘图，默认buffer为50
     _saveDrawingToBuffer: function(){
-        var buffer = this.reDoUnDo.buffer;
-        if(buffer.length>50){
-
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
+            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
+            preHeight = drawingInfo.get("canvasH");  //当前canvas高度
+        if(buffer.length === 50){
+            buffer.shift();   //移除第一项
+            if(index-1<=0){
+                this._removeUndoHandler();
+            }else{
+                index--;
+            }
         }
+        index++;
+        buffer.push(this.context.getImageData(0, 0, preWidth, preHeight));
+        if(buffer.length > 1){
+            //加载撤销操作事件
+            this._addUndoHandler();
+        }
+        reDoUnDo.buffer = buffer;
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
     },
     _undo: function(){
-        var buffer = this.reDoUnDo.buffer,
-            index = this.reDoUnDo.index,
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
             preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
             preHeight = drawingInfo.get("canvasH"),  //当前canvas高度
             recWidth= null,
@@ -3259,20 +3313,26 @@ var Drawing = RichBase.extend({
         this.context.putImageData(imageData, 0, 0);
         if(index > 0){
 
-        }{
-            this.undo.classList.add("invalid");
+        }
+        else{
             //删除撤销操作事件
+            this._removeUndoHandler();
 
         }
+        if(index < buffer.length-1){
+            //绑定redo事件
+            this._addRedoHandler();
+        }
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
     },
     _redo: function(){
-        var buffer = this.reDoUnDo.buffer,
-            index = this.reDoUnDo.index,
-            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
-            preHeight = drawingInfo.get("canvasH"),  //当前canvas高度
-            recWidth= null,
-            recHeight = null,
-            imageData = {};
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
+            recWidth,
+            recHeight,
+            imageData;
         index = index +1;
         imageData = buffer[index];
         recWidth = imageData.width;
@@ -3282,13 +3342,38 @@ var Drawing = RichBase.extend({
         this.context.putImageData(imageData, 0, 0);
         if(index < buffer.length-1){
 
-        }{
-            this.redo.classList.add("invalid");
-            //删除重做事件
-
         }
+        else{
+            //删除重做事件
+            this._removeRedoHandler();
+        }
+        if(index > 0){
+            this._addUndoHandler();
+        }
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
     },
 
+    //
+    _addRedoHandler: function(){
+        this.redo.classList.remove("invalid");
+        this.addHandler(this.redo, "handlers", this._redo);
+    },
+    //
+    _removeRedoHandler: function(){
+        this.redo.classList.add("invalid");
+        this.removeHandler(this.redo, "click", this._redo);
+    },
+    //
+    _addUndoHandler: function(){
+        this.undo.classList.remove("invalid");
+        this.addHandler(this.undo, "handlers", this._undo);
+    },
+    //
+    _removeUndoHandler: function(){
+        this.undo.classList.add("invalid");
+        this.removeHandler(this.undo, "click", this._undo);
+    },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -3340,6 +3425,7 @@ var Drawing = RichBase.extend({
         //撤销、重做
         this.redo = document.querySelector("#redo");
         this.undo = document.querySelector("#undo");
+        this.redoUndo = document.querySelector("#redo-undo");
 
         //初始化
         this.canvasBox.style.zIndex = 1;
@@ -3361,7 +3447,10 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.arrowDrop, this.EVENTS["arrowDrop"]);               //加入到观察者
         this.createHandlers(this.wrapDiv, this.EVENTS["wrapDiv"]);               //加入到观察者
         this.createHandlers(this.scroll, this.EVENTS["scroll"]);               //加入到观察者
+        this.createHandlers(this.redoUndo, this.EVENTS["redoUndo"]);
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
+        this.createHandlers(this.redo, this.EVENTS["redo"]);    //加入到观察者
+        this.createHandlers(this.undo, this.EVENTS["undo"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         // this._addDrawLineHandler();   //默认为绘制线条
         this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
@@ -3370,6 +3459,7 @@ var Drawing = RichBase.extend({
         this._addPasteButtonHandler();
         this._addCopyPasteHandler();
         this._addArrowEventHandle();
+        this._saveDrawingToBuffer();
         // this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
@@ -3377,6 +3467,10 @@ var Drawing = RichBase.extend({
     },
     bind: function(){
         var self = this;
+        //撤销
+        EventUtil.addHandler(this.redoUndo, "click", function (event) {
+            self.fire(self.redoUndo, "click", event);
+        });
         //形状按钮
         EventUtil.addHandler(this.wrapDiv, "click", function (event) {
             self.fire(self.wrapDiv, "click", event);
@@ -3845,10 +3939,10 @@ var Color = RichBase.extend({
             diffY: null,
             clicking: false,
             copyImageData: null,
-            reDoUnDo: {
-                buffer: [],
-                index: null,
-            }
+            // reDoUnDo: {
+            //     buffer: [],
+            //     index: -1,
+            // }
         }
         // {
         // behavior: "pencil",
