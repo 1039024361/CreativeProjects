@@ -1100,7 +1100,7 @@ div{
 .bottom-ruler-label{
     position: absolute;
     top: -7px;
-    left: -1px;
+    left: 35px;
     width: 10px;
     height: 11px;
     border-left: 1px solid #b0b3c3;

@@ -123,6 +123,131 @@ var RichBase = Base.extend({
     _displaySelectSize: function (x, y){
         (x>=0&&y>=0)? this.bottomFonts[1].textContent = `${Math.round(x)} × ${Math.round(y)}像素`: this.bottomFonts[1].textContent ="";
     },
+    _resizeCanvasBox: function(target, width, height){
+        //先保存图像信息
+        var ctx = target.getContext("2d");
+        if(!(target.width&&target.height)){
+            return null;
+        }
+        var imgData = ctx.getImageData(0, 0, target.width, target.height);
+        if(!target){
+            return null;
+        }
+        if(typeof width === "number"&&typeof height === "number"){
+            target.width = width;
+            target.height = height;
+            if(target.id === "canvasBox"){
+                drawingInfo.set("canvasW", width);
+                drawingInfo.set("canvasH", height);
+            }
+            this._displaySize(width, height);
+        }
+        ctx.putImageData(imgData, 0, 0);   //还原图像
+    },
+    //撤销重做原型
+    _saveDrawingToBuffer: function(){
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
+            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
+            preHeight = drawingInfo.get("canvasH");  //当前canvas高度
+        if(buffer.length === 50){
+            buffer.shift();   //移除第一项
+            if(index-1<=0){
+                this._removeUndoHandler();
+            }else{
+                index--;
+            }
+        }
+        index++;
+        buffer.push(this.context.getImageData(0, 0, preWidth, preHeight));
+        if(buffer.length > 1){
+            //加载撤销操作事件
+            this._addUndoHandler();
+        }
+        reDoUnDo.buffer = buffer;
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
+    },
+    _undo: function(){
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
+            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
+            preHeight = drawingInfo.get("canvasH"),  //当前canvas高度
+            recWidth= null,
+            recHeight = null,
+            imageData;
+        index = index -1;
+        imageData = buffer[index];
+        recWidth = imageData.width;
+        recHeight = imageData.height;
+        // this.context.clearRect(0, 0, width, height);
+        this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
+        this.context.putImageData(imageData, 0, 0);
+        if(index > 0){
+
+        }
+        else{
+            //删除撤销操作事件
+            this._removeUndoHandler();
+
+        }
+        if(index < buffer.length-1){
+            //绑定redo事件
+            this._addRedoHandler();
+        }
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
+    },
+    _redo: function(){
+        var reDoUnDo = drawingInfo.get("reDoUnDo"),
+            buffer = reDoUnDo.buffer,
+            index = reDoUnDo.index,
+            recWidth,
+            recHeight,
+            imageData;
+        index = index +1;
+        imageData = buffer[index];
+        recWidth = imageData.width;
+        recHeight = imageData.height;
+        // this.context.clearRect(0, 0, width, height);
+        this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
+        this.context.putImageData(imageData, 0, 0);
+        if(index < buffer.length-1){
+
+        }
+        else{
+            //删除重做事件
+            this._removeRedoHandler();
+        }
+        if(index > 0){
+            this._addUndoHandler();
+        }
+        reDoUnDo.index = index;
+        drawingInfo.set("reDoUnDo", reDoUnDo);
+    },
+
+    //
+    _addRedoHandler: function(){
+        this.redo.classList.remove("invalid");
+        this.addHandler(this.redo, "handlers", this._redo);
+    },
+    //
+    _removeRedoHandler: function(){
+        this.redo.classList.add("invalid");
+        this.removeHandler(this.redo, "handlers", this._redo);
+    },
+    //
+    _addUndoHandler: function(){
+        this.undo.classList.remove("invalid");
+        this.addHandler(this.undo, "handlers", this._undo);
+    },
+    //
+    _removeUndoHandler: function(){
+        this.undo.classList.add("invalid");
+        this.removeHandler(this.undo, "handlers", this._undo);
+    },
 });
 
 
@@ -250,6 +375,7 @@ var Drawing = RichBase.extend({
                                 this.context.drawImage(this.image, 0, 0);
                                 // this.image.onload = null;
                                 EventUtil.removeHandler(this.image, "load", imageDropHandle);   //图片加载完成后，清除事件处理程序
+                                this._saveDrawingToBuffer();
                             }.bind(this);
                             // this.image.onload =
                             EventUtil.addHandler(this.image, "load", imageDropHandle);
@@ -435,6 +561,7 @@ var Drawing = RichBase.extend({
                     EventUtil.removeHandler(this.image, "load", imageStretch);
                     EventUtil.addHandler(this.image, "load", imageIncline);
                     this.image.src = this.canvasBox.toDataURL("image/png");
+                    this._saveDrawingToBuffer();
                 }.bind(this);
 
                 var imageIncline = function(){
@@ -459,6 +586,7 @@ var Drawing = RichBase.extend({
                     this.context.drawImage(this.image, 0, 0);
                     this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                     EventUtil.removeHandler(this.image, "load", imageIncline);
+                    this._saveDrawingToBuffer();
                 }.bind(this);
 
                 EventUtil.addHandler(this.image, "load", imageStretch);
@@ -481,6 +609,7 @@ var Drawing = RichBase.extend({
                         this.context.drawImage(this.image, 0, 0);
                         this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", imageRight90);
+                        this._saveDrawingToBuffer();
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageRight90);
                     this.image.src = this.canvasBox.toDataURL("image/png");
@@ -495,6 +624,7 @@ var Drawing = RichBase.extend({
                         this.context.drawImage(this.image, 0, 0);
                         this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", imageLeft90);
+                        this._saveDrawingToBuffer();
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", imageLeft90);
                     this.image.src = this.canvasBox.toDataURL("image/png");
@@ -507,6 +637,7 @@ var Drawing = RichBase.extend({
                         this.context.drawImage(this.image, 0, 0);
                         this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", rotate180);
+                        this._saveDrawingToBuffer();
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", rotate180);
                     this.image.src = this.canvasBox.toDataURL("image/png");
@@ -519,6 +650,7 @@ var Drawing = RichBase.extend({
                         this.context.drawImage(this.image, 0, 0);
                         this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", flipVertical);
+                        this._saveDrawingToBuffer();
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipVertical);
                     this.image.src = this.canvasBox.toDataURL("image/png");
@@ -531,6 +663,7 @@ var Drawing = RichBase.extend({
                         this.context.drawImage(this.image, 0, 0);
                         this.context.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                         EventUtil.removeHandler(this.image, "load", flipHorizontal);
+                        this._saveDrawingToBuffer();
                     }.bind(this);
                     EventUtil.addHandler(this.image, "load", flipHorizontal);
                     this.image.src = this.canvasBox.toDataURL("image/png");
@@ -897,27 +1030,27 @@ var Drawing = RichBase.extend({
     this.context.lineTo(x,y);
     this.context.stroke();
     },
-    _resizeCanvasBox: function(target, width, height){
-        //先保存图像信息
-        var ctx = target.getContext("2d");
-        if(!(target.width&&target.height)){
-            return null;
-        }
-        var imgData = ctx.getImageData(0, 0, target.width, target.height);
-        if(!target){
-            return null;
-        }
-        if(typeof width === "number"&&typeof height === "number"){
-            target.width = width;
-            target.height = height;
-            if(target.id === "canvasBox"){
-                drawingInfo.set("canvasW", width);
-                drawingInfo.set("canvasH", height);
-            }
-            this._displaySize(width, height);
-        }
-        ctx.putImageData(imgData, 0, 0);   //还原图像
-    },
+    // _resizeCanvasBox: function(target, width, height){
+    //     //先保存图像信息
+    //     var ctx = target.getContext("2d");
+    //     if(!(target.width&&target.height)){
+    //         return null;
+    //     }
+    //     var imgData = ctx.getImageData(0, 0, target.width, target.height);
+    //     if(!target){
+    //         return null;
+    //     }
+    //     if(typeof width === "number"&&typeof height === "number"){
+    //         target.width = width;
+    //         target.height = height;
+    //         if(target.id === "canvasBox"){
+    //             drawingInfo.set("canvasW", width);
+    //             drawingInfo.set("canvasH", height);
+    //         }
+    //         this._displaySize(width, height);
+    //     }
+    //     ctx.putImageData(imgData, 0, 0);   //还原图像
+    // },
     //字符串颜色值转换成rgba颜色值
     _hexToRgba: function(hex){
         var R = null,
@@ -1216,6 +1349,7 @@ var Drawing = RichBase.extend({
         this._floodFillScanLineWithStack(imageRGBArr, X, Y, oldColor, newColor);
         imageData.data = imageRGBArr;
         this.context.putImageData(imageData, 0, 0);
+        this._saveDrawingToBuffer();
     },
     //
     _addFillHandler: function(){
@@ -1234,18 +1368,18 @@ var Drawing = RichBase.extend({
     *    width：宽度，数值类型
     *    height：高度，数值类型
     * */
-    _magnifierWrapStyle: function(options){
-        //if(options.isDisplay){
-            this.magnifierWrap.style.display = options.isDisplay? "block":"none";
-            this.magnifierWrap.style.top = options.top + "px";
-            this.magnifierWrap.style.left = options.left + "px";
-            this.magnifierWrap.style.width = options.width + "px";
-            this.magnifierWrap.style.height = options.height + "px";
-        //}
-        //else{
-        //    this.magnifierWrap.style.display = "none";
-        //}
-    },
+    // _magnifierWrapStyle: function(options){
+    //     //if(options.isDisplay){
+    //         this.magnifierWrap.style.display = options.isDisplay? "block":"none";
+    //         this.magnifierWrap.style.top = options.top + "px";
+    //         this.magnifierWrap.style.left = options.left + "px";
+    //         this.magnifierWrap.style.width = options.width + "px";
+    //         this.magnifierWrap.style.height = options.height + "px";
+    //     //}
+    //     //else{
+    //     //    this.magnifierWrap.style.display = "none";
+    //     //}
+    // },
     _appendStyle: function (target, options){
         if(target.tagName.toLowerCase() === "canvas"){
             if(options.width != undefined){
@@ -1788,6 +1922,7 @@ var Drawing = RichBase.extend({
                 // this._removeTextInputHandler();
                 this._removeMoveAndStretchElementHandler();
                 this._displaySelectSize(0, 0);
+                this._saveDrawingToBuffer();
             }
         }
     },
@@ -1816,6 +1951,7 @@ var Drawing = RichBase.extend({
                 // this._removeTextInputHandler();
                 this._removeMoveAndStretchElementHandler();
                 this._displaySelectSize(0, 0);
+                this._saveDrawingToBuffer();
             }
             else{
                 width = this.get("diffX")> 120? this.get("diffX"): 120;
@@ -1951,7 +2087,7 @@ var Drawing = RichBase.extend({
                 ctx.drawImage(this.image, 0, 0);
                 ctx.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                 EventUtil.removeHandler(this.image, "load", imageStretch);
-                console.log("_imageStretch");
+                console.log("imageStretch");
             }.bind(this);
             EventUtil.addHandler(this.image, "load", imageStretch);
             this.image.src = target.toDataURL("image/png");
@@ -2267,6 +2403,7 @@ var Drawing = RichBase.extend({
 
                 drawingInfo.set("imageStretch", false);
                 drawingInfo.set("description", "");
+                this._saveDrawingToBuffer();
             }
             else{
                 // this._appendStyle(this.elementWrap, {
@@ -2302,7 +2439,7 @@ var Drawing = RichBase.extend({
             }
         }
     },
-    //处理文本输入事件
+    //处理
     _drawImageHandler: function (event) {
         event = EventUtil.getEvent(event);
         var target = EventUtil.getTarget(event);
@@ -3237,6 +3374,7 @@ var Drawing = RichBase.extend({
                 // });
                 this._drawShapeToCanvas();
                 this._showDrawingSelectObj(false);
+                this._saveDrawingToBuffer();
             }
             else{
                 // this._drawShapeToCanvas();
@@ -3271,109 +3409,109 @@ var Drawing = RichBase.extend({
 
     //撤销，重做事件
     //保存当前绘图，默认buffer为50
-    _saveDrawingToBuffer: function(){
-        var reDoUnDo = drawingInfo.get("reDoUnDo"),
-            buffer = reDoUnDo.buffer,
-            index = reDoUnDo.index,
-            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
-            preHeight = drawingInfo.get("canvasH");  //当前canvas高度
-        if(buffer.length === 50){
-            buffer.shift();   //移除第一项
-            if(index-1<=0){
-                this._removeUndoHandler();
-            }else{
-                index--;
-            }
-        }
-        index++;
-        buffer.push(this.context.getImageData(0, 0, preWidth, preHeight));
-        if(buffer.length > 1){
-            //加载撤销操作事件
-            this._addUndoHandler();
-        }
-        reDoUnDo.buffer = buffer;
-        reDoUnDo.index = index;
-        drawingInfo.set("reDoUnDo", reDoUnDo);
-    },
-    _undo: function(){
-        var reDoUnDo = drawingInfo.get("reDoUnDo"),
-            buffer = reDoUnDo.buffer,
-            index = reDoUnDo.index,
-            preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
-            preHeight = drawingInfo.get("canvasH"),  //当前canvas高度
-            recWidth= null,
-            recHeight = null,
-            imageData;
-        index = index -1;
-        imageData = buffer[index];
-        recWidth = imageData.width;
-        recHeight = imageData.height;
-        // this.context.clearRect(0, 0, width, height);
-        this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
-        this.context.putImageData(imageData, 0, 0);
-        if(index > 0){
-
-        }
-        else{
-            //删除撤销操作事件
-            this._removeUndoHandler();
-
-        }
-        if(index < buffer.length-1){
-            //绑定redo事件
-            this._addRedoHandler();
-        }
-        reDoUnDo.index = index;
-        drawingInfo.set("reDoUnDo", reDoUnDo);
-    },
-    _redo: function(){
-        var reDoUnDo = drawingInfo.get("reDoUnDo"),
-            buffer = reDoUnDo.buffer,
-            index = reDoUnDo.index,
-            recWidth,
-            recHeight,
-            imageData;
-        index = index +1;
-        imageData = buffer[index];
-        recWidth = imageData.width;
-        recHeight = imageData.height;
-        // this.context.clearRect(0, 0, width, height);
-        this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
-        this.context.putImageData(imageData, 0, 0);
-        if(index < buffer.length-1){
-
-        }
-        else{
-            //删除重做事件
-            this._removeRedoHandler();
-        }
-        if(index > 0){
-            this._addUndoHandler();
-        }
-        reDoUnDo.index = index;
-        drawingInfo.set("reDoUnDo", reDoUnDo);
-    },
-
+    // _saveDrawingToBuffer: function(){
+    //     var reDoUnDo = drawingInfo.get("reDoUnDo"),
+    //         buffer = reDoUnDo.buffer,
+    //         index = reDoUnDo.index,
+    //         preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
+    //         preHeight = drawingInfo.get("canvasH");  //当前canvas高度
+    //     if(buffer.length === 50){
+    //         buffer.shift();   //移除第一项
+    //         if(index-1<=0){
+    //             this._removeUndoHandler();
+    //         }else{
+    //             index--;
+    //         }
+    //     }
+    //     index++;
+    //     buffer.push(this.context.getImageData(0, 0, preWidth, preHeight));
+    //     if(buffer.length > 1){
+    //         //加载撤销操作事件
+    //         this._addUndoHandler();
+    //     }
+    //     reDoUnDo.buffer = buffer;
+    //     reDoUnDo.index = index;
+    //     drawingInfo.set("reDoUnDo", reDoUnDo);
+    // },
+    // _undo: function(){
+    //     var reDoUnDo = drawingInfo.get("reDoUnDo"),
+    //         buffer = reDoUnDo.buffer,
+    //         index = reDoUnDo.index,
+    //         preWidth = drawingInfo.get("canvasW"),   //当前canvas宽度
+    //         preHeight = drawingInfo.get("canvasH"),  //当前canvas高度
+    //         recWidth= null,
+    //         recHeight = null,
+    //         imageData;
+    //     index = index -1;
+    //     imageData = buffer[index];
+    //     recWidth = imageData.width;
+    //     recHeight = imageData.height;
+    //     // this.context.clearRect(0, 0, width, height);
+    //     this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
+    //     this.context.putImageData(imageData, 0, 0);
+    //     if(index > 0){
     //
-    _addRedoHandler: function(){
-        this.redo.classList.remove("invalid");
-        this.addHandler(this.redo, "handlers", this._redo);
-    },
+    //     }
+    //     else{
+    //         //删除撤销操作事件
+    //         this._removeUndoHandler();
     //
-    _removeRedoHandler: function(){
-        this.redo.classList.add("invalid");
-        this.removeHandler(this.redo, "click", this._redo);
-    },
+    //     }
+    //     if(index < buffer.length-1){
+    //         //绑定redo事件
+    //         this._addRedoHandler();
+    //     }
+    //     reDoUnDo.index = index;
+    //     drawingInfo.set("reDoUnDo", reDoUnDo);
+    // },
+    // _redo: function(){
+    //     var reDoUnDo = drawingInfo.get("reDoUnDo"),
+    //         buffer = reDoUnDo.buffer,
+    //         index = reDoUnDo.index,
+    //         recWidth,
+    //         recHeight,
+    //         imageData;
+    //     index = index +1;
+    //     imageData = buffer[index];
+    //     recWidth = imageData.width;
+    //     recHeight = imageData.height;
+    //     // this.context.clearRect(0, 0, width, height);
+    //     this._resizeCanvasBox(this.canvasBox, recWidth, recHeight);
+    //     this.context.putImageData(imageData, 0, 0);
+    //     if(index < buffer.length-1){
     //
-    _addUndoHandler: function(){
-        this.undo.classList.remove("invalid");
-        this.addHandler(this.undo, "handlers", this._undo);
-    },
+    //     }
+    //     else{
+    //         //删除重做事件
+    //         this._removeRedoHandler();
+    //     }
+    //     if(index > 0){
+    //         this._addUndoHandler();
+    //     }
+    //     reDoUnDo.index = index;
+    //     drawingInfo.set("reDoUnDo", reDoUnDo);
+    // },
     //
-    _removeUndoHandler: function(){
-        this.undo.classList.add("invalid");
-        this.removeHandler(this.undo, "click", this._undo);
-    },
+    // //
+    // _addRedoHandler: function(){
+    //     this.redo.classList.remove("invalid");
+    //     this.addHandler(this.redo, "handlers", this._redo);
+    // },
+    // //
+    // _removeRedoHandler: function(){
+    //     this.redo.classList.add("invalid");
+    //     this.removeHandler(this.redo, "handlers", this._redo);
+    // },
+    // //
+    // _addUndoHandler: function(){
+    //     this.undo.classList.remove("invalid");
+    //     this.addHandler(this.undo, "handlers", this._undo);
+    // },
+    // //
+    // _removeUndoHandler: function(){
+    //     this.undo.classList.add("invalid");
+    //     this.removeHandler(this.undo, "handlers", this._undo);
+    // },
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -3639,6 +3777,7 @@ var Stretch = RichBase.extend({
                         this.virtualWrap.style.border = "none";
                         this.virtualWrap.style.cursor = "default";
                         this.resizeCanvas(canvasBox, this._ctrlEvent);
+                        this._saveDrawingToBuffer();
                         console.log(this._ctrlEvent);
                     }
                 }
@@ -3654,10 +3793,17 @@ var Stretch = RichBase.extend({
                         this.virtualWrap.style.border = "none";
                         this.virtualWrap.style.cursor = "default";
                         this.resizeCanvas(canvasBox, this._ctrlEvent);
+                        this._saveDrawingToBuffer();
                         console.log(this._ctrlEvent);
                     }
                 }
             ],
+            "redo":{
+                "handlers":[]
+            },
+            "undo":{
+                "handlers":[]
+            },
         }
     },
     _ctrlEvent:{
@@ -3678,8 +3824,14 @@ var Stretch = RichBase.extend({
         this.ctrlWrapCorner = document.getElementsByClassName("ctrl-wrap-corner")[0];
         this.ctrlWrapBottom = document.getElementsByClassName("ctrl-wrap-bottom")[0];
         this.virtualWrap = document.getElementsByClassName("virtual-wrap")[0];
+        //撤销、重做
+        this.redo = document.querySelector("#redo");
+        this.undo = document.querySelector("#undo");
+
         this.createHandlers(this.body, this.EVENTS["body"]);               //加入到观察者
         this.createHandlers(this.ctrlWrapRight, this.EVENTS["target"]);    //加入到观察者，3个对象事件处理程序都一样
+        this.createHandlers(this.redo, this.EVENTS["redo"]);    //加入到观察者
+        this.createHandlers(this.undo, this.EVENTS["undo"]);    //加入到观察者
         //初始化
         this.ctrlWrapRight.style.cursor = "e-resize";
         this.ctrlWrapCorner.style.cursor = "nw-resize";
