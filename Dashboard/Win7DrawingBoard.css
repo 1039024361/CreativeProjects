@@ -41,6 +41,18 @@ div{
     z-index: 12;
 }
 
+.top-menu-relative{
+    position: relative;
+}
+
+.fake-wrap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 45px;
+    width: 184px;
+}
+
 .top-menu-drop img{
     vertical-align: top;
     margin: 5px 2px 5px 2px;

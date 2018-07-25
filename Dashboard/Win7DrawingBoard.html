@@ -20,10 +20,16 @@
             <div class="top-menu-drop-down-top">
             </div>
             <div class="top-menu-drop-down-left">
-                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/1.gif" height="28" width="23"/></div><span class="fontType span-inline-block">新建(<span class="underline">N</span>)</span></div>
-                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/2.gif" height="31" width="26"/></div><span class="fontType span-inline-block">打开(<span class="underline">O</span>)</span></div>
-                <div class="top-drop--left-list "><div class="drop-img-wrap"><img src="images/drop/3.gif" height="24" width="24"/></div><span class="fontType span-inline-block">保存(<span class="underline">S</span>)</span></div>
-                <div class="top-drop--left-list"><div class="drop-img-wrap"><img src="images/drop/4.gif" height="27" width="27"/></div><span class="fontType span-inline-block">另存为(<span class="underline">A</span>)</span></div>
+                <div class="top-drop--left-list top-menu-relative">
+                    <div class="drop-img-wrap"><img src="images/drop/1.gif" height="28" width="23"/></div><span class="fontType span-inline-block">新建(<span class="underline">N</span>)</span>
+                    <a href="Win7DrawingBoard.html" class="fake-wrap" target="_blank"></a>
+                </div>
+                <div class="top-drop--left-list" id="open">
+                    <div class="drop-img-wrap"><img src="images/drop/2.gif" height="31" width="26"/></div><span class="fontType span-inline-block">打开(<span class="underline">O</span>)</span>
+                    <!--<input type="file" class="fake-wrap">-->
+                </div>
+                <div class="top-drop--left-list" id="save"><div class="drop-img-wrap"><img src="images/drop/3.gif" height="24" width="24"/></div><span class="fontType span-inline-block">保存(<span class="underline">S</span>)</span></div>
+                <div class="top-drop--left-list unused"><div class="drop-img-wrap"><img src="images/drop/4.gif" height="27" width="27"/></div><span class="fontType span-inline-block">另存为(<span class="underline">A</span>)</span></div>
                 <div class="top-drop--left-list unused"><div class="drop-img-wrap"><img src="images/drop/5.gif" height="26" width="33"/></div><span class="fontType span-inline-block">打印(<span class="underline">P</span>)</span></div>
                 <div class="top-drop--left-list unused"><div class="drop-img-wrap"><img src="images/drop/6.gif" height="24" width="32"/></div><span class="fontType span-inline-block">从扫描仪或照相机(<span class="underline">M</span>)</span></div>
                 <div class="top-drop--left-list unused"><div class="drop-img-wrap"><img src="images/drop/7.gif" height="20" width="31"/></div><span class="fontType span-inline-block">在电子邮件中发送(<span class="underline">D</span>)</span></div>
@@ -35,8 +41,8 @@
             </div>
             <div class="top-menu-drop-down-right">
                 <div class="top-menu-recent-title"><span class="fontType span-inline-block bold">最近的图片</span></div>
-                <span class="fontType span-inline-block">1&#160;&#160;费德勒.jpg</span>
-                <span class="fontType span-inline-block">2&#160;&#160;纳达尔.jpg</span>
+                <span class="fontType span-inline-block unused">1&#160;&#160;费德勒.jpg</span>
+                <span class="fontType span-inline-block unused">2&#160;&#160;纳达尔.jpg</span>
             </div>
             <div class="top-menu-drop-down-bottom">
 
@@ -407,6 +413,8 @@
 <!--</div>-->
 <img id="imgContainer" style="display: none">
 <input type="text" id="pasteInput" style="display: none"/>
+<!--下拉菜单打开文件-->
+<input type="file" id="openFile"  style="display: none">
 <script src="DrawingBoard.js"></script>
 </body>
 </html>

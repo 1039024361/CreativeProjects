@@ -1003,6 +1003,12 @@ var Drawing = RichBase.extend({
         "undo":{
             "handlers":[]
         },
+        "open":{
+            "click":[]
+        },
+        "save":{
+            "click":[]
+        },
     },
     _ctrlEvent:{
         target: null,
@@ -2103,10 +2109,10 @@ var Drawing = RichBase.extend({
 
     },
     //实现复制图片
-    _imgReader: function( item ){
-        var blob = item.getAsFile(),
+    _imgReader: function( item , isOpenFile){
+        var blob,
             reader = new FileReader();
-
+        blob = isOpenFile? item: item.getAsFile();
         //get image src
         var getImageSrc = new Promise(function (resolve, reject){
             reader.onload = function(e){
@@ -2126,6 +2132,7 @@ var Drawing = RichBase.extend({
                 that.image.src = src;
             });
         }
+
         getImageSrc.then(loadImage.bind(this)).then(function(){
             var canvasW = drawingInfo.get("canvasW"),
                 canvasH = drawingInfo.get("canvasH");
@@ -2148,8 +2155,11 @@ var Drawing = RichBase.extend({
                 width: this.image.width,
                 height: this.image.height,
             });
+            if(isOpenFile){
+                this._resizeCanvasBox(this.canvasBox, this.image.width, this.image.height);
+                this._renderCanvas();
+            }
         }.bind(this));
-
     },
     //判断是否存在剪贴板数据，并将剪贴板图片粘贴值img标签
     _clipboardDataHandle: function(clipboardData){
@@ -2370,6 +2380,7 @@ var Drawing = RichBase.extend({
         });
         this._showSelectObj(false);
         drawingInfo.set("imageStretch", false);
+        this._saveDrawingToBuffer();
     },
     //notFill： 为了模拟剪切事件不填充的效果
     _fillImage: function (notFill) {
@@ -3513,6 +3524,54 @@ var Drawing = RichBase.extend({
     //     this.removeHandler(this.undo, "handlers", this._undo);
     // },
     //事件绑定及节流处理
+    //open
+    _openFile: function(){
+        var event = new MouseEvent('click');
+        //读取图片函数
+        var pic = function(event) {
+            event = EventUtil.getEvent();
+            var files = EventUtil.getTarget(event).files;
+            if (/image/.test(files[0].type)) {
+                this._imgReader(files[0] ,true);
+            } else {
+                console.log("选择的不是图片");
+            }
+            EventUtil.removeHandler(this.openFile, "change", pic);
+            // this._resizeCanvasBox(this.canvasBox, this.editCanvasBox.width, this.editCanvasBox.height);
+        }.bind(this);
+        EventUtil.addHandler(this.openFile, "change", pic);
+            // 触发a的单击事件
+        this.openFile.dispatchEvent(event);
+    },
+    _addOpenFileHandler: function(){
+        this.addHandler(this.open, "click", this._openFile);
+    },
+    _removerOpenFileHandler: function(){
+        this.addHandler(this.open, "click", this._openFile);
+    },
+    //保存文件
+    _saveFile: function(){
+        var defaultName = new Date().getTime();
+        // 使用toDataURL方法将图像转换被base64编码的URL字符串
+        var url = this.canvasBox.toDataURL('image/png');
+        // 生成一个a元素
+        var a = document.createElement('a');
+        // 创建一个单击事件
+        var event = new MouseEvent('click');
+        // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+        a.download = name || defaultName;
+        // 将生成的URL设置为a.href属性
+        a.href = url;
+
+        // 触发a的单击事件
+        a.dispatchEvent(event);
+    },
+    _addSaveHandler: function(){
+        this.addHandler(this.save, "click", this._saveFile);
+    },
+    _removerSaveHandler: function(){
+        this.addHandler(this.save, "click", this._saveFile);
+    },
     init: function (config) {
         this._super(config);
         this.canvasBox = document.getElementById("canvasBox");   //canvas
@@ -3561,9 +3620,14 @@ var Drawing = RichBase.extend({
         this.wrapDiv = document.querySelector(".shape-wrap-left-img");
         this.wrapLeft = document.querySelector(".shape-wrap-left");
         //撤销、重做
+        this.redoUndo = document.querySelector("#redo-undo");
         this.redo = document.querySelector("#redo");
         this.undo = document.querySelector("#undo");
-        this.redoUndo = document.querySelector("#redo-undo");
+
+        //下拉菜单
+        this.openFile = document.querySelector("#openFile");
+        this.open = document.querySelector("#open");
+        this.save = document.querySelector("#save");
 
         //初始化
         this.canvasBox.style.zIndex = 1;
@@ -3589,6 +3653,8 @@ var Drawing = RichBase.extend({
         this.createHandlers(this, this.EVENTS["remove"]);    //加入到观察者
         this.createHandlers(this.redo, this.EVENTS["redo"]);    //加入到观察者
         this.createHandlers(this.undo, this.EVENTS["undo"]);    //加入到观察者
+        this.createHandlers(this.open, this.EVENTS["open"]);    //加入到观察者
+        this.createHandlers(this.save, this.EVENTS["save"]);    //加入到观察者
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         // this._addDrawLineHandler();   //默认为绘制线条
         this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
@@ -3598,6 +3664,8 @@ var Drawing = RichBase.extend({
         this._addCopyPasteHandler();
         this._addArrowEventHandle();
         this._saveDrawingToBuffer();
+        this._addOpenFileHandler();
+        this._addSaveHandler();
         // this.addHandler(this, "handlers", this._removeDrawLineHandler);
         // this._addMoveElementHandler();  //调试使用
         // this._addStretchElementHandler(); //调试
@@ -3605,6 +3673,14 @@ var Drawing = RichBase.extend({
     },
     bind: function(){
         var self = this;
+        //open
+        EventUtil.addHandler(this.open, "click", function (event) {
+            self.fire(self.open, "click", event);
+        });
+        //save
+        EventUtil.addHandler(this.save, "click", function (event) {
+            self.fire(self.save, "click", event);
+        });
         //撤销
         EventUtil.addHandler(this.redoUndo, "click", function (event) {
             self.fire(self.redoUndo, "click", event);
