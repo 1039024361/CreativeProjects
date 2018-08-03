@@ -456,11 +456,11 @@ var Drawing = RichBase.extend({
             ],
             "touchend":[
                 function (event) {
-                    event = EventUtil.getEvent(event);
-                    this.set("startX", null);
-                    this.set("startY", null);
-                    this.set("diffX", null);
-                    this.set("diffY", null);
+                    // event = EventUtil.getEvent(event);
+                    // this.set("startX", null);
+                    // this.set("startY", null);
+                    // this.set("diffX", null);
+                    // this.set("diffY", null);
                     this.set("clicking", false);
                 }
             ],
@@ -2073,14 +2073,27 @@ var Drawing = RichBase.extend({
     _addTextInputHandler: function(){
         //拖拽效果事件
         this._addVirtualBoxHandler();
-        this.addHandler(this.canvasWrap, "click", this._textInputHandler);
+        //在桌面系统中，通过click事件触发显示隐藏文本框
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.addHandler(this.canvasWrap, "click", this._textInputHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.addHandler(this.canvasWrap, "touchend", this._textInputHandler);
+        }
     },
     //删除文本事件
     _removeTextInputHandler: function(){
         this.text.classList.remove("selected");
         //拖拽效果事件
         this._removeVirtualBoxHandler();
-        this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.removeHandler(this.canvasWrap, "click", this._textInputHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.removeHandler(this.canvasWrap, "touchend", this._textInputHandler);
+        }
     },
     //
     _imageStretch: function(target, width, height){
@@ -2466,7 +2479,15 @@ var Drawing = RichBase.extend({
         this.selectButton.classList.add("selected");
         //拖拽效果事件
         this._addVirtualBoxHandler();
-        this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
+        // this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
+        //在桌面系统中，通过click事件触发显示隐藏文本框
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.addHandler(this.canvasWrap, "touchend", this._drawImageHandler);
+        }
     },
     //image事件
     _removeDrawImageHandler: function(){
@@ -2475,7 +2496,14 @@ var Drawing = RichBase.extend({
         this.imgWrap.classList.remove("selected");
         this.selectButton.classList.remove("selected");
         this._removeVirtualBoxHandler();
-        this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+        // this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.removeHandler(this.canvasWrap, "touchend", this._drawImageHandler);
+        }
     },
     //复制/剪切操作
     //target：选取中的canvas,这个复制事件不会吧图片插入系统剪贴板，只会清空系统剪贴板，并把数据保留在本地
@@ -3408,12 +3436,28 @@ var Drawing = RichBase.extend({
         this.canvasBox.style.cursor = "crosshair";
         // handleTarget.classList.toggle("selected");
         //拖拽效果事件
-        this.addHandler(this.canvasWrap, "click", this._drawShapeHandler);
+
+        //在桌面系统中，通过click事件触发显示隐藏文本框
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.addHandler(this.canvasWrap, "click", this._drawShapeHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.addHandler(this.canvasWrap, "touchend", this._drawShapeHandler);
+        }
     },
     //
     _removeDrawShapeHandler: function(){
         document.querySelector("#" + drawingInfo.get("description")).classList.remove("selected");
-        this.removeHandler(this.canvasWrap, "click", this._drawShapeHandler);
+        // this.removeHandler(this.canvasWrap, "click", this._drawShapeHandler);
+        //在桌面系统中，通过click事件触发显示隐藏文本框
+        if(client.system.win||client.system.mac||client.system.x11){
+            this.removeHandler(this.canvasWrap, "click", this._drawShapeHandler);
+        }
+        else{
+            //在移动设备中，通过touchend事件触发显示隐藏文本框
+            this.removeHandler(this.canvasWrap, "touchend", this._drawShapeHandler);
+        }
         drawingInfo.set("behavior", "");
         drawingInfo.set("description", "");
     },
@@ -3572,6 +3616,7 @@ var Drawing = RichBase.extend({
     _removerSaveHandler: function(){
         this.addHandler(this.save, "click", this._saveFile);
     },
+
     init: function (config) {
         this._super(config);
         this.canvasBox = document.getElementById("canvasBox");   //canvas
@@ -3655,6 +3700,7 @@ var Drawing = RichBase.extend({
         this.createHandlers(this.undo, this.EVENTS["undo"]);    //加入到观察者
         this.createHandlers(this.open, this.EVENTS["open"]);    //加入到观察者
         this.createHandlers(this.save, this.EVENTS["save"]);    //加入到观察者
+
         // this.createHandlers(this.elementWrap, this.EVENTS["elementWrap"]);    //加入到观察者
         // this._addDrawLineHandler();   //默认为绘制线条
         this._handle(this._addDrawLineHandler, this._removeDrawLineHandler);
@@ -4100,6 +4146,9 @@ var Color = RichBase.extend({
                 }
             ],
         },
+        "editColor":{
+            "click":[]
+        },
     },
     _arrangeNewColorArray: function(array, newColor){
         var index = array.indexOf(newColor);
@@ -4123,6 +4172,19 @@ var Color = RichBase.extend({
             boxes[i+20].firstElementChild.style.backgroundColor = array[i];
         }
     },
+    //editColor
+    _editColor: function(){
+        var event = new MouseEvent('click');
+        // 触发a的单击事件
+        this.colorInput.dispatchEvent(event);
+    },
+    _addEditColorHandler: function(){
+        this.addHandler(this.editColor, "click", this._editColor);
+    },
+    _removerEditColorHandler: function(){
+        this.addHandler(this.editColor, "click", this._editColor);
+    },
+
     //事件绑定及节流处理
     init: function (config) {
         this._super(config);
@@ -4132,16 +4194,23 @@ var Color = RichBase.extend({
         this.fontColor = document.getElementsByClassName("font-color")[0];
         this.backgroundColor = document.getElementsByClassName("background-color")[0];
         this.colorInput = document.querySelector("#colorInput");
+        //颜色选择按键
+        this.editColor = document.querySelector("#editColor");
         this.newColor = [];
         this.createHandlers(this.colorSetButtons[0], this.EVENTS["colorSetButtons[0]"]);               //加入到观察者
         this.createHandlers(this.colorSetButtons[1], this.EVENTS["colorSetButtons[1]"]);               //加入到观察者
         this.createHandlers(this.colorBoxContainer, this.EVENTS["colorBoxContainer"]);
         this.createHandlers(this.colorInput, this.EVENTS["colorInput"]);
+        this.createHandlers(this.editColor, this.EVENTS["editColor"]);    //加入到观察者
         //初始化
         this.bind();
+        this._addEditColorHandler();
     },
     bind: function(){
         var self = this;
+        EventUtil.addHandler(this.editColor, "click", function (event) {
+            self.fire(self.editColor, "click", event);
+        });
         EventUtil.addHandler(this.colorSetButtons[0], "click", function (event) {
             self.fire(self.colorSetButtons[0], "click", event);
         });
