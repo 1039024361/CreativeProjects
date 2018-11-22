@@ -34,5 +34,5 @@ window.onload = function () {
         if (touch) {
             update(cursorPoint(touch, svgElement));
         }
-    }, false);
+    }, { passive: false });
 };
