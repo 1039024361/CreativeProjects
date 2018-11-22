@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f5faa95-ec3b-4236-bbcc-72d7d3227757" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/X-ray me/X-ray me.html" afterPath="$PROJECT_DIR$/X-ray me/X-ray me.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/X-ray me/X-ray me.js" afterPath="$PROJECT_DIR$/X-ray me/X-ray me.js" />
     </list>
     <ignored path="CreativeProjects.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,11 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="X-ray me.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="X-ray me.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="36" column="54" selection-start-line="36" selection-start-column="54" selection-end-line="36" selection-end-column="54" />
+            <state relative-caret-position="272">
+              <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
               <folding>
                 <element signature="n#style#0;n#circle#0;n#clipPath#0;n#defs#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#circle#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -42,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="X-ray me.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="X-ray me.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="629">
+              <caret line="37" column="2" selection-start-line="37" selection-start-column="2" selection-end-line="37" selection-end-column="2" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -91,8 +91,8 @@
         <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.css" />
         <option value="$PROJECT_DIR$/Dashboard/Win7DrawingBoard.html" />
         <option value="$PROJECT_DIR$/Dashboard/DrawingBoard.js" />
-        <option value="$PROJECT_DIR$/X-ray me/X-ray me.html" />
         <option value="$PROJECT_DIR$/X-ray me/X-ray me.js" />
+        <option value="$PROJECT_DIR$/X-ray me/X-ray me.html" />
       </list>
     </option>
   </component>
@@ -322,12 +322,12 @@
       <workItem from="1532389481834" duration="11170000" />
       <workItem from="1532531750307" duration="3600000" />
       <workItem from="1532562956284" duration="728000" />
-      <workItem from="1542897331430" duration="4228000" />
+      <workItem from="1542897331430" duration="4380000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="762314000" />
+    <option name="totallyTimeSpent" value="762466000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -660,23 +660,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.html">
+    <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="36" column="54" selection-start-line="36" selection-start-column="54" selection-end-line="36" selection-end-column="54" />
+        <state relative-caret-position="629">
+          <caret line="37" column="2" selection-start-line="37" selection-start-column="2" selection-end-line="37" selection-end-column="2" />
           <folding>
-            <element signature="n#style#0;n#circle#0;n#clipPath#0;n#defs#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#circle#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.js">
+    <entry file="file://$PROJECT_DIR$/X-ray me/X-ray me.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="272">
+          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#style#0;n#circle#0;n#clipPath#0;n#defs#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#circle#0;n#svg#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
