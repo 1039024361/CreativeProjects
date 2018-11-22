@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>X-ray me</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Monaco;
+            font-size: 12px;
+            color: rgba(0,0,0,.7);
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        div,
+        a {
+            position: relative;
+            padding: 1em;
+        }
+
+        div {
+            text-shadow: 0 1px 0 rgba(255,255,255,.5);
+        }
+
+        span {
+            color: rgba(0,0,0,.4);
+        }
+
+        a {
+            color: rgba(255,0,0,.5);
+        }
+    </style>
+    <script src="X-ray me.js"></script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
+    <rect width="100%" height="100%" fill="#E7E7E8"/>
+    <image xmlns:xlink= "http://www.w3.org/1999/xlink" xlink:href="images/a.svg" width="100%" height="100%" />
+</svg>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink= "http://www.w3.org/1999/xlink">
+    <defs>
+        <clipPath id="mask">
+            <circle id="mask-circle" cx="50%" cy="50%" r="8%" style="fill: #ffffff"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#mask)">
+        <rect width="100%" height="100%" fill="#272730"/>
+        <image xmlns:xlink= "http://www.w3.org/1999/xlink" xlink:href="images/b.svg" width="100%" height="100%" />
+    </g>
+    <circle id="circle-shadow" cx="50%" cy="50%" r="8%" style="stroke: #fff; fill: transparent; stroke-width: 5;" />
+</svg>
+
+<div>
+    SVG <del>Masking</del> <ins>clip-path</ins> Experiment.<br/>
+    <span>Move your mouse/finger over the image.</span>
+</div>
+<script src="X-ray me.js"></script>
+</body>
+</html>
