@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>debug</title>
+    <script src="../EventUtil.js"></script>
+</head>
+<body>
+<div>test</div>
+<script>
+  EventUtil.addHandler(document.body, 'mousemove', function(e){
+      e.preventDefault()
+      alert('no default')
+  })
+</script>
+</body>
+</html>
