@@ -6,12 +6,19 @@
     <script src="../EventUtil.js"></script>
 </head>
 <body style="height: 100%">
-<div style="width: 100%; height: 100%">test</div>
+<div id="myDiv" style="width: 100%; height: 100%">test</div>
 <script>
   EventUtil.addHandler(document.body, 'mousemove', function(e){
-      e.preventDefault()
-      alert('no default')
-  })
+      e.preventDefault();
+      alert('no default');
+  });
+
+  var myDiv = document.getElementById("myDiv");
+
+  EventUtil.addHandler(myDiv, 'mousemove', function(e){
+      e.preventDefault();
+      alert('no default');
+  });
 </script>
 </body>
 </html>
