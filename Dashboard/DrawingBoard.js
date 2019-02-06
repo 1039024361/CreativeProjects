@@ -46,7 +46,7 @@ var RichBase = Base.extend({
 
         return this;
     },
-    //注意，不允许同一个都想之间相互动态删除handler
+    //注意，不允许同一个对象之间相互动态删除handler
     fire: function(target, type){
         var that = this;
         if(!target.handlers&&!target.handlers[type]){
@@ -446,6 +446,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     event.preventDefault();   //阻止滚动
+                    debug = 'touchmove';
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     if(this.get("clicking") === true){
@@ -461,6 +462,7 @@ var Drawing = RichBase.extend({
                     // this.set("startY", null);
                     // this.set("diffX", null);
                     // this.set("diffY", null);
+                    alert(debug);
                     this.set("clicking", false);
                 }
             ],
