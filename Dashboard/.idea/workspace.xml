@@ -23,7 +23,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Win7DrawingBoard.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Win7DrawingBoard.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Win7DrawingBoard.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
@@ -46,12 +46,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="debug.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="debug.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/debug/debug.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
-              <folding />
+            <state relative-caret-position="17">
+              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+              <folding>
+                <element signature="n#style#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -274,12 +278,12 @@
       <workItem from="1541493331763" duration="2784000" />
       <workItem from="1542109013486" duration="565000" />
       <workItem from="1542897015216" duration="302000" />
-      <workItem from="1549458323115" duration="6951000" />
+      <workItem from="1549458323115" duration="7438000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34350000" />
+    <option name="totallyTimeSpent" value="34837000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -739,14 +743,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/debug/debug.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Win7DrawingBoard.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -754,6 +750,18 @@
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#a#0;n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/debug/debug.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+          <folding>
+            <element signature="n#style#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
