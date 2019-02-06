@@ -8,24 +8,28 @@
 <body style="height: 100%">
 <div id="myDiv" style="width: 100%; height: 100%">test</div>
 <script>
-//    EventUtil.addHandler(document.body, 'mousemove', function(e){
-//        e.preventDefault();
-//        alert('no default');
-//    });
-//    EventUtil.addHandler(document.body, 'mousemove', function(e){
-//      e.preventDefault();
-//      alert('no default');
-//    });
-    alert("23:54")
+    EventUtil.addHandler(document.body, 'mousemove', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        alert('no default');
+    });
+    EventUtil.addHandler(document.body, 'mousemove', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      alert('no default');
+    });
+    alert("23:56")
 
     var myDiv = document.getElementById("myDiv");
 
     EventUtil.addHandler(myDiv, 'mousestart', function(e){
       e.preventDefault();
+      e.stopPropagation();
       alert('mousestart no default');
     });
     EventUtil.addHandler(myDiv, 'mousemove', function(e){
       e.preventDefault();
+      e.stopPropagation();
       alert('mousemove no default');
     });
 </script>
