@@ -436,7 +436,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     debug = 'touchstart';
-                    alert(debug);
+                    // alert(debug);
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     this.set("startX", this._xConvert(event.touches[0].clientX));
@@ -448,7 +448,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     event.preventDefault();   //阻止滚动
-                    debug = 'touchmove';
+                    // debug = 'touchmove';
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     if(this.get("clicking") === true){
@@ -464,7 +464,7 @@ var Drawing = RichBase.extend({
                     // this.set("startY", null);
                     // this.set("diffX", null);
                     // this.set("diffY", null);
-                    alert(debug);
+                    // alert(debug);
                     this.set("clicking", false);
                 }
             ],
@@ -4231,34 +4231,39 @@ var Color = RichBase.extend({
 });
 
 (function(){
-    var drawingModule = new Drawing({
-            X: null,  //绘图区域X坐标
-            Y: null,   //绘图区域Y坐标
-            startX: null,  //mousedown坐标
-            startY: null,
-            diffX: null,
-            diffY: null,
-            clicking: false,
-            copyImageData: null,
-            // reDoUnDo: {
-            //     buffer: [],
-            //     index: -1,
-            // }
-        }
-        // {
-        // behavior: "pencil",
-        // lineWeight: 1,
-        // color: "black",
-        // backgroundColor: "white"}
+    try {
+        var drawingModule = new Drawing({
+                X: null,  //绘图区域X坐标
+                Y: null,   //绘图区域Y坐标
+                startX: null,  //mousedown坐标
+                startY: null,
+                diffX: null,
+                diffY: null,
+                clicking: false,
+                copyImageData: null,
+                // reDoUnDo: {
+                //     buffer: [],
+                //     index: -1,
+                // }
+            }
+            // {
+            // behavior: "pencil",
+            // lineWeight: 1,
+            // color: "black",
+            // backgroundColor: "white"}
         );
 
-    //拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
-    if(client.system.win||client.system.mac||client.system.x11){
-        var StretchModule = new Stretch();
+        //拉伸操作只有桌面设备支持，触摸设备不知道拖拽调整画布大小
+        if(client.system.win||client.system.mac||client.system.x11){
+            var StretchModule = new Stretch();
+        }
+        // var tool = new Tool();
+        var line = new Line();
+        var colorSelect = new Color();
+    } catch (err) {
+        alert(err);
     }
-    // var tool = new Tool();
-    var line = new Line();
-    var colorSelect = new Color();
+
 })();
 
 //双击折叠菜单栏
