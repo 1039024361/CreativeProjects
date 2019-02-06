@@ -4260,6 +4260,7 @@ var Color = RichBase.extend({
         // var tool = new Tool();
         var line = new Line();
         var colorSelect = new Color();
+        alert('no error');
     } catch (err) {
         alert(err);
     }
