@@ -435,6 +435,8 @@ var Drawing = RichBase.extend({
             "touchstart":[
                 function (event) {
                     event = EventUtil.getEvent(event);
+                    debug = 'touchstart';
+                    alert(debug);
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     this.set("startX", this._xConvert(event.touches[0].clientX));
