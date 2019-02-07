@@ -52,6 +52,7 @@ var RichBase = Base.extend({
         if(!target.handlers&&!target.handlers[type]){
             return;
         }
+        console.log(target.id);
         console.log(type);
         var i = null,
             len = target.handlers[type].length,
@@ -472,12 +473,12 @@ var Drawing = RichBase.extend({
                     this.set("clicking", false);
                 }
             ],
-            // "click": [
-            //     function (event) {
-            //         event = EventUtil.getEvent(event);
-            //         event.preventDefault();
-            //     }
-            // ]
+            "click": [
+                // function (event) {
+                //     event = EventUtil.getEvent(event);
+                //     event.preventDefault();
+                // }
+            ]
         },
         "adjustCanvas": {"click": [
             function(event){
@@ -814,12 +815,12 @@ var Drawing = RichBase.extend({
             //         alert(event.target.id);
             //     }
             // ],
-            "touchstart": [
-                function (event) {
-                    event = EventUtil.getEvent(event);
-                    alert(event.target.id);
-                }
-            ]
+            // "touchstart": [
+            //     function (event) {
+            //         event = EventUtil.getEvent(event);
+            //         alert(event.target.id);
+            //     }
+            // ]
         },
         //复制按键
         "copy":{
@@ -3788,12 +3789,12 @@ var Drawing = RichBase.extend({
             self.fire(document, "paste", event);
         });
         //粘贴事件等
-        EventUtil.addHandler(document, "touchstart", function (event) {
-            self.fire(document, "touchstart", event);
-        });
-        EventUtil.addHandler(this.canvasWrap, "click", function (event) {
-            self.fire(self.canvasWrap, "click", event);
-        });
+        // EventUtil.addHandler(document, "touchstart", function (event) {
+        //     self.fire(document, "touchstart", event);
+        // });
+        // EventUtil.addHandler(this.canvasWrap, "click", function (event) {
+        //     self.fire(self.canvasWrap, "click", event);
+        // });
         //复制按钮
         EventUtil.addHandler(this.copy, "click", function (event) {
             self.fire(self.copy, "click", event);
@@ -4288,7 +4289,7 @@ var Color = RichBase.extend({
         // var tool = new Tool();
         var line = new Line();
         var colorSelect = new Color();
-        alert('no error');
+        // alert('no error');
     } catch (err) {
         alert(err);
     }
