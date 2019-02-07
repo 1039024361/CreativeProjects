@@ -442,6 +442,10 @@ var Drawing = RichBase.extend({
                     this.set("startX", this._xConvert(event.touches[0].clientX));
                     this.set("startY", this._yConvert(event.touches[0].clientY));
                     this.set("clicking", true);
+                },
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    alert(event.target.id);
                 }
             ],
             "touchmove":[
@@ -468,12 +472,12 @@ var Drawing = RichBase.extend({
                     this.set("clicking", false);
                 }
             ],
-            "click": [
-                function (event) {
-                    event = EventUtil.getEvent(event);
-                    event.preventDefault();
-                }
-            ]
+            // "click": [
+            //     function (event) {
+            //         event = EventUtil.getEvent(event);
+            //         event.preventDefault();
+            //     }
+            // ]
         },
         "adjustCanvas": {"click": [
             function(event){
@@ -804,7 +808,13 @@ var Drawing = RichBase.extend({
         "document":{
             "copy":[],
             "paste":[],
-            "click": [
+            // "click": [
+            //     function (event) {
+            //         event = EventUtil.getEvent(event);
+            //         alert(event.target.id);
+            //     }
+            // ],
+            "touchstart": [
                 function (event) {
                     event = EventUtil.getEvent(event);
                     alert(event.target.id);
@@ -3778,8 +3788,8 @@ var Drawing = RichBase.extend({
             self.fire(document, "paste", event);
         });
         //粘贴事件等
-        EventUtil.addHandler(document, "click", function (event) {
-            self.fire(document, "click", event);
+        EventUtil.addHandler(document, "touchstart", function (event) {
+            self.fire(document, "touchstart", event);
         });
         EventUtil.addHandler(this.canvasWrap, "click", function (event) {
             self.fire(self.canvasWrap, "click", event);
