@@ -3878,10 +3878,10 @@ var Stretch = RichBase.extend({
             "mousemove":[
                 function(event){
                     event = EventUtil.getEvent(event);
+                    event.preventDefault();
                     if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
                         this.canvasWrap.style.zIndex = -1;
                     }
-                    event.preventDefault();
                     if(this._ctrlEvent.flag === true){
                         this.virtualWrap.style.border = "1px dotted black";
                         this._ctrlEvent.endXY[0] = this._xConvert(event.clientX);

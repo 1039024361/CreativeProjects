@@ -19,12 +19,12 @@
     <p>test</p>
 </div>
 <script>
-    EventUtil.addHandler(document.body, 'mousemove', function(e){
+    EventUtil.addHandler(document, 'mousemove', function(e){
         e.preventDefault();
         e.stopPropagation();
         alert('no default');
     });
-    EventUtil.addHandler(document.body, 'mousemove', function(e){
+    EventUtil.addHandler(document, 'mousemove', function(e){
       e.preventDefault();
       e.stopPropagation();
       alert('no default');
