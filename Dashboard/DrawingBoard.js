@@ -469,6 +469,10 @@ var Drawing = RichBase.extend({
                 }
             ],
             "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    event.preventDefault();
+                }
             ]
         },
         "adjustCanvas": {"click": [
@@ -3776,6 +3780,9 @@ var Drawing = RichBase.extend({
         //粘贴事件等
         EventUtil.addHandler(document, "click", function (event) {
             self.fire(document, "click", event);
+        });
+        EventUtil.addHandler(this.canvasWrap, "click", function (event) {
+            self.fire(self.canvasWrap, "click", event);
         });
         //复制按钮
         EventUtil.addHandler(this.copy, "click", function (event) {
