@@ -443,10 +443,10 @@ var Drawing = RichBase.extend({
                     this.set("startY", this._yConvert(event.touches[0].clientY));
                     this.set("clicking", true);
                 },
-                function (event) {
-                    event = EventUtil.getEvent(event);
-                    alert(event.target.id);
-                }
+                // function (event) {
+                //     event = EventUtil.getEvent(event);
+                //     alert(event.target.id);
+                // }
             ],
             "touchmove":[
                 function (event) {
