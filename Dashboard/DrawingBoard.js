@@ -468,7 +468,12 @@ var Drawing = RichBase.extend({
                     this.set("clicking", false);
                 }
             ],
-            "click": [],
+            "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    alert(event.target.id);
+                }
+            ]
         },
         "adjustCanvas": {"click": [
             function(event){
@@ -3879,7 +3884,6 @@ var Stretch = RichBase.extend({
                 function(event){
                     event = EventUtil.getEvent(event);
                     event.preventDefault();
-                    alert("body touchmove");
                     if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
                         this.canvasWrap.style.zIndex = -1;
                     }
