@@ -6,7 +6,7 @@
     <script src="../EventUtil.js"></script>
 </head>
 <body style="height: 100%">
-<div id="myDiv" style="width: 100%;">
+<div id="myDiv" style="width: 100%; background-color: #22b14c">
     <p>test</p>
     <p>test</p>
     <p>test</p>
@@ -19,18 +19,18 @@
     <p>test</p>
 </div>
 <script>
-    EventUtil.addHandler(document, 'touchstart', function(e){
-        e = EventUtil.getEvent(e);
-        e.preventDefault();
-        e.stopPropagation();
-        alert('no default');
-    });
-    EventUtil.addHandler(document, 'touchmove', function(e){
-      e = EventUtil.getEvent(e);
-      e.preventDefault();
-      e.stopPropagation();
-      alert('no default');
-    });
+//    EventUtil.addHandler(document, 'touchstart', function(e){
+//        e = EventUtil.getEvent(e);
+//        e.preventDefault();
+//        e.stopPropagation();
+//        alert('no default');
+//    });
+//    EventUtil.addHandler(document, 'touchmove', function(e){
+//      e = EventUtil.getEvent(e);
+//      e.preventDefault();
+//      e.stopPropagation();
+//      alert('no default');
+//    });
     alert("12:53");
 
     var myDiv = document.getElementById("myDiv");
