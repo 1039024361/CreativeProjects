@@ -31,20 +31,20 @@
 //      e.stopPropagation();
 //      alert('no default');
 //    });
-    alert("12:53");
+    alert("16:36");
 
     var myDiv = document.getElementById("myDiv");
 
     EventUtil.addHandler(myDiv, 'touchstart', function(e){
       e = EventUtil.getEvent(e);
       e.preventDefault();
-      e.stopPropagation();
+//      e.stopPropagation();
       alert('touchstart no default');
     });
     EventUtil.addHandler(myDiv, 'touchmove', function(e){
       e = EventUtil.getEvent(e);
       e.preventDefault();
-      e.stopPropagation();
+//      e.stopPropagation();
       alert('touchmove no default');
     });
 </script>
