@@ -436,7 +436,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     debug = 'touchstart';
-                    alert(debug);
+                    // alert(debug);
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     this.set("startX", this._xConvert(event.touches[0].clientX));
@@ -448,7 +448,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     event.preventDefault();   //阻止滚动
-                    debug = 'touchmove';
+                    // debug = 'touchmove';
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     if(this.get("clicking") === true){
@@ -464,15 +464,11 @@ var Drawing = RichBase.extend({
                     // this.set("startY", null);
                     // this.set("diffX", null);
                     // this.set("diffY", null);
-                    alert(debug);
+                    // alert(debug);
                     this.set("clicking", false);
                 }
             ],
             "click": [
-                function (event) {
-                    event = EventUtil.getEvent(event);
-                    alert(event.target.id);
-                }
             ]
         },
         "adjustCanvas": {"click": [
@@ -803,7 +799,13 @@ var Drawing = RichBase.extend({
         },
         "document":{
             "copy":[],
-            "paste":[]
+            "paste":[],
+            "click": [
+                function (event) {
+                    event = EventUtil.getEvent(event);
+                    alert(event.target.id);
+                }
+            ]
         },
         //复制按键
         "copy":{
@@ -3770,6 +3772,10 @@ var Drawing = RichBase.extend({
         //粘贴事件等
         EventUtil.addHandler(document, "paste", function (event) {
             self.fire(document, "paste", event);
+        });
+        //粘贴事件等
+        EventUtil.addHandler(document, "click", function (event) {
+            self.fire(document, "click", event);
         });
         //复制按钮
         EventUtil.addHandler(this.copy, "click", function (event) {

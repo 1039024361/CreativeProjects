@@ -42,8 +42,8 @@
       <file leaf-file-name="DrawingBoard.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DrawingBoard.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="475" column="13" selection-start-line="475" selection-start-column="13" selection-end-line="475" selection-end-column="13" />
+            <state relative-caret-position="1901">
+              <caret line="467" column="36" selection-start-line="467" selection-start-column="36" selection-end-line="467" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -281,12 +281,12 @@
       <workItem from="1541493331763" duration="2784000" />
       <workItem from="1542109013486" duration="565000" />
       <workItem from="1542897015216" duration="302000" />
-      <workItem from="1549458323115" duration="15781000" />
+      <workItem from="1549458323115" duration="16268000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43180000" />
+    <option name="totallyTimeSpent" value="43667000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -796,8 +796,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DrawingBoard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="475" column="13" selection-start-line="475" selection-start-column="13" selection-end-line="475" selection-end-column="13" />
+        <state relative-caret-position="1901">
+          <caret line="467" column="36" selection-start-line="467" selection-start-column="36" selection-end-line="467" selection-end-column="36" />
           <folding />
         </state>
       </provider>
