@@ -436,7 +436,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     debug = 'touchstart';
-                    // alert(debug);
+                    alert(debug);
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     this.set("startX", this._xConvert(event.touches[0].clientX));
@@ -448,7 +448,7 @@ var Drawing = RichBase.extend({
                 function (event) {
                     event = EventUtil.getEvent(event);
                     event.preventDefault();   //阻止滚动
-                    // debug = 'touchmove';
+                    debug = 'touchmove';
                     this.set("X", this._xConvert(event.touches[0].clientX));
                     this.set("Y", this._yConvert(event.touches[0].clientY));
                     if(this.get("clicking") === true){
@@ -464,7 +464,7 @@ var Drawing = RichBase.extend({
                     // this.set("startY", null);
                     // this.set("diffX", null);
                     // this.set("diffY", null);
-                    // alert(debug);
+                    alert(debug);
                     this.set("clicking", false);
                 }
             ],
