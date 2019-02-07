@@ -19,13 +19,13 @@
     <p>test</p>
 </div>
 <script>
-    EventUtil.addHandler(document, 'mousestart', function(e){
+    EventUtil.addHandler(document, 'touchstart', function(e){
         e = EventUtil.getEvent(e);
         e.preventDefault();
         e.stopPropagation();
         alert('no default');
     });
-    EventUtil.addHandler(document, 'mousemove', function(e){
+    EventUtil.addHandler(document, 'touchmove', function(e){
       e = EventUtil.getEvent(e);
       e.preventDefault();
       e.stopPropagation();
@@ -35,17 +35,17 @@
 
     var myDiv = document.getElementById("myDiv");
 
-    EventUtil.addHandler(myDiv, 'mousestart', function(e){
+    EventUtil.addHandler(myDiv, 'touchstart', function(e){
       e = EventUtil.getEvent(e);
       e.preventDefault();
       e.stopPropagation();
-      alert('mousestart no default');
+      alert('touchstart no default');
     });
-    EventUtil.addHandler(myDiv, 'mousemove', function(e){
+    EventUtil.addHandler(myDiv, 'touchmove', function(e){
       e = EventUtil.getEvent(e);
       e.preventDefault();
       e.stopPropagation();
-      alert('mousemove no default');
+      alert('touchmove no default');
     });
 </script>
 </body>
