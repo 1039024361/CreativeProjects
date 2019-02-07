@@ -3879,6 +3879,7 @@ var Stretch = RichBase.extend({
                 function(event){
                     event = EventUtil.getEvent(event);
                     event.preventDefault();
+                    alert("body touchmove");
                     if (this.canvasWrap.style.zIndex !== -1 && this._ctrlEvent.flag === true) {   //使虚线框在最前)
                         this.canvasWrap.style.zIndex = -1;
                     }
