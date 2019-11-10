@@ -40,7 +40,7 @@ require.config({
         drawShape: './modules/tools/drawShape',
         moreShape: './modules/tools/moreShape',
         file: './modules/tools/file',
-        init: './modules/drawconfig/init',
+        init: './modules/drawConfig/init',
         initStretch: './modules/stretchConfig/init',
         Drawing: './modules/drawConfig/index',
         Stretch: './modules/stretchConfig/index',
