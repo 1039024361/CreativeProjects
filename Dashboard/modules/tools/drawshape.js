@@ -1,3 +1,4 @@
+// 绘制图形
 define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, EventUtil) {
     //显示选择框
     var _displayDrawingSelectBox = function(toDisplay){
