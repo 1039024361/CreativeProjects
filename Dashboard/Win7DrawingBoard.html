@@ -6,9 +6,9 @@
     <title>画图</title>
     <link rel="icon" href="images/paint.ico">
     <link rel="stylesheet" href="Win7DrawingBoard.css">
-    <script src="EventUtil.js"></script>
-    <script src="client.js"></script>
-    <script src="InheritanceAndObserver.js"></script>
+    <!-- <script src="EventUtil.js"></script>
+    <script src="Client.js"></script>
+    <script src="ClassFactory.js"></script> -->
 </head>
 <body style="user-select:none;">   /*禁止双击被选中*/
 <div id="top-menu">
@@ -349,7 +349,7 @@
 <div id="draw-area">
     <div class="virtual-wrap">
         <div class="canvas-wrap" id="canvasWrap">
-            <canvas width="800" height="600" id="canvasBox"></canvas>
+            <canvas width="1152" height="648" id="canvasBox"></canvas>
             <div class="ctrl-wrap-right"><div class="ctrl-content-right"></div></div>
             <div class="ctrl-wrap-corner"><div class="ctrl-content-corner"></div></div>
             <div class="ctrl-wrap-bottom"><div class="ctrl-content-bottom"></div></div>
@@ -418,6 +418,6 @@
 <input type="text" id="pasteInput" style="display: none"/>
 <!--下拉菜单打开文件-->
 <input type="file" id="openFile"  style="display: none">
-<script src="DrawingBoard.js"></script>
+<script  src="./utils/require.js" data-main="Win7DrawingBoard.js"></script>
 </body>
 </html>

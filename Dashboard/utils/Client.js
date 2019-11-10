@@ -1,6 +1,5 @@
-
-var client = function(){
-
+// 浏览器判断方法
+define([], function () {
     //rendering engines
     var engine = {            
         ie: 0,
@@ -169,5 +168,7 @@ var client = function(){
         browser:    browser,
         system:     system        
     };
+})
+// var client = function(){
 
-}();
+// }();
