@@ -1,0 +1,526 @@
+{
+    "name": "Drawing board",
+    "short_name": "Drawing",
+    "description": "an online windows drawing board",
+    "display": "standalone",
+    "start_url": "/",
+    "theme_color": "#313131",
+    "background_color": "#313131",
+    "icons": [
+      {
+        "url": "./images/180.gif180.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/180.png180.png",
+        "sizes": "16×16",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/area-pos.gifarea-pos.gif",
+        "sizes": "13×12",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/brush.pngbrush.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush1.pngbrush1.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush2.pngbrush2.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush3.pngbrush3.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush4.pngbrush4.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush5.pngbrush5.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush6.pngbrush6.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush7.pngbrush7.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush8.pngbrush8.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/brush9.pngbrush9.png",
+        "sizes": "32×32",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/circle.gifcircle.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/copy.gifcopy.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/ctrl/all.jpgall.jpg",
+        "sizes": "1200×1037",
+        "type": "image/jpeg"
+      },
+      {
+        "url": "./images/cut-copy.gifcut-copy.gif",
+        "sizes": "17×42",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/cut.gifcut.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/cut1.gifcut1.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/delect.gifdelect.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/1.gif1.gif",
+        "sizes": "23×28",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/10.gif10.gif",
+        "sizes": "28×28",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/11.gif11.gif",
+        "sizes": "27×30",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/2.gif2.gif",
+        "sizes": "26×31",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/3.gif3.gif",
+        "sizes": "24×24",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/4.gif4.gif",
+        "sizes": "27×27",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/5.gif5.gif",
+        "sizes": "33×26",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/6.gif6.gif",
+        "sizes": "32×24",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/7.gif7.gif",
+        "sizes": "31×20",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/8.gif8.gif",
+        "sizes": "32×29",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/9.gif9.gif",
+        "sizes": "28×29",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop/list.giflist.gif",
+        "sizes": "23×28",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop-parse.gifdrop-parse.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop-source.gifdrop-source.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/drop.pngdrop.png",
+        "sizes": "27×53",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/erase.giferase.gif",
+        "sizes": "16×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/fill.giffill.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/fill2.giffill2.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/fill2.pngfill2.png",
+        "sizes": "16×16",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/hr.gifhr.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/l90.gifl90.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/magnifier.gifmagnifier.gif",
+        "sizes": "14×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/new-area-pos.gifnew-area-pos.gif",
+        "sizes": "13×12",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/oppselect.gifoppselect.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/oppselect.pngoppselect.png",
+        "sizes": "16×16",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/outline.gifoutline.gif",
+        "sizes": "16×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/paste.jpgpaste.jpg",
+        "sizes": "170×170",
+        "type": "image/jpeg"
+      },
+      {
+        "url": "./images/paste1.gifpaste1.gif",
+        "sizes": "27×31",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/paste1.jpgpaste1.jpg",
+        "sizes": "27×31",
+        "type": "image/jpeg"
+      },
+      {
+        "url": "./images/paste2.jpgpaste2.jpg",
+        "sizes": "27×31",
+        "type": "image/jpeg"
+      },
+      {
+        "url": "./images/pen-bw.gifpen-bw.gif",
+        "sizes": "15×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/pen.gifpen.gif",
+        "sizes": "15×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/position.gifposition.gif",
+        "sizes": "11×11",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/r90.gifr90.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/redo.gifredo.gif",
+        "sizes": "13×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/resize.gifresize.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/rotate.gifrotate.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/rotate.pngrotate.png",
+        "sizes": "166×129",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/select.pngselect.png",
+        "sizes": "21×76",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/select1.pngselect1.png",
+        "sizes": "26×127",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/selectall.gifselectall.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/selectall.pngselectall.png",
+        "sizes": "16×16",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/selectcolor.gifselectcolor.gif",
+        "sizes": "30×30",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/selectcolor.pngselectcolor.png",
+        "sizes": "38×38",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/shape/outline2.gifoutline2.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outline3.gifoutline3.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outline4.gifoutline4.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outline5.gifoutline5.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outline6.gifoutline6.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outline7.gifoutline7.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/outlinf1.gifoutlinf1.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape.pngshape.png",
+        "sizes": "201×113",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/shape/shape1.gifshape1.gif",
+        "sizes": "16×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape10.gifshape10.gif",
+        "sizes": "16×17",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape11.gifshape11.gif",
+        "sizes": "15×17",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape12.gifshape12.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape13.gifshape13.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape14.gifshape14.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape15.gifshape15.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape16.gifshape16.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape17.gifshape17.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape18.gifshape18.gif",
+        "sizes": "15×17",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape19.gifshape19.gif",
+        "sizes": "16×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape2.gifshape2.gif",
+        "sizes": "16×13",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape2.pngshape2.png",
+        "sizes": "16×13",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/shape/shape20.gifshape20.gif",
+        "sizes": "16×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape21.gifshape21.gif",
+        "sizes": "16×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape22.gifshape22.gif",
+        "sizes": "16×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape23.gifshape23.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape3.gifshape3.gif",
+        "sizes": "16×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape4.gifshape4.gif",
+        "sizes": "15×13",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape5.gifshape5.gif",
+        "sizes": "16×13",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape6.gifshape6.gif",
+        "sizes": "16×13",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape7.gifshape7.gif",
+        "sizes": "16×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape8.gifshape8.gif",
+        "sizes": "16×17",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape/shape9.gifshape9.gif",
+        "sizes": "15×16",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/shape-2.pngshape-2.png",
+        "sizes": "33×171",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/straw.gifstraw.gif",
+        "sizes": "15×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/tailor.giftailor.gif",
+        "sizes": "17×18",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/text.giftext.gif",
+        "sizes": "15×14",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/top-menu-drop.pngtop-menu-drop.png",
+        "sizes": "14×11",
+        "type": "image/png"
+      },
+      {
+        "url": "./images/undo.gifundo.gif",
+        "sizes": "13×15",
+        "type": "image/gif"
+      },
+      {
+        "url": "./images/vr.gifvr.gif",
+        "sizes": "16×16",
+        "type": "image/gif"
+      }
+    ]
+  }
