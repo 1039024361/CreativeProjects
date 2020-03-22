@@ -1,5 +1,5 @@
 // 保存画板配置基本信息
-define(['Class', 'base'], function (Class, base,) {
+define(['Class', 'base'], function (Class, base) {
     //组件基对象
     var Base = Class.extend(base);
     //创建一个保存配置信息的对象
@@ -18,5 +18,5 @@ define(['Class', 'base'], function (Class, base,) {
             index: -1,
         }
     });
-    return drawingInfo
+    return drawingInfo;
 })

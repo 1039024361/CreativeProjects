@@ -30,8 +30,6 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         top = parseInt(currentTarget.style.top) + y - this._ctrlEvent.startXY[1],
                         canvasW = drawingInfo.get("canvasW"),
                         canvasH = drawingInfo.get("canvasH");
-                    console.log(`top: ${top}`);
-                    console.log(`left: ${left}`);
                     //超过画布右侧
                     left = (left + width+ 2) > canvasW ? canvasW - width -2: left;  //2个像素的padding
                     //超出画布左侧
@@ -71,9 +69,6 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
             case "mousedown":
             case "touchstart":
                 if (target.id === "top-left"||target.id === "top-middle"||target.id === "top-right"||target.id === "right-middle"||target.id === "right-bottom"||target.id === "bottom-middle"||target.id === "left-bottom"||target.id === "left-middle") {
-                    console.log("mousedown");
-                    console.log(`this.get("X"): ${this.get("X")}`);
-                    console.log(`this.get("Y"): ${this.get("Y")}`);
                     this._ctrlEvent.startStretchXY = [this.get("X"), this.get("Y")];
                     this._ctrlEvent.target = target.id;
                     this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
@@ -110,8 +105,6 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
 
                     let newWidth = width,
                         newHeight = height;
-
-                    console.log(`1：${newWidth}, ${newHeight}`);
                     switch (this._ctrlEvent.target){
                         case "top-left":
                             newWidth = width - diffX;
@@ -148,7 +141,6 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                             newLeft = left + diffX;
                             break;
                     }
-                    console.log(`2：${newWidth}, ${newHeight}`);
                     //超过左边界
                     if(newLeft<0){
                         newWidth  = width+left;
@@ -169,7 +161,6 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         newHeight = 15;
                         newTop = height+top-15;
                     }
-                    console.log(`3：${newWidth}, ${newHeight}`);
                     if(this.editCanvasBox.style.display !== "none"){
                         margin = 0;
                         _imageStretch.call(this, this.editCanvasBox, newWidth, newHeight);

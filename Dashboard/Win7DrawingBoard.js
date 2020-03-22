@@ -3,6 +3,7 @@
  */
 require.config({
     baseUrl: './',
+    waitSeconds: 20000,
     paths: {
         client: './utils/Client',
         EventUtil: './utils/EventUtil',

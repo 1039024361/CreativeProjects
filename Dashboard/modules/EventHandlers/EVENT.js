@@ -1,4 +1,4 @@
-define(['canvasBox', 'canvasWrap', 'adjustCanvas', 'rotateDrop', 'tool', 'wrapDiv',], function (canvasBox, canvasWrap, adjustCanvas, rotateDrop, tool, wrapDiv,) {
+define(['canvasBox', 'canvasWrap', 'adjustCanvas', 'rotateDrop', 'tool', 'wrapDiv'], function (canvasBox, canvasWrap, adjustCanvas, rotateDrop, tool, wrapDiv) {
     return {
         canvasBox: canvasBox, // canvas画布对应的事件处理方法
         canvasWrap: canvasWrap,

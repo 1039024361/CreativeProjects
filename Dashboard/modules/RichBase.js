@@ -33,19 +33,19 @@ define(['drawingInfo', 'Class', 'base', 'Observer'], function (drawingInfo, Clas
             var bbox = this.canvasBox.getBoundingClientRect();
             X -= bbox.left;
             Y -= bbox.top;
-            return { X: X, Y: Y} 
+            return { X: X, Y: Y }
         },
         //实时显示绘图区域坐标位置
         _displayCursorPos: function(x, y){
-            (x>=0&&y>=0)? this.bottomFonts[0].textContent = `${Math.round(x)}, ${Math.round(y)}像素`: this.bottomFonts[0].textContent =""; // review：将方法与页面元素耦合
+            (x>=0&&y>=0)? this.bottomFonts[0].textContent = Math.round(x) + '×' + Math.round(y) + '像素': this.bottomFonts[0].textContent =""; // review：将方法与页面元素耦合
         },
         //实时显示绘图区域大小
         _displaySize: function (x, y){
-            (x>=0&&y>=0)? this.bottomFonts[2].textContent = `${Math.round(x)} × ${Math.round(y)}像素`: this.bottomFonts[2].textContent ="";
+            (x>=0&&y>=0)? this.bottomFonts[2].textContent = Math.round(x) + '×' + Math.round(y) + '像素': this.bottomFonts[2].textContent ="";
         },
         //实时显示绘图区域大小
         _displaySelectSize: function (x, y){
-            (x>=0&&y>=0)? this.bottomFonts[1].textContent = `${Math.round(x)} × ${Math.round(y)}像素`: this.bottomFonts[1].textContent ="";
+            (x>=0&&y>=0)? this.bottomFonts[1].textContent = Math.round(x) + '×' + Math.round(y) + '像素': this.bottomFonts[1].textContent ="";
         },
         _resizeCanvasBox: function(target, width, height){
             if(!target){
@@ -172,7 +172,7 @@ define(['drawingInfo', 'Class', 'base', 'Observer'], function (drawingInfo, Clas
         _removeUndoHandler: function(){
             this.undo.classList.add("invalid");
             this.removeHandler(this.undo, "handlers", this._undo);
-        },
+        }
     });
     return RichBase;
 })

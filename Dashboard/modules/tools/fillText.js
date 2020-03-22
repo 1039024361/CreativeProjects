@@ -138,7 +138,7 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
         context.fillStyle = backColor;
         context.fillRect(x, y+4, width, height);
         context.fillStyle = color;
-        context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
+        context.font = fontWeight + fontSize + 'px' + fontFamily;
         context.textAlign = textAlign;
         context.textBaseline = textAlign;
         // var row = this._wordBreak(context, string, width);

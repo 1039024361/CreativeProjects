@@ -8,7 +8,7 @@ define(['drawingInfo'], function (drawingInfo) {
             Y = this.get("Y");
         var imageRGBArr = this.context.getImageData(0, 0, this.canvasBox.width, this.canvasBox.height).data;
         var colorObj = this._getRGBByXY(imageRGBArr, X, Y);
-        var color = `rgba(${colorObj.R}, ${colorObj.G}, ${colorObj.B}, ${colorObj.alpha/255})`;
+        var color = 'rgba(' + colorObj.R + ',' + colorObj.G + ',' + colorObj.B + ',' + colorObj.alpha/255 + ')';
         console.log(color);
         _setForecolor(this.foreColor, color);
         drawingInfo.set("color", color);
