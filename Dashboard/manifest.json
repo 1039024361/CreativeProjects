@@ -8,517 +8,517 @@
     "background_color": "#313131",
     "icons": [
       {
-        "url": "./images/180.gif180.gif",
+        "url": "/CreativeProjects/Dashboard/images/180.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/180.png180.png",
+        "url": "/CreativeProjects/Dashboard/images/180.png",
         "sizes": "16×16",
         "type": "image/png"
       },
       {
-        "url": "./images/area-pos.gifarea-pos.gif",
+        "url": "/CreativeProjects/Dashboard/images/area-pos.gif",
         "sizes": "13×12",
         "type": "image/gif"
       },
       {
-        "url": "./images/brush.pngbrush.png",
+        "url": "/CreativeProjects/Dashboard/images/brush.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush1.pngbrush1.png",
+        "url": "/CreativeProjects/Dashboard/images/brush1.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush2.pngbrush2.png",
+        "url": "/CreativeProjects/Dashboard/images/brush2.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush3.pngbrush3.png",
+        "url": "/CreativeProjects/Dashboard/images/brush3.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush4.pngbrush4.png",
+        "url": "/CreativeProjects/Dashboard/images/brush4.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush5.pngbrush5.png",
+        "url": "/CreativeProjects/Dashboard/images/brush5.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush6.pngbrush6.png",
+        "url": "/CreativeProjects/Dashboard/images/brush6.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush7.pngbrush7.png",
+        "url": "/CreativeProjects/Dashboard/images/brush7.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush8.pngbrush8.png",
+        "url": "/CreativeProjects/Dashboard/images/brush8.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/brush9.pngbrush9.png",
+        "url": "/CreativeProjects/Dashboard/images/brush9.png",
         "sizes": "32×32",
         "type": "image/png"
       },
       {
-        "url": "./images/circle.gifcircle.gif",
+        "url": "/CreativeProjects/Dashboard/images/circle.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/copy.gifcopy.gif",
+        "url": "/CreativeProjects/Dashboard/images/copy.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/ctrl/all.jpgall.jpg",
+        "url": "/CreativeProjects/Dashboard/images/ctrl/all.jpg",
         "sizes": "1200×1037",
         "type": "image/jpeg"
       },
       {
-        "url": "./images/cut-copy.gifcut-copy.gif",
+        "url": "/CreativeProjects/Dashboard/images/cut-copy.gif",
         "sizes": "17×42",
         "type": "image/gif"
       },
       {
-        "url": "./images/cut.gifcut.gif",
+        "url": "/CreativeProjects/Dashboard/images/cut.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/cut1.gifcut1.gif",
+        "url": "/CreativeProjects/Dashboard/images/cut1.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/delect.gifdelect.gif",
+        "url": "/CreativeProjects/Dashboard/images/delect.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/1.gif1.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/1.gif",
         "sizes": "23×28",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/10.gif10.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/10.gif",
         "sizes": "28×28",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/11.gif11.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/11.gif",
         "sizes": "27×30",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/2.gif2.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/2.gif",
         "sizes": "26×31",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/3.gif3.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/3.gif",
         "sizes": "24×24",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/4.gif4.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/4.gif",
         "sizes": "27×27",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/5.gif5.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/5.gif",
         "sizes": "33×26",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/6.gif6.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/6.gif",
         "sizes": "32×24",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/7.gif7.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/7.gif",
         "sizes": "31×20",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/8.gif8.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/8.gif",
         "sizes": "32×29",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/9.gif9.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/9.gif",
         "sizes": "28×29",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop/list.giflist.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop/list.gif",
         "sizes": "23×28",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop-parse.gifdrop-parse.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop-parse.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop-source.gifdrop-source.gif",
+        "url": "/CreativeProjects/Dashboard/images/drop-source.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/drop.pngdrop.png",
+        "url": "/CreativeProjects/Dashboard/images/drop.png",
         "sizes": "27×53",
         "type": "image/png"
       },
       {
-        "url": "./images/erase.giferase.gif",
+        "url": "/CreativeProjects/Dashboard/images/erase.gif",
         "sizes": "16×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/fill.giffill.gif",
+        "url": "/CreativeProjects/Dashboard/images/fill.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/fill2.giffill2.gif",
+        "url": "/CreativeProjects/Dashboard/images/fill2.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/fill2.pngfill2.png",
+        "url": "/CreativeProjects/Dashboard/images/fill2.png",
         "sizes": "16×16",
         "type": "image/png"
       },
       {
-        "url": "./images/hr.gifhr.gif",
+        "url": "/CreativeProjects/Dashboard/images/hr.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/l90.gifl90.gif",
+        "url": "/CreativeProjects/Dashboard/images/l90.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/magnifier.gifmagnifier.gif",
+        "url": "/CreativeProjects/Dashboard/images/magnifier.gif",
         "sizes": "14×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/new-area-pos.gifnew-area-pos.gif",
+        "url": "/CreativeProjects/Dashboard/images/new-area-pos.gif",
         "sizes": "13×12",
         "type": "image/gif"
       },
       {
-        "url": "./images/oppselect.gifoppselect.gif",
+        "url": "/CreativeProjects/Dashboard/images/oppselect.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/oppselect.pngoppselect.png",
+        "url": "/CreativeProjects/Dashboard/images/oppselect.png",
         "sizes": "16×16",
         "type": "image/png"
       },
       {
-        "url": "./images/outline.gifoutline.gif",
+        "url": "/CreativeProjects/Dashboard/images/outline.gif",
         "sizes": "16×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/paste.jpgpaste.jpg",
+        "url": "/CreativeProjects/Dashboard/images/paste.jpg",
         "sizes": "170×170",
         "type": "image/jpeg"
       },
       {
-        "url": "./images/paste1.gifpaste1.gif",
+        "url": "/CreativeProjects/Dashboard/images/paste1.gif",
         "sizes": "27×31",
         "type": "image/gif"
       },
       {
-        "url": "./images/paste1.jpgpaste1.jpg",
-        "sizes": "27×31",
-        "type": "image/jpeg"
-      },
-      {
-        "url": "./images/paste2.jpgpaste2.jpg",
+        "url": "/CreativeProjects/Dashboard/images/paste1.jpg",
         "sizes": "27×31",
         "type": "image/jpeg"
       },
       {
-        "url": "./images/pen-bw.gifpen-bw.gif",
+        "url": "/CreativeProjects/Dashboard/images/paste2.jpg",
+        "sizes": "27×31",
+        "type": "image/jpeg"
+      },
+      {
+        "url": "/CreativeProjects/Dashboard/images/pen-bw.gif",
         "sizes": "15×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/pen.gifpen.gif",
+        "url": "/CreativeProjects/Dashboard/images/pen.gif",
         "sizes": "15×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/position.gifposition.gif",
+        "url": "/CreativeProjects/Dashboard/images/position.gif",
         "sizes": "11×11",
         "type": "image/gif"
       },
       {
-        "url": "./images/r90.gifr90.gif",
+        "url": "/CreativeProjects/Dashboard/images/r90.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/redo.gifredo.gif",
+        "url": "/CreativeProjects/Dashboard/images/redo.gif",
         "sizes": "13×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/resize.gifresize.gif",
+        "url": "/CreativeProjects/Dashboard/images/resize.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/rotate.gifrotate.gif",
+        "url": "/CreativeProjects/Dashboard/images/rotate.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/rotate.pngrotate.png",
+        "url": "/CreativeProjects/Dashboard/images/rotate.png",
         "sizes": "166×129",
         "type": "image/png"
       },
       {
-        "url": "./images/select.pngselect.png",
+        "url": "/CreativeProjects/Dashboard/images/select.png",
         "sizes": "21×76",
         "type": "image/png"
       },
       {
-        "url": "./images/select1.pngselect1.png",
+        "url": "/CreativeProjects/Dashboard/images/select1.png",
         "sizes": "26×127",
         "type": "image/png"
       },
       {
-        "url": "./images/selectall.gifselectall.gif",
+        "url": "/CreativeProjects/Dashboard/images/selectall.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/selectall.pngselectall.png",
+        "url": "/CreativeProjects/Dashboard/images/selectall.png",
         "sizes": "16×16",
         "type": "image/png"
       },
       {
-        "url": "./images/selectcolor.gifselectcolor.gif",
+        "url": "/CreativeProjects/Dashboard/images/selectcolor.gif",
         "sizes": "30×30",
         "type": "image/gif"
       },
       {
-        "url": "./images/selectcolor.pngselectcolor.png",
+        "url": "/CreativeProjects/Dashboard/images/selectcolor.png",
         "sizes": "38×38",
         "type": "image/png"
       },
       {
-        "url": "./images/shape/outline2.gifoutline2.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline2.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outline3.gifoutline3.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline3.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outline4.gifoutline4.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline4.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outline5.gifoutline5.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline5.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outline6.gifoutline6.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline6.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outline7.gifoutline7.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outline7.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/outlinf1.gifoutlinf1.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/outlinf1.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape.pngshape.png",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape.png",
         "sizes": "201×113",
         "type": "image/png"
       },
       {
-        "url": "./images/shape/shape1.gifshape1.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape1.gif",
         "sizes": "16×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape10.gifshape10.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape10.gif",
         "sizes": "16×17",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape11.gifshape11.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape11.gif",
         "sizes": "15×17",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape12.gifshape12.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape12.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape13.gifshape13.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape13.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape14.gifshape14.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape14.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape15.gifshape15.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape15.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape16.gifshape16.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape16.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape17.gifshape17.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape17.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape18.gifshape18.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape18.gif",
         "sizes": "15×17",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape19.gifshape19.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape19.gif",
         "sizes": "16×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape2.gifshape2.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape2.gif",
         "sizes": "16×13",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape2.pngshape2.png",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape2.png",
         "sizes": "16×13",
         "type": "image/png"
       },
       {
-        "url": "./images/shape/shape20.gifshape20.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape20.gif",
         "sizes": "16×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape21.gifshape21.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape21.gif",
         "sizes": "16×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape22.gifshape22.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape22.gif",
         "sizes": "16×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape23.gifshape23.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape23.gif",
         "sizes": "16×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape3.gifshape3.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape3.gif",
         "sizes": "16×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape4.gifshape4.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape4.gif",
         "sizes": "15×13",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape5.gifshape5.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape5.gif",
         "sizes": "16×13",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape6.gifshape6.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape6.gif",
         "sizes": "16×13",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape7.gifshape7.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape7.gif",
         "sizes": "16×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape8.gifshape8.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape8.gif",
         "sizes": "16×17",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape/shape9.gifshape9.gif",
+        "url": "/CreativeProjects/Dashboard/images/shape/shape9.gif",
         "sizes": "15×16",
         "type": "image/gif"
       },
       {
-        "url": "./images/shape-2.pngshape-2.png",
+        "url": "/CreativeProjects/Dashboard/images/shape-2.png",
         "sizes": "33×171",
         "type": "image/png"
       },
       {
-        "url": "./images/straw.gifstraw.gif",
+        "url": "/CreativeProjects/Dashboard/images/straw.gif",
         "sizes": "15×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/tailor.giftailor.gif",
+        "url": "/CreativeProjects/Dashboard/images/tailor.gif",
         "sizes": "17×18",
         "type": "image/gif"
       },
       {
-        "url": "./images/text.giftext.gif",
+        "url": "/CreativeProjects/Dashboard/images/text.gif",
         "sizes": "15×14",
         "type": "image/gif"
       },
       {
-        "url": "./images/top-menu-drop.pngtop-menu-drop.png",
+        "url": "/CreativeProjects/Dashboard/images/top-menu-drop.png",
         "sizes": "14×11",
         "type": "image/png"
       },
       {
-        "url": "./images/undo.gifundo.gif",
+        "url": "/CreativeProjects/Dashboard/images/undo.gif",
         "sizes": "13×15",
         "type": "image/gif"
       },
       {
-        "url": "./images/vr.gifvr.gif",
+        "url": "/CreativeProjects/Dashboard/images/vr.gif",
         "sizes": "16×16",
         "type": "image/gif"
       }

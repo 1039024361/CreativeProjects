@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 
+const publicPath = '/CreativeProjects/Dashboard/'
 const includeDirs = ['modules', 'utils', 'images']
 const includeTypes = ['js', 'jpg', 'jpeg', 'png', 'gif', 'json']
 let eFiles = []
@@ -17,7 +18,7 @@ const getEFilesList = function togGetEFilesList (root, eFiles, basic) {
         } else {
             const type = path.extname(newPath).substring(1);
             if (includeTypes.includes(type)) {
-                const base = '/' + basic + newPath.split(basic)[1].replace(/\\/g,"/")
+                const base = publicPath + basic + newPath.split(basic)[1].replace(/\\/g,"/")
                 eFiles.push(base)
             }
         }

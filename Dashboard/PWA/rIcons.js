@@ -4,6 +4,7 @@ const imageinfo = require('imageinfo')
 
 let icons = []
 const includeTypes = ['jpg', 'jpeg', 'png', 'gif']
+const publicPath = '/CreativeProjects/Dashboard/'
 const basic = 'images'
 const dir = path.resolve(__dirname, '../', basic)
 
@@ -21,9 +22,9 @@ const getIconsList = function togGetIconsList (root, icons) {
             if (includeTypes.includes(type)) {
                 const data = fs.readFileSync(newPath)
                 const info = imageinfo(data)
-                const base = './' + basic + newPath.split(basic)[1].replace(/\\/g,"/")
+                const base = publicPath + basic + newPath.split(basic)[1].replace(/\\/g,"/")
                 icons.push({
-                    url: base + file,
+                    url: base,
                     sizes: `${info.width}×${info.height}`,
                     type: info.mimeType
                 })
