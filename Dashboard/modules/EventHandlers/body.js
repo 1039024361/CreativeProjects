@@ -29,7 +29,7 @@ define(['EventUtil'], function (EventUtil) {
                     this.virtualWrap.style.cursor = "default";
                     this.resizeCanvas(canvasBox, this._ctrlEvent);
                     this._saveDrawingToBuffer();
-                    console.log(this._ctrlEvent);
+                    // console.log(this._ctrlEvent);
                 }
             }
         ],
@@ -45,7 +45,7 @@ define(['EventUtil'], function (EventUtil) {
                     this.virtualWrap.style.cursor = "default";
                     this.resizeCanvas(canvasBox, this._ctrlEvent);
                     this._saveDrawingToBuffer();
-                    console.log(this._ctrlEvent);
+                    // console.log(this._ctrlEvent);
                 }
             }
         ],

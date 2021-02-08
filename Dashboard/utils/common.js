@@ -15,7 +15,7 @@ define(['EventUtil'], function (EventUtil) {
             reader.readAsDataURL(file);
             reader.onload = function () {
                 this.image.src = reader.result;
-                console.log(this.image);
+                // console.log(this.image);
                 var imageDropHandle = function() {
                     this._resizeCanvasBox(this.canvasBox, this.image.width, this.image.height);
                     this.context.drawImage(this.image, 0, 0);

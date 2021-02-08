@@ -87,7 +87,7 @@ define(['drawingInfo', 'EventUtil', 'drawingInfo'], function (drawingInfo, Event
     }
     return {
         _addMagnifierHandler: function(){
-            console.log('this.magnifierWrap:', this.magnifierWrap)
+            // console.log('this.magnifierWrap:', this.magnifierWrap)
             this.addHandler(this.canvasWrap, "mousemove", _magnifierHandler);
             this.addHandler(this.magnifierWrap, "click", _magnifierHandler);
         },

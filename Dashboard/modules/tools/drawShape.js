@@ -34,13 +34,13 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
     var _fillDrawing = function () {
         if(drawingInfo.get("behavior") === "shape"){
             if(this.elementWrap.style.display === "inline-block") {
-                console.log('_fillDrawing _drawShapeToCanvas')
+                // console.log('_fillDrawing _drawShapeToCanvas')
                 this._drawShapeToCanvas();
                 _showDrawingSelectObj.call(this, false);
                 this._saveDrawingToBuffer();
             }
             else{
-                console.log('_fillDrawing')
+                // console.log('_fillDrawing')
                 // this._drawShapeToCanvas();
                 _showDrawingSelectObj.call(this, true);
             }
@@ -50,18 +50,17 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
     var _drawShapeHandler = function (event) {
         eventShape = EventUtil.getEvent(event);
         var target = EventUtil.getTarget(event);
-
+        debugger
         if(target.id === "canvasBox"||target.id === "canvasWrap"){
             _fillDrawing.call(this);
         }
     }
     return {
         _addDrawShapeHandler: function(){
-            console.log('_addDrawShapeHandler')
+            // console.log('_addDrawShapeHandler')
             this.canvasBox.style.cursor = "crosshair";
             // handleTarget.classList.toggle("selected");
             //拖拽效果事件
-
             //在桌面系统中，通过click事件触发显示隐藏文本框
             if(client.system.win||client.system.mac||client.system.x11){
                 this.addHandler(this.canvasWrap, "click", _drawShapeHandler);
@@ -73,7 +72,8 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
         },
         //
         _removeDrawShapeHandler: function(){
-            console.log('_removeDrawShapeHandler')
+            debugger
+            // console.log('_removeDrawShapeHandler')
             document.querySelector("#" + drawingInfo.get("description")).classList.remove("selected");
             // this.removeHandler(this.canvasWrap, "click", this._drawShapeHandler);
             //在桌面系统中，通过click事件触发显示隐藏文本框

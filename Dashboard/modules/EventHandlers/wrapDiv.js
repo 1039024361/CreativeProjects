@@ -11,7 +11,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                 switch (handleTarget.id)
                 {
                     case "ellipse":
-                        console.log("ellipse");
+                        // console.log("ellipse");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -20,7 +20,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "rectangle":
-                        console.log("rectangle");
+                        // console.log("rectangle");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -29,7 +29,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "circle-rectangle":
-                        console.log("circle-rectangle");
+                        // console.log("circle-rectangle");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -38,7 +38,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "triangle":
-                        console.log("triangle");
+                        // console.log("triangle");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -47,7 +47,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "right-triangle":
-                        console.log("right-triangle");
+                        // console.log("right-triangle");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -56,7 +56,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "quadrangle":
-                        console.log("quadrangle");
+                        // console.log("quadrangle");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -65,7 +65,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "pentagon":
-                        console.log("pentagon");
+                        // console.log("pentagon");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -74,7 +74,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "hexagon":
-                        console.log("hexagon");
+                        // console.log("hexagon");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -83,7 +83,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "shape-arrow-right":
-                        console.log("shape-arrow-right");
+                        // console.log("shape-arrow-right");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -92,7 +92,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "shape-arrow-left":
-                        console.log("shape-arrow-left");
+                        // console.log("shape-arrow-left");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -101,7 +101,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "shape-arrow-up":
-                        console.log("shape-arrow-up");
+                        // console.log("shape-arrow-up");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -110,7 +110,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "shape-arrow-down":
-                        console.log("shape-arrow-down");
+                        // console.log("shape-arrow-down");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -119,7 +119,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "four-star":
-                        console.log("four-star");
+                        // console.log("four-star");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -128,7 +128,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "five-star":
-                        console.log("five-star");
+                        // console.log("five-star");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -137,7 +137,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "six-star":
-                        console.log("six-star");
+                        // console.log("six-star");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");
@@ -146,7 +146,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                         }
                         break;
                     case "heart":
-                        console.log("heart");
+                        // console.log("heart");
                         if(!handleTarget.classList.contains("selected")){
                             this._handle(this._addDrawShapeHandler, this._removeDrawShapeHandler);
                             drawingInfo.set("behavior", "shape");

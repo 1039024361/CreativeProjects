@@ -2,7 +2,7 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
     //注入填充区域算法
         //颜色格式为rgba
         // _floodFill8: function f(imageRGBArr, x, y, oldColor, newColor){
-        //     console.log(++debug);
+        //     // console.log(++debug);
         //     if(x < 0 || x > drawingInfo.canvasW || y < 0 || y > drawingInfo.canvasH){
         //         return null;
         //     }
@@ -22,7 +22,7 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
         //扫描线填充算法，非迭代法
         var _floodFillScanLineWithStack = function(imageRGBArr, x, y, oldColor, newColor){
             if(newColor.R === oldColor.R&&newColor.G === oldColor.G&&newColor.B === oldColor.B&&newColor.alpha === oldColor.alpha) {
-                console.log("do nothing !!!, filled area!!");
+                // console.log("do nothing !!!, filled area!!");
                 return null;
             }
             var xStack = [],

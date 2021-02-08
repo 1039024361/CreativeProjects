@@ -404,7 +404,7 @@ define(['drawingInfo'], function (drawingInfo) {
             editContext.beginPath();
             editContext.lineWidth = drawingInfo.get("lineWeight");
             editContext.strokeStyle = drawingInfo.get("color");
-            console.log('target, shapeFunc, options', target, shapeFunc, options)
+            // console.log('target, shapeFunc, options', target, shapeFunc, options)
             shapeFunc.call(this, target, options);
             editContext.closePath();
             editContext.stroke();

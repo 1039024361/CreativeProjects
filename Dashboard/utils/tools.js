@@ -319,14 +319,14 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
             });
             //image on load
             function loadImage (src){
-                console.log('loadimgage: ', this)
+                // console.log('loadimgage: ', this)
                 var that = this;
                 return new Promise(function (resolve, reject){
-                    console.log('123: '. that)
+                    // console.log('123: '. that)
                     that.image.onload = function(e){
-                        console.log('this: '. that)
+                        // console.log('this: '. that)
                         resolve();
-                        console.log('that.image.onload: ', that.image.onload)
+                        // console.log('that.image.onload: ', that.image.onload)
                         that.image.onload = null;
                     };
                     that.image.src = src;

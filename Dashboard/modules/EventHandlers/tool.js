@@ -15,7 +15,7 @@ define(['toolMenu', 'EventUtil', 'drawingInfo'], function (toolMenu, EventUtil, 
                     switch (handleTarget.id)
                     {
                         case "imgWrap":
-                            console.log("imgWrap");
+                            // console.log("imgWrap");
                             if(!handleTarget.classList.contains("selected")){
                                 this._handle(this._addDrawImageHandler, this._removeDrawImageHandler);
                                 drawingInfo.set("behavior", "select");
@@ -36,11 +36,11 @@ define(['toolMenu', 'EventUtil', 'drawingInfo'], function (toolMenu, EventUtil, 
 
                     switch (handleTarget.id) {
                         case "undo":
-                            console.log("undo");
+                            // console.log("undo");
                             this.fire(this.undo, "handlers");
                             break;
                         case "redo":
-                            console.log("redo");
+                            // console.log("redo");
                             this.fire(this.redo, "handlers");
                             break;
                     }

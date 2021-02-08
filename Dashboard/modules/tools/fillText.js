@@ -56,7 +56,7 @@ define(['drawingInfo', 'client', 'EventUtil'], function (drawingInfo, client, Ev
                 }
             }
             tempCopy = temp;
-            console.log(array);
+            // console.log(array);
         }
         if(temp !== ""){
             rowArray.push(temp);

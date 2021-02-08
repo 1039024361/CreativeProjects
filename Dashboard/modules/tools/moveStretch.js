@@ -71,7 +71,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                 if (target.id === "top-left"||target.id === "top-middle"||target.id === "top-right"||target.id === "right-middle"||target.id === "right-bottom"||target.id === "bottom-middle"||target.id === "left-bottom"||target.id === "left-middle") {
                     this._ctrlEvent.startStretchXY = [this.get("X"), this.get("Y")];
                     this._ctrlEvent.target = target.id;
-                    this.removeHandler(this.canvasWrap, "click", this._drawImageHandler);
+                    // this.removeHandler(this.canvasWrap, "click", this._drawImageHandler); // here this._drawImageHandler is undefined
                     // this._removeVirtualBoxHandler();       //注意这里无法使用，不能动态删除同一个对象的handler
                 }
                 break;
@@ -187,7 +187,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
             case "mouseleave":
             case "touchend":
                 this._ctrlEvent.startStretchXY = [null, null];
-                var recover =  function (){
+                var recover = function (){
                     this.addHandler(this.canvasWrap, "click", this._drawImageHandler);
                     EventUtil.removeHandler(this.canvasWrap, "click", recover);
                 }.bind(this);
@@ -207,7 +207,7 @@ define(['drawingInfo', 'EventUtil'], function (drawingInfo, EventUtil) {
                 ctx.drawImage(this.image, 0, 0);
                 ctx.setTransform(1, 0, 0, 1, 0, 0); //恢复坐标
                 EventUtil.removeHandler(this.image, "load", imageStretch);
-                console.log("imageStretch");
+                // console.log("imageStretch");
             }.bind(this);
             EventUtil.addHandler(this.image, "load", imageStretch);
             this.image.src = target.toDataURL("image/png");

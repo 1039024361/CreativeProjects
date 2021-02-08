@@ -52,7 +52,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
         },
         //删除画线事件
         _removeDrawLineHandler: function(){
-            console.log('this: ', this)
+            // console.log('this: ', this)
             if(drawingInfo.get("behavior") === "pencil"){
                 this.pencil.classList.remove("selected");
             }

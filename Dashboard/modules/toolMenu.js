@@ -19,7 +19,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
             switch (handleTarget.id)
             {
                 case "pencil":
-                    console.log("pencil");
+                    // console.log("pencil");
                     if(!handleTarget.classList.contains("selected")){
                         this.canvasBox.style.cursor = "url(images/pen.gif) 0 20, auto";
                         handleTarget.classList.toggle("selected");
@@ -28,7 +28,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     }
                 break;
                 case "erase":
-                    console.log("erase");
+                    // console.log("erase");
                     if(!handleTarget.classList.contains("selected")){
                         this.canvasBox.style.cursor = "url(images/erase.gif) 0 20, auto";
                         handleTarget.classList.toggle("selected");
@@ -37,7 +37,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     }
                 break;
                 case "fill":
-                    console.log("fill");
+                    // console.log("fill");
                     if(!handleTarget.classList.contains("selected")){
                         this.canvasBox.style.cursor = "url(images/fill.gif) 0 20, auto";
                         handleTarget.classList.toggle("selected");
@@ -46,7 +46,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     }
                 break;
                 case "straw":
-                    console.log("straw");
+                    // console.log("straw");
                     if(!handleTarget.classList.contains("selected")){
                         this.canvasBox.style.cursor = "url(images/straw.gif) 0 20, auto";
                         handleTarget.classList.toggle("selected");
@@ -55,7 +55,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     }
                 break;
                 case "magnifier":
-                    console.log("magnifier");
+                    // console.log("magnifier");
                     if(!handleTarget.classList.contains("selected")){
                         this.magnifierWrap.style.cursor = "url(images/magnifier.gif) 0 20, auto";
                         handleTarget.classList.toggle("selected");
@@ -64,7 +64,7 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     }
                 break;
                 case "text":
-                    console.log("text");
+                    // console.log("text");
                     if(!handleTarget.classList.contains("selected")){
                         this.canvasBox.style.cursor = "text";
                         handleTarget.classList.toggle("selected");

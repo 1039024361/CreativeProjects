@@ -29,11 +29,11 @@ define(['EventUtil', 'drawingInfo'], function (EventUtil, drawingInfo) {
                     return null;
                 }
                 if(data<lowBorder){
-                    console.log("超过下限");
+                    // console.log("超过下限");
                     return lowBorder;
                 }
                 if(data>upBorder){
-                    console.log("超过上限");
+                    // console.log("超过上限");
 
                     return upBorder;
                 }

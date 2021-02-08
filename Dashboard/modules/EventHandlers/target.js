@@ -13,8 +13,8 @@ define(['EventUtil'], function (EventUtil) {
                     this._ctrlEvent.source = targetCursor;
                     this._ctrlEvent.startXY[0] = this._ctrlEvent.middleXY[0] = this._xConvert(event.clientX);
                     this._ctrlEvent.startXY[1] = this._ctrlEvent.middleXY[1] = this._yConvert(event.clientY);
-                    console.log(targetCursor);
-                    console.log(targetCursor.style.cursor);
+                    // console.log(targetCursor);
+                    // console.log(targetCursor.style.cursor);
                     this.virtualWrap.style.cursor = targetCursor.style.cursor;
                 }
             }
